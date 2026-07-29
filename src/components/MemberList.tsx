@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { GuildMember, GuildInfo } from '../types';
 import { getHuaxuImageUrl, GUILD_BRANCHES } from '../services/imageUtils';
-import { Users, Search, ArrowUpDown, Shield, ChevronRight, Award } from 'lucide-react';
+import { Users, Search, ArrowUpDown, Shield, ChevronRight, Award, Globe } from 'lucide-react';
 
 interface MemberListProps {
   members: GuildMember[];
   guildInfo: GuildInfo | null;
   selectedBranchId: number;
+  onSelectBranch?: (branchId: number) => void;
   onSelectMember: (member: GuildMember) => void;
   loading: boolean;
 }
@@ -15,6 +16,7 @@ export const MemberList: React.FC<MemberListProps> = ({
   members,
   guildInfo,
   selectedBranchId,
+  onSelectBranch,
   onSelectMember,
   loading
 }) => {
@@ -59,7 +61,51 @@ export const MemberList: React.FC<MemberListProps> = ({
   return (
     <div className="space-y-6 animate-fadeIn pb-16 md:pb-0">
       
-      {/* Header Banner & Controls */}
+      {/* Branch Selection Bar */}
+      <div className="minimal-card p-4 space-y-3">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-xs font-tech font-bold text-zinc-400 uppercase tracking-wider flex items-center space-x-1.5">
+            <Globe className="w-3.5 h-3.5 text-white" />
+            <span>PILIH CABANG GUILD ALLIANCE</span>
+          </span>
+          <span className="text-[11px] font-tech text-zinc-500 hidden sm:inline-block">
+            4 Official Guild Divisions (AP &amp; NA)
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {GUILD_BRANCHES.map((b) => {
+            const isActive = b.id === selectedBranchId;
+            return (
+              <button
+                key={b.id}
+                onClick={() => {
+                  if (onSelectBranch) onSelectBranch(b.id);
+                }}
+                className={`p-3 rounded-xl border text-left transition-all ${
+                  isActive
+                    ? 'bg-white text-black border-white shadow-md'
+                    : 'bg-[#09090b] text-zinc-400 border-[#27272a] hover:text-white hover:border-zinc-500'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-tech font-bold uppercase opacity-75">{b.region}</span>
+                  <span className={`text-[9px] font-tech font-bold px-1.5 py-0.2 rounded uppercase ${
+                    isActive ? 'bg-black text-white' : 'bg-[#18181b] text-zinc-300 border border-[#27272a]'
+                  }`}>
+                    {b.tag}
+                  </span>
+                </div>
+                <span className="font-heading font-bold text-xs sm:text-sm block mt-1 truncate">
+                  {b.name}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Header Banner & Search Controls */}
       <div className="minimal-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -71,7 +117,7 @@ export const MemberList: React.FC<MemberListProps> = ({
               DAFTAR MEMBER &amp; JABATAN
             </h1>
             <p className="text-xs font-tech text-zinc-400">
-              Daftar seluruh anggota {activeBranch.name} diurutkan berdasarkan jabatan &amp; kontribusi
+              Daftar seluruh anggota {activeBranch.name} ({activeBranch.region}) diurutkan berdasarkan jabatan &amp; kontribusi
             </p>
           </div>
 
@@ -98,50 +144,46 @@ export const MemberList: React.FC<MemberListProps> = ({
               >
                 <option value="rank">Urutan: Jabatan (Role)</option>
                 <option value="level">Urutan: Level Player</option>
-                <option value="contribute">Urutan: Kontribusi Mingguan</option>
-                <option value="name">Urutan: Nama Player</option>
+                <option value="contribute">Urutan: Mingguan Kontrib</option>
+                <option value="name">Urutan: Nama A-Z</option>
               </select>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Member Feed */}
+      {/* Member Cards List */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <span className="text-xs font-tech font-bold text-zinc-400 uppercase tracking-wider">
+        <div className="flex items-center justify-between px-1 text-xs font-tech text-zinc-400">
+          <span className="font-bold uppercase tracking-wider">
             ANGGOTA TERDAFTAR ({filteredMembers.length})
           </span>
-          <span className="text-[11px] font-tech text-zinc-500">Klik card untuk inspect profile</span>
+          <span>Klik card untuk inspect profile</span>
         </div>
 
         {loading ? (
-          <div className="text-center py-20">
+          <div className="text-center py-20 bg-[#121215] rounded-2xl border border-[#27272a]">
             <div className="inline-block animate-spin w-8 h-8 border-4 border-white border-t-transparent rounded-full mb-3" />
-            <p className="text-xs font-tech text-zinc-400">Loading Member List...</p>
+            <p className="text-xs font-tech text-zinc-400">Loading Members Roster...</p>
           </div>
         ) : filteredMembers.length === 0 ? (
           <div className="text-center py-16 bg-[#121215] rounded-2xl border border-[#27272a] text-zinc-400 font-tech text-sm">
-            Tidak ada member yang sesuai kriteria pencarian.
+            Tidak ada member yang sesuai pencarian.
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-3">
             {filteredMembers.map((member) => {
-              const roleBadge = getRankBadge(member.rankLevel);
+              const rankBadge = getRankBadge(member.rankLevel || 4);
 
               return (
-                <a
+                <div
                   key={member.playerId}
-                  href={`#/player/${activeBranch.server}/${member.playerId}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onSelectMember(member);
-                  }}
-                  className="minimal-card-interactive p-4 sm:p-5 flex items-center justify-between gap-4 block cursor-pointer group"
+                  onClick={() => onSelectMember(member)}
+                  className="minimal-card-interactive p-4 flex items-center justify-between cursor-pointer group"
                 >
-                  {/* Left: Avatar & Info */}
-                  <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
-                    <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-black p-1 flex-shrink-0 border border-[#27272a] group-hover:border-white transition-colors">
+                  <div className="flex items-center space-x-4">
+                    {/* Member Avatar */}
+                    <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-black p-1 flex-shrink-0 border border-[#27272a] group-hover:border-white transition-colors overflow-hidden">
                       {member.frame && (
                         <img
                           src={getHuaxuImageUrl(member.frame)}
@@ -153,39 +195,43 @@ export const MemberList: React.FC<MemberListProps> = ({
                       <img
                         src={getHuaxuImageUrl(member.portrait)}
                         alt={member.name}
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover rounded-xl"
                       />
                     </div>
 
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="font-heading font-bold text-base sm:text-lg text-white truncate group-hover:text-zinc-200 transition-colors">
+                    {/* Member Info */}
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <h3 className="font-heading font-bold text-base sm:text-lg text-white group-hover:text-zinc-200 transition-colors truncate max-w-[200px] sm:max-w-xs">
                           {member.name}
                         </h3>
-                        <span className={`text-[10px] font-heading font-bold px-2 py-0.5 rounded-full uppercase ${roleBadge.classNames}`}>
-                          {roleBadge.label}
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider ${rankBadge.classNames}`}>
+                          {rankBadge.label}
                         </span>
                       </div>
-                      <p className="text-xs font-tech text-zinc-400 mt-0.5 truncate">
-                        ID: {member.playerId} • LVL <span className="text-white font-bold">{member.level}</span>
-                      </p>
+
+                      <div className="flex items-center space-x-3 text-xs font-tech text-zinc-400">
+                        <span>ID: <code className="text-zinc-300 font-bold">{member.playerId}</code></span>
+                        <span>•</span>
+                        <span>LVL <strong className="text-white">{member.level}</strong></span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Right: Contribution & Arrow */}
-                  <div className="flex items-center space-x-3 sm:space-x-4 flex-shrink-0">
+                  {/* Right Contribution & Action Arrow */}
+                  <div className="flex items-center space-x-4">
                     <div className="text-right hidden sm:block">
-                      <span className="text-[10px] font-tech text-zinc-400 uppercase block">Weekly Contrib</span>
+                      <span className="text-[10px] font-tech text-zinc-400 uppercase font-bold block">WEEKLY CONTRIB</span>
                       <span className="font-heading font-bold text-sm text-white">
-                        {member.contributeWeek ? member.contributeWeek.toLocaleString() : 0}
+                        {member.contributeWeek ? member.contributeWeek.toLocaleString() : '-'}
                       </span>
                     </div>
 
-                    <div className="p-2 rounded-xl bg-[#09090b] border border-[#27272a] text-zinc-400 group-hover:text-white group-hover:border-white transition-colors">
-                      <ChevronRight className="w-4 h-4" />
+                    <div className="w-9 h-9 rounded-xl bg-[#09090b] border border-[#27272a] group-hover:border-white group-hover:bg-white text-zinc-400 group-hover:text-black flex items-center justify-center transition-all shadow-sm">
+                      <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
-                </a>
+                </div>
               );
             })}
           </div>
