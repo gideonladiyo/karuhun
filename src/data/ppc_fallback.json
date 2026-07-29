@@ -1,0 +1,1603 @@
+{
+  "status": "success",
+  "data": {
+    "ppc": {
+      "server": "na",
+      "activity": 264,
+      "start": "2026-07-27T07:00:00Z",
+      "end": "2026-08-03T07:00:00Z",
+      "members": 7416,
+      "updatedAt": "2026-07-29T09:05:00.001707Z",
+      "level": {
+        "id": 4,
+        "name": "Ultimate",
+        "icon": "image/icontype/iconrank4",
+        "levelMin": 80,
+        "levelMax": 120
+      },
+      "bosses": [
+        {
+          "id": 2044,
+          "name": "The Pseudo-Unwinged",
+          "description": "He cast aside his real body and stole a false name, wandering through the shadows of the network. In the end, the Sixth Sin became the cage that trapped him.",
+          "icon": "image/uifubenbosssingle/bosssingletab54",
+          "stages": [
+            {
+              "id": 30303279,
+              "difficulty": "Knight",
+              "score": 84000,
+              "buffs": [
+                {
+                  "name": "Frost",
+                  "description": "The phenomenon of freezing expansion will occur at low temperatures. Ice DMG received is increased significantly.",
+                  "icon": "image/uifubenbosssingle/bosssingleiconpowerbing"
+                }
+              ],
+              "features": [],
+              "skills": [
+                {
+                  "name": "Adrift",
+                  "description": "The Pseudo-Unwinged uses wingsuit thrusters to move and reposition."
+                },
+                {
+                  "name": "Suppressive Assault",
+                  "description": "The Pseudo-Unwinged launches a dense multi-weapon assault. It thrusts forward, switches to close-range hand cannons, retreats using recoil, then deploys drones for follow-up suppression."
+                },
+                {
+                  "name": "Overload Rays",
+                  "description": "The Pseudo-Unwinged has drones form a power gate, then fires pulse beams from the arm cannon. Once the beams pass through the gate, they are amplified into Overload Rays."
+                },
+                {
+                  "name": "Roaming Blades",
+                  "description": "The Pseudo-Unwinged has drones merge into a shuriken, takes off, then dives down to slash at the target. After pulling back and sweeping across with a backhand strike, the Pseudo-Unwinged closes in again for continuous spinning slashes, then retreats and lands as the drones break apart and open fire on the target."
+                },
+                {
+                  "name": "Cyclone Uppercut",
+                  "description": "The Pseudo-Unwinged drifts left using wingsuit thrusters, performs a diagonal slash, then follows with an upward cut before stabilizing its frame."
+                }
+              ]
+            },
+            {
+              "id": 30303280,
+              "difficulty": "Chaos",
+              "score": 168000,
+              "buffs": [
+                {
+                  "name": "Frost",
+                  "description": "The phenomenon of freezing expansion will occur at low temperatures. Ice DMG received is increased significantly.",
+                  "icon": "image/uifubenbosssingle/bosssingleiconpowerbing"
+                }
+              ],
+              "features": [],
+              "skills": [
+                {
+                  "name": "Adrift",
+                  "description": "The Pseudo-Unwinged uses wingsuit thrusters to move and reposition."
+                },
+                {
+                  "name": "Suppressive Assault",
+                  "description": "The Pseudo-Unwinged launches a dense multi-weapon assault. It thrusts forward, switches to close-range hand cannons, retreats using recoil, then deploys drones for follow-up suppression."
+                },
+                {
+                  "name": "Overload Rays",
+                  "description": "The Pseudo-Unwinged has drones form a power gate, then fires pulse beams from the arm cannon. Once the beams pass through the gate, they are amplified into Overload Rays."
+                },
+                {
+                  "name": "Roaming Blades",
+                  "description": "The Pseudo-Unwinged has drones merge into a shuriken, takes off, then dives down to slash at the target. After pulling back and sweeping across with a backhand strike, the Pseudo-Unwinged closes in again for continuous spinning slashes, then retreats and lands as the drones break apart and open fire on the target."
+                },
+                {
+                  "name": "Cyclone Uppercut",
+                  "description": "The Pseudo-Unwinged drifts left using wingsuit thrusters, performs a diagonal slash, then follows with an upward cut before stabilizing its frame."
+                }
+              ]
+            },
+            {
+              "id": 30303281,
+              "difficulty": "Hell",
+              "score": 336000,
+              "buffs": [
+                {
+                  "name": "Frost",
+                  "description": "The phenomenon of freezing expansion will occur at low temperatures. Ice DMG received is increased significantly.",
+                  "icon": "image/uifubenbosssingle/bosssingleiconpowerbing"
+                }
+              ],
+              "features": [],
+              "skills": [
+                {
+                  "name": "Scorched Earth",
+                  "description": "Reshapes the battlefield, dealing continuous extra DMG to all enemies within it."
+                },
+                {
+                  "name": "Adrift",
+                  "description": "The Pseudo-Unwinged uses wingsuit thrusters to move and reposition."
+                },
+                {
+                  "name": "Suppressive Assault",
+                  "description": "The Pseudo-Unwinged launches a dense multi-weapon assault. It thrusts forward, switches to close-range hand cannons, retreats using recoil, then deploys drones for follow-up suppression."
+                },
+                {
+                  "name": "Overload Rays",
+                  "description": "The Pseudo-Unwinged has drones form a power gate, then fires pulse beams from the arm cannon. Once the beams pass through the gate, they are amplified into Overload Rays."
+                },
+                {
+                  "name": "Roaming Blades",
+                  "description": "The Pseudo-Unwinged has drones merge into a shuriken, takes off, then dives down to slash at the target. After pulling back and sweeping across with a backhand strike, the Pseudo-Unwinged closes in again for continuous spinning slashes, then retreats and lands as the drones break apart and open fire on the target."
+                },
+                {
+                  "name": "Cyclone Uppercut",
+                  "description": "The Pseudo-Unwinged drifts left using wingsuit thrusters, performs a diagonal slash, then follows with an upward cut before stabilizing its frame."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 2028,
+          "name": "Skych",
+          "description": "Skych is a former butler of the Norman Mining Corp who was modified into an Experiment at the Konstantin Mine. Sometimes rational, sometimes crazy, Skych always defends the glory of the Norman Mining Corp.",
+          "icon": "image/uifubenbosssingle/bosssingletab41",
+          "stages": [
+            {
+              "id": 30303225,
+              "difficulty": "Knight",
+              "score": 84000,
+              "buffs": [
+                {
+                  "name": "Frail",
+                  "description": "Cannot resist physical impacts after the structure is weakened. Physical DMG received is increased significantly.",
+                  "icon": "image/uifubenbosssingle/bosssingleiconpowerwuli"
+                }
+              ],
+              "features": [],
+              "skills": [
+                {
+                  "name": "Charged Slash",
+                  "description": "Skych breaks the ground with the impact drill and leaps to sweep the drill and attack the enemy."
+                },
+                {
+                  "name": "Leap Bombardment",
+                  "description": "Skych breaks the ground with the impact drill and leaps behind the enemy to launch a powerful bombardment."
+                },
+                {
+                  "name": "Lava Bombardment",
+                  "description": "Skych fills his heavy artillery with the lava on the ground and bombards forward, dealing massive damage to nearby enemies."
+                },
+                {
+                  "name": "Shattering Slam",
+                  "description": "Skych stomps the ground to create shockwaves, dealing damage to enemies in front."
+                },
+                {
+                  "name": "Shattering Raid",
+                  "description": "Skych launches an assault at the enemy and then bombards the ground with his heavy artillery."
+                }
+              ]
+            },
+            {
+              "id": 30303226,
+              "difficulty": "Chaos",
+              "score": 168000,
+              "buffs": [
+                {
+                  "name": "Frail",
+                  "description": "Cannot resist physical impacts after the structure is weakened. Physical DMG received is increased significantly.",
+                  "icon": "image/uifubenbosssingle/bosssingleiconpowerwuli"
+                }
+              ],
+              "features": [],
+              "skills": [
+                {
+                  "name": "Charged Slash",
+                  "description": "Skych breaks the ground with the impact drill and leaps to sweep the drill and attack the enemy."
+                },
+                {
+                  "name": "Leap Bombardment",
+                  "description": "Skych breaks the ground with the impact drill and leaps behind the enemy to launch a powerful bombardment."
+                },
+                {
+                  "name": "Lava Bombardment",
+                  "description": "Skych fills his heavy artillery with the lava on the ground and bombards forward, dealing massive damage to nearby enemies."
+                },
+                {
+                  "name": "Shattering Slam",
+                  "description": "Skych stomps the ground to create shockwaves, dealing damage to enemies in front."
+                },
+                {
+                  "name": "Shattering Raid",
+                  "description": "Skych launches an assault at the enemy and then bombards the ground with his heavy artillery."
+                }
+              ]
+            },
+            {
+              "id": 30303227,
+              "difficulty": "Hell",
+              "score": 336000,
+              "buffs": [
+                {
+                  "name": "Frail",
+                  "description": "Cannot resist physical impacts after the structure is weakened. Physical DMG received is increased significantly.",
+                  "icon": "image/uifubenbosssingle/bosssingleiconpowerwuli"
+                }
+              ],
+              "features": [],
+              "skills": [
+                {
+                  "name": "Scorched Earth",
+                  "description": "Reshapes the battlefield, dealing continuous extra DMG to all enemies within it."
+                },
+                {
+                  "name": "Charged Slash",
+                  "description": "Skych breaks the ground with the impact drill and leaps to sweep the drill and attack the enemy."
+                },
+                {
+                  "name": "Leap Bombardment",
+                  "description": "Skych breaks the ground with the impact drill and leaps behind the enemy to launch a powerful bombardment."
+                },
+                {
+                  "name": "Lava Bombardment",
+                  "description": "Skych fills his heavy artillery with the lava on the ground and bombards forward, dealing massive damage to nearby enemies."
+                },
+                {
+                  "name": "Shattering Slam",
+                  "description": "Skych stomps the ground to create shockwaves, dealing damage to enemies in front."
+                },
+                {
+                  "name": "Shattering Raid",
+                  "description": "Skych launches an assault at the enemy and then bombards the ground with his heavy artillery."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 2041,
+          "name": "Melinoe",
+          "description": "A mechanoid doctor born to devour the poisons of the human heart. With silk and claw, she weaves deadly illusions in a hopeless offering to her lost love.",
+          "icon": "image/uifubenbosssingle/bosssingletab53",
+          "stages": [
+            {
+              "id": 30303270,
+              "difficulty": "Knight",
+              "score": 84000,
+              "buffs": [
+                {
+                  "name": "Corrosion",
+                  "description": "The internal structure has been corroded by excessively stored radiant energy. Dark DMG received is increased significantly.",
+                  "icon": "image/uifubenbosssingle/bosssingleiconpoweran"
+                }
+              ],
+              "features": [],
+              "skills": [
+                {
+                  "name": "Arachnid Leap",
+                  "description": "Melinoe leaps up and slams down, unleashing a spreading shockwave."
+                },
+                {
+                  "name": "Deadly Pierce",
+                  "description": "Melinoe raises her bone sword and thrusts it at the target."
+                },
+                {
+                  "name": "Web Ambush",
+                  "description": "Melinoe transforms spider silk into a slingshot and launches a charged projectile."
+                },
+                {
+                  "name": "Venom Waltz",
+                  "description": "Melinoe fires a strand of spider silk to hook her target, yanking herself into a ferocious spinning slash."
+                },
+                {
+                  "name": "Silken Cross",
+                  "description": "Melinoe swings her bone sword to perform a double slash."
+                },
+                {
+                  "name": "Briar Ward",
+                  "description": "With a horizontal sword sweep, Melinoe calls forth spikes from the earth that knock back nearby enemies."
+                },
+                {
+                  "name": "Thorned Judgment",
+                  "description": "Melinoe raises her bone sword high and brings it down in a cleaving arc."
+                }
+              ]
+            },
+            {
+              "id": 30303271,
+              "difficulty": "Chaos",
+              "score": 168000,
+              "buffs": [
+                {
+                  "name": "Corrosion",
+                  "description": "The internal structure has been corroded by excessively stored radiant energy. Dark DMG received is increased significantly.",
+                  "icon": "image/uifubenbosssingle/bosssingleiconpoweran"
+                }
+              ],
+              "features": [],
+              "skills": [
+                {
+                  "name": "Arachnid Leap",
+                  "description": "Melinoe leaps up and slams down, unleashing a spreading shockwave."
+                },
+                {
+                  "name": "Deadly Pierce",
+                  "description": "Melinoe raises her bone sword and thrusts it at the target."
+                },
+                {
+                  "name": "Web Ambush",
+                  "description": "Melinoe transforms spider silk into a slingshot and launches a charged projectile."
+                },
+                {
+                  "name": "Venom Waltz",
+                  "description": "Melinoe fires a strand of spider silk to hook her target, yanking herself into a ferocious spinning slash."
+                },
+                {
+                  "name": "Silken Cross",
+                  "description": "Melinoe swings her bone sword to perform a double slash."
+                },
+                {
+                  "name": "Briar Ward",
+                  "description": "With a horizontal sword sweep, Melinoe calls forth spikes from the earth that knock back nearby enemies."
+                },
+                {
+                  "name": "Thorned Judgment",
+                  "description": "Melinoe raises her bone sword high and brings it down in a cleaving arc."
+                }
+              ]
+            },
+            {
+              "id": 30303272,
+              "difficulty": "Hell",
+              "score": 336000,
+              "buffs": [
+                {
+                  "name": "Corrosion",
+                  "description": "The internal structure has been corroded by excessively stored radiant energy. Dark DMG received is increased significantly.",
+                  "icon": "image/uifubenbosssingle/bosssingleiconpoweran"
+                }
+              ],
+              "features": [],
+              "skills": [
+                {
+                  "name": "Scorched Earth",
+                  "description": "Reshapes the battlefield, dealing continuous extra DMG to all enemies within it."
+                },
+                {
+                  "name": "Arachnid Leap",
+                  "description": "Melinoe leaps up and slams down, unleashing a spreading shockwave."
+                },
+                {
+                  "name": "Deadly Pierce",
+                  "description": "Melinoe raises her bone sword and thrusts it at the target."
+                },
+                {
+                  "name": "Web Ambush",
+                  "description": "Melinoe transforms spider silk into a slingshot and launches a charged projectile."
+                },
+                {
+                  "name": "Venom Waltz",
+                  "description": "Melinoe fires a strand of spider silk to hook her target, yanking herself into a ferocious spinning slash."
+                },
+                {
+                  "name": "Silken Cross",
+                  "description": "Melinoe swings her bone sword to perform a double slash."
+                },
+                {
+                  "name": "Briar Ward",
+                  "description": "With a horizontal sword sweep, Melinoe calls forth spikes from the earth that knock back nearby enemies."
+                },
+                {
+                  "name": "Thorned Judgment",
+                  "description": "Melinoe raises her bone sword high and brings it down in a cleaving arc."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "activities": {
+      "min": 143,
+      "max": 264
+    },
+    "ranking": [
+      {
+        "rank": 1,
+        "player": {
+          "id": 11138352,
+          "name": "Tớ Bị Lép",
+          "portrait": "image/roleplayersp/roleplaysuper01",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 48,
+          "guildName": "Fanatics"
+        },
+        "score": 1892520
+      },
+      {
+        "rank": 2,
+        "player": {
+          "id": 25165442,
+          "name": "sol",
+          "portrait": "image/roleplayersp/roleheadr5luxiya8",
+          "frame": "image/roleplayersp/headframe36",
+          "guildId": 2,
+          "guildName": "永々 ❀ Void"
+        },
+        "score": 1891061
+      },
+      {
+        "rank": 3,
+        "player": {
+          "id": 12199689,
+          "name": "夜' VICTORIA",
+          "portrait": "image/roleplayersp/roleplayer01",
+          "frame": "image/roleplayersp/headframe36",
+          "guildId": 2013,
+          "guildName": "Karuhun 夜’"
+        },
+        "score": 1887298
+      },
+      {
+        "rank": 4,
+        "player": {
+          "id": 17172478,
+          "name": "夜’ Ryndette",
+          "portrait": "image/roleplayersp/roleheaddubiancharactertower1",
+          "frame": "",
+          "guildId": 2013,
+          "guildName": "Karuhun 夜’"
+        },
+        "score": 1887017
+      },
+      {
+        "rank": 5,
+        "player": {
+          "id": 22367575,
+          "name": "Kor",
+          "portrait": "image/roleplayersp/roleheadr5bianka6",
+          "frame": "image/roleplayersp/headframe35",
+          "guildId": 3379,
+          "guildName": "Hello, World"
+        },
+        "score": 1887005
+      },
+      {
+        "rank": 6,
+        "player": {
+          "id": 17756973,
+          "name": "Jin",
+          "portrait": "image/roleplayersp/roleheadr5sailinna7",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 24,
+          "guildName": "SE.RA.PH"
+        },
+        "score": 1884706
+      },
+      {
+        "rank": 7,
+        "player": {
+          "id": 18040680,
+          "name": "Lance",
+          "portrait": "image/roleplayersp/roleheadr3wanshi5",
+          "frame": "image/roleplayersp/headframe35",
+          "guildId": 48,
+          "guildName": "Fanatics"
+        },
+        "score": 1883556
+      },
+      {
+        "rank": 8,
+        "player": {
+          "id": 17858835,
+          "name": "Karmac",
+          "portrait": "image/roleplayersp/roleheadr3nietiya4",
+          "frame": "image/roleplayersp/headframe17",
+          "guildId": 79,
+          "guildName": "Mangetsu"
+        },
+        "score": 1882967
+      },
+      {
+        "rank": 9,
+        "player": {
+          "id": 19827421,
+          "name": "Fraux Thighs",
+          "portrait": "image/roleplayersp/roleheadtwob5",
+          "frame": "image/roleplayersp/headframe36",
+          "guildId": 48,
+          "guildName": "Fanatics"
+        },
+        "score": 1882090
+      },
+      {
+        "rank": 10,
+        "player": {
+          "id": 10563866,
+          "name": "Drakie",
+          "portrait": "image/roleplayersp/roleheadr5lifu6",
+          "frame": "image/roleplayersp/headframe36",
+          "guildId": 2,
+          "guildName": "永々 ❀ Void"
+        },
+        "score": 1881816
+      },
+      {
+        "rank": 11,
+        "player": {
+          "id": 16830697,
+          "name": "Commandant",
+          "portrait": "image/roleplayersp/roleplayer01",
+          "frame": "",
+          "guildId": 5,
+          "guildName": "Strike Hawk"
+        },
+        "score": 1881184
+      },
+      {
+        "rank": 12,
+        "player": {
+          "id": 17786117,
+          "name": "RyzerPhoenix",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe35",
+          "guildId": 48,
+          "guildName": "Fanatics"
+        },
+        "score": 1880941
+      },
+      {
+        "rank": 13,
+        "player": {
+          "id": 24276128,
+          "name": "Mei",
+          "portrait": "image/roleplayersp/roleheadweila5",
+          "frame": "",
+          "guildId": 79,
+          "guildName": "Mangetsu"
+        },
+        "score": 1880671
+      },
+      {
+        "rank": 14,
+        "player": {
+          "id": 18419701,
+          "name": "Alice",
+          "portrait": "image/roleplayersp/roleheadr5sailinna7",
+          "frame": "image/roleplayersp/headframe37",
+          "guildId": 2,
+          "guildName": "永々 ❀ Void"
+        },
+        "score": 1880658
+      },
+      {
+        "rank": 15,
+        "player": {
+          "id": 19955135,
+          "name": "Fuwa",
+          "portrait": "image/roleplayersp/roleheadr2xiezou4",
+          "frame": "image/roleplayersp/headframe8",
+          "guildId": 171,
+          "guildName": "LunarEclipse"
+        },
+        "score": 1880376
+      },
+      {
+        "rank": 16,
+        "player": {
+          "id": 19189438,
+          "name": "pdub",
+          "portrait": "image/roleplayersp/roleheadr5sailinna4",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 74,
+          "guildName": "Bluϟtorm"
+        },
+        "score": 1879808
+      },
+      {
+        "rank": 17,
+        "player": {
+          "id": 10709842,
+          "name": "Crëm Õ'range",
+          "portrait": "image/roleplayersp/roleplayer26",
+          "frame": "image/roleplayersp/headframe37",
+          "guildId": 48,
+          "guildName": "Fanatics"
+        },
+        "score": 1879496
+      },
+      {
+        "rank": 18,
+        "player": {
+          "id": 20983042,
+          "name": "D4RK_M4T3R",
+          "portrait": "image/roleplayersp/roleheadr4weila5",
+          "frame": "image/roleplayersp/headframe34",
+          "guildId": 6884,
+          "guildName": "Burdel de Illya"
+        },
+        "score": 1879222
+      },
+      {
+        "rank": 19,
+        "player": {
+          "id": 12678856,
+          "name": "taserhamg",
+          "portrait": "image/roleplayersp/roleheadr3cibeizhe7",
+          "frame": "image/roleplayersp/headframe34",
+          "guildId": 253,
+          "guildName": "PGR LATAM"
+        },
+        "score": 1878666
+      },
+      {
+        "rank": 20,
+        "player": {
+          "id": 17008084,
+          "name": "✯",
+          "portrait": "image/roleplayersp/roleheadr3weiluonika6",
+          "frame": "image/roleplayersp/headframe27",
+          "guildId": 401,
+          "guildName": "Avaritia"
+        },
+        "score": 1878342
+      },
+      {
+        "rank": 21,
+        "player": {
+          "id": 16235408,
+          "name": "Kutagaru",
+          "portrait": "image/roleplayersp/roleheadkuluomu7",
+          "frame": "image/roleplayersp/headframe27",
+          "guildId": 3631,
+          "guildName": "Kintsugi"
+        },
+        "score": 1877950
+      },
+      {
+        "rank": 22,
+        "player": {
+          "id": 18730452,
+          "name": "夜' Jingran",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "",
+          "guildId": 2013,
+          "guildName": "Karuhun 夜’"
+        },
+        "score": 1877491
+      },
+      {
+        "rank": 23,
+        "player": {
+          "id": 10266304,
+          "name": "n°5",
+          "portrait": "image/roleplayersp/roleheadr4luna5",
+          "frame": "image/roleplayersp/headframe35",
+          "guildId": 5323,
+          "guildName": "Deathwatch"
+        },
+        "score": 1877480
+      },
+      {
+        "rank": 24,
+        "player": {
+          "id": 13073359,
+          "name": "Panzermagier",
+          "portrait": "image/roleplayersp/roleheadr3cibeizhe5",
+          "frame": "image/roleplayersp/headframe31",
+          "guildId": 401,
+          "guildName": "Avaritia"
+        },
+        "score": 1875756
+      },
+      {
+        "rank": 25,
+        "player": {
+          "id": 19464072,
+          "name": "lIpsissimisl",
+          "portrait": "image/roleplayersp/roleheadr4weila5",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 401,
+          "guildName": "Avaritia"
+        },
+        "score": 1875756
+      },
+      {
+        "rank": 26,
+        "player": {
+          "id": 13049819,
+          "name": "Qit",
+          "portrait": "image/roleplayersp/roleheadr3lilith6",
+          "frame": "image/roleplayersp/headframe31",
+          "guildId": 296,
+          "guildName": "Realtua"
+        },
+        "score": 1875177
+      },
+      {
+        "rank": 27,
+        "player": {
+          "id": 12383549,
+          "name": "BurNing™",
+          "portrait": "image/roleplayersp/roleheadr3yalisha5",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 2096,
+          "guildName": "Iron Lane"
+        },
+        "score": 1874891
+      },
+      {
+        "rank": 28,
+        "player": {
+          "id": 21658178,
+          "name": "Skarbrand",
+          "portrait": "image/roleplayersp/roleheadr5lifu6",
+          "frame": "image/roleplayersp/headframe37",
+          "guildId": 5647,
+          "guildName": "Vlka Fenryka"
+        },
+        "score": 1874312
+      },
+      {
+        "rank": 29,
+        "player": {
+          "id": 13766990,
+          "name": "Buddy",
+          "portrait": "image/roleplayersp/roleheadr6luxiya6",
+          "frame": "image/roleplayersp/headframe32",
+          "guildId": 2,
+          "guildName": "永々 ❀ Void"
+        },
+        "score": 1874295
+      },
+      {
+        "rank": 30,
+        "player": {
+          "id": 15515405,
+          "name": "hexacypher",
+          "portrait": "image/roleplayersp/roleheadbianka5ss",
+          "frame": "image/roleplayersp/headframe30",
+          "guildId": 278,
+          "guildName": "Versace Virus"
+        },
+        "score": 1874024
+      },
+      {
+        "rank": 31,
+        "player": {
+          "id": 12884479,
+          "name": "Worry",
+          "portrait": "image/roleplayersp/roleheadr5bianka4",
+          "frame": "image/roleplayersp/headframe23",
+          "guildId": 48,
+          "guildName": "Fanatics"
+        },
+        "score": 1873813
+      },
+      {
+        "rank": 32,
+        "player": {
+          "id": 15747166,
+          "name": "Jericho",
+          "portrait": "image/roleplayersp/roleheadr7luxiya5",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 715,
+          "guildName": "Dreamwalkers"
+        },
+        "score": 1872350
+      },
+      {
+        "rank": 33,
+        "player": {
+          "id": 23386997,
+          "name": "夜’ Feldway",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 2013,
+          "guildName": "Karuhun 夜’"
+        },
+        "score": 1871775
+      },
+      {
+        "rank": 34,
+        "player": {
+          "id": 23005675,
+          "name": "Armarrash",
+          "portrait": "image/roleplayersp/roleheadr2danding4",
+          "frame": "image/roleplayersp/headframe32",
+          "guildId": 890,
+          "guildName": "Waifu Hunters"
+        },
+        "score": 1871173
+      },
+      {
+        "rank": 35,
+        "player": {
+          "id": 19063359,
+          "name": "Vera's Dog",
+          "portrait": "image/roleplayersp/roleheadveracharactertower6",
+          "frame": "image/roleplayersp/headframe30",
+          "guildId": 43,
+          "guildName": "Cerberus"
+        },
+        "score": 1871033
+      },
+      {
+        "rank": 36,
+        "player": {
+          "id": 13132716,
+          "name": "۝ อาริกาโตะ",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe30",
+          "guildId": 715,
+          "guildName": "Dreamwalkers"
+        },
+        "score": 1870937
+      },
+      {
+        "rank": 37,
+        "player": {
+          "id": 18849320,
+          "name": "R3",
+          "portrait": "image/roleplayersp/roleheadr5sailinna7",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 65,
+          "guildName": "Lee's T. Support"
+        },
+        "score": 1870636
+      },
+      {
+        "rank": 38,
+        "player": {
+          "id": 17980175,
+          "name": "isseitajima",
+          "portrait": "image/roleplayersp/roleheadr7luxiya4",
+          "frame": "image/roleplayersp/headframe35",
+          "guildId": 429,
+          "guildName": "Manga"
+        },
+        "score": 1870590
+      },
+      {
+        "rank": 39,
+        "player": {
+          "id": 16695616,
+          "name": "SnNinja",
+          "portrait": "image/roleplayersp/roleheadr3helentine5",
+          "frame": "image/roleplayersp/headframe34",
+          "guildId": 48,
+          "guildName": "Fanatics"
+        },
+        "score": 1870582
+      },
+      {
+        "rank": 40,
+        "player": {
+          "id": 14862885,
+          "name": "夜' JINRANG",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 2013,
+          "guildName": "Karuhun 夜’"
+        },
+        "score": 1870318
+      },
+      {
+        "rank": 41,
+        "player": {
+          "id": 28442222,
+          "name": "Tdigerr",
+          "portrait": "image/roleplayersp/roleheadr4li4",
+          "frame": "image/roleplayersp/headframe31",
+          "guildId": 191,
+          "guildName": "Heaven and Hell"
+        },
+        "score": 1868650
+      },
+      {
+        "rank": 42,
+        "player": {
+          "id": 17298015,
+          "name": "no name",
+          "portrait": "image/roleplayersp/roleheadr5sailinna5",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 1063,
+          "guildName": "Kronos"
+        },
+        "score": 1868649
+      },
+      {
+        "rank": 43,
+        "player": {
+          "id": 12410470,
+          "name": "Rochwelt",
+          "portrait": "image/roleplayersp/roleheadr4luosaita4",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 1645,
+          "guildName": "The Chair"
+        },
+        "score": 1867130
+      },
+      {
+        "rank": 44,
+        "player": {
+          "id": 12034155,
+          "name": "Kyla",
+          "portrait": "image/roleplayersp/roleheadveracharactertower6",
+          "frame": "image/roleplayersp/headframe36",
+          "guildId": 99,
+          "guildName": "Frieren"
+        },
+        "score": 1866749
+      },
+      {
+        "rank": 45,
+        "player": {
+          "id": 15365818,
+          "name": "NIGHMARE",
+          "portrait": "image/roleplayersp/roleplayer24",
+          "frame": "image/roleplayersp/headframe34",
+          "guildId": 2541,
+          "guildName": "Thief Corner"
+        },
+        "score": 1866427
+      },
+      {
+        "rank": 46,
+        "player": {
+          "id": 17035367,
+          "name": "零 Z e k t",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe23",
+          "guildId": 290,
+          "guildName": "TEAMPODEROSA"
+        },
+        "score": 1866385
+      },
+      {
+        "rank": 47,
+        "player": {
+          "id": 19830070,
+          "name": "Kalvinist",
+          "portrait": "image/roleplayersp/roleheadr3helentine5",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 296,
+          "guildName": "Realtua"
+        },
+        "score": 1865493
+      },
+      {
+        "rank": 48,
+        "player": {
+          "id": 18548416,
+          "name": "Twunkeezz",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe23",
+          "guildId": 618,
+          "guildName": "Lost"
+        },
+        "score": 1865405
+      },
+      {
+        "rank": 49,
+        "player": {
+          "id": 28761007,
+          "name": "AlphaOmega",
+          "portrait": "image/roleplayersp/roleheadr5bianka6",
+          "frame": "image/roleplayersp/headframe35",
+          "guildId": 97,
+          "guildName": "Deity"
+        },
+        "score": 1864920
+      },
+      {
+        "rank": 50,
+        "player": {
+          "id": 10252945,
+          "name": "Dark Templar",
+          "portrait": "image/roleplayersp/roleheadr4kalienina7",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 84,
+          "guildName": "Nerazim"
+        },
+        "score": 1864842
+      },
+      {
+        "rank": 51,
+        "player": {
+          "id": 18848370,
+          "name": " Cailem",
+          "portrait": "image/roleplayersp/roleheadr2weijier4",
+          "frame": "image/roleplayersp/headframe27",
+          "guildId": 1264,
+          "guildName": "Librom"
+        },
+        "score": 1864130
+      },
+      {
+        "rank": 52,
+        "player": {
+          "id": 10953014,
+          "name": "私の名前はIKIです",
+          "portrait": "image/roleplayersp/roleheadr3cibeizhe5",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 4856,
+          "guildName": "Noble Bloodline"
+        },
+        "score": 1863519
+      },
+      {
+        "rank": 53,
+        "player": {
+          "id": 18240794,
+          "name": "Johnsten",
+          "portrait": "image/roleplayersp/roleheadr3wanshi4",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 524,
+          "guildName": "Reapers"
+        },
+        "score": 1863220
+      },
+      {
+        "rank": 54,
+        "player": {
+          "id": 23135192,
+          "name": "twinforte",
+          "portrait": "image/roleplayersp/roleheadveracharactertower6",
+          "frame": "image/roleplayersp/headframe23",
+          "guildId": 57,
+          "guildName": "Hololive"
+        },
+        "score": 1862625
+      },
+      {
+        "rank": 55,
+        "player": {
+          "id": 15228133,
+          "name": "BAK-BAC",
+          "portrait": "image/roleplayersp/roleheadr3bianka9ss",
+          "frame": "image/roleplayersp/headframe35",
+          "guildId": 74,
+          "guildName": "Bluϟtorm"
+        },
+        "score": 1862402
+      },
+      {
+        "rank": 56,
+        "player": {
+          "id": 18226534,
+          "name": "J",
+          "portrait": "image/roleplayersp/roleheadr3nietiya4",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 108,
+          "guildName": "Nemesis"
+        },
+        "score": 1862205
+      },
+      {
+        "rank": 57,
+        "player": {
+          "id": 13737205,
+          "name": "Chungus",
+          "portrait": "image/roleplayersp/roleheadr5lifu6",
+          "frame": "image/roleplayersp/headframe32",
+          "guildId": 4183,
+          "guildName": "Waifu Enjoyers"
+        },
+        "score": 1861458
+      },
+      {
+        "rank": 58,
+        "player": {
+          "id": 11378000,
+          "name": "Drachenstein",
+          "portrait": "image/roleplayersp/roleheadr5sailinna4",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 97,
+          "guildName": "Deity"
+        },
+        "score": 1861454
+      },
+      {
+        "rank": 59,
+        "player": {
+          "id": 21790518,
+          "name": "rake.sky",
+          "portrait": "image/roleplayersp/roleheadr5bianka4",
+          "frame": "image/roleplayersp/headframe31",
+          "guildId": 100,
+          "guildName": "Chapter One"
+        },
+        "score": 1860832
+      },
+      {
+        "rank": 60,
+        "player": {
+          "id": 15117790,
+          "name": "Reina",
+          "portrait": "image/roleplayersp/roleheadr3qu5",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 23,
+          "guildName": "Cult of Turu"
+        },
+        "score": 1860720
+      },
+      {
+        "rank": 61,
+        "player": {
+          "id": 20890318,
+          "name": "夜’ Kyouka",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 2013,
+          "guildName": "Karuhun 夜’"
+        },
+        "score": 1860661
+      },
+      {
+        "rank": 62,
+        "player": {
+          "id": 22289310,
+          "name": "Darklos",
+          "portrait": "image/roleplayersp/roleheadr7luxiya4",
+          "frame": "image/roleplayersp/headframe34",
+          "guildId": 4237,
+          "guildName": "Carnifex"
+        },
+        "score": 1860440
+      },
+      {
+        "rank": 63,
+        "player": {
+          "id": 29447399,
+          "name": "Menma",
+          "portrait": "image/roleplayersp/roleheadchangyu5",
+          "frame": "image/roleplayersp/headframe34",
+          "guildId": 1434,
+          "guildName": "Lost Guardians"
+        },
+        "score": 1860427
+      },
+      {
+        "rank": 64,
+        "player": {
+          "id": 11007059,
+          "name": "Ausbruk",
+          "portrait": "image/roleplayersp/roleheadr5sailinna7",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 47,
+          "guildName": "GachaLabs"
+        },
+        "score": 1860221
+      },
+      {
+        "rank": 65,
+        "player": {
+          "id": 25355118,
+          "name": "Kynee",
+          "portrait": "image/roleplayersp/roleheadr3cibeizhe5",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 84,
+          "guildName": "Nerazim"
+        },
+        "score": 1859774
+      },
+      {
+        "rank": 66,
+        "player": {
+          "id": 19667264,
+          "name": "Tenko",
+          "portrait": "image/roleplayersp/roleheadr5sailinna7",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 429,
+          "guildName": "Manga"
+        },
+        "score": 1859538
+      },
+      {
+        "rank": 67,
+        "player": {
+          "id": 14013287,
+          "name": "Winston",
+          "portrait": "image/roleplayersp/roleheadr4weila6",
+          "frame": "image/roleplayersp/headframe32",
+          "guildId": 24,
+          "guildName": "SE.RA.PH"
+        },
+        "score": 1859384
+      },
+      {
+        "rank": 68,
+        "player": {
+          "id": 18569216,
+          "name": "TerraCoeur",
+          "portrait": "image/roleplayersp/theatre3rolehead",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 4136,
+          "guildName": "OMINOUS 白虎"
+        },
+        "score": 1858658
+      },
+      {
+        "rank": 69,
+        "player": {
+          "id": 18205779,
+          "name": "常闇トワ",
+          "portrait": "image/roleplayersp/roleheadr2buouxiong4",
+          "frame": "image/roleplayersp/headframe31",
+          "guildId": 325,
+          "guildName": "Fraternity"
+        },
+        "score": 1858095
+      },
+      {
+        "rank": 70,
+        "player": {
+          "id": 23810624,
+          "name": "Puffin",
+          "portrait": "image/roleplayersp/roleheadr5sailinna7",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 86,
+          "guildName": "Takodachi Cult"
+        },
+        "score": 1857888
+      },
+      {
+        "rank": 71,
+        "player": {
+          "id": 14166318,
+          "name": "ʀᴏʙɪɴᴍᴇɴᴅᴏᴢᴀ",
+          "portrait": "image/roleplayersp/roleheadbianka5ss",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 6258,
+          "guildName": "MIGAJAS FARMING"
+        },
+        "score": 1857758
+      },
+      {
+        "rank": 72,
+        "player": {
+          "id": 11153078,
+          "name": "The Lost",
+          "portrait": "image/roleplayersp/roleplayer25",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 229,
+          "guildName": "Ascendants Rise"
+        },
+        "score": 1857674
+      },
+      {
+        "rank": 73,
+        "player": {
+          "id": 10134502,
+          "name": "NovianEpic",
+          "portrait": "image/roleplayersp/roleheadr6luxiya6",
+          "frame": "image/roleplayersp/headframe32",
+          "guildId": 4786,
+          "guildName": "Mercy"
+        },
+        "score": 1857317
+      },
+      {
+        "rank": 74,
+        "player": {
+          "id": 21178381,
+          "name": "DeadDog",
+          "portrait": "image/roleplayersp/roleheadr6luxiya4",
+          "frame": "image/roleplayersp/headframe30",
+          "guildId": 4308,
+          "guildName": "Tri-ni-sette"
+        },
+        "score": 1857268
+      },
+      {
+        "rank": 75,
+        "player": {
+          "id": 16860093,
+          "name": "TheLastSaku",
+          "portrait": "image/roleplayersp/roleheadluxiya5s",
+          "frame": "image/roleplayersp/headframe36",
+          "guildId": 177,
+          "guildName": "Originalz"
+        },
+        "score": 1856829
+      },
+      {
+        "rank": 76,
+        "player": {
+          "id": 26297242,
+          "name": "NEKO#ΦωΦ",
+          "portrait": "image/roleplayersp/roleheadr5lifu6",
+          "frame": "image/roleplayersp/headframe37",
+          "guildId": 3543,
+          "guildName": "☾Lunar Enclave☾"
+        },
+        "score": 1856561
+      },
+      {
+        "rank": 77,
+        "player": {
+          "id": 19519554,
+          "name": "Yuaka",
+          "portrait": "image/roleplayersp/roleplayer04",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 377,
+          "guildName": "TheGoldenOrder"
+        },
+        "score": 1856481
+      },
+      {
+        "rank": 78,
+        "player": {
+          "id": 11337920,
+          "name": "GSDKyle",
+          "portrait": "image/roleplayersp/roleheadr2blackrock4",
+          "frame": "image/roleplayersp/headframe31",
+          "guildId": 2741,
+          "guildName": "Ｋ.６２６"
+        },
+        "score": 1856247
+      },
+      {
+        "rank": 79,
+        "player": {
+          "id": 17406171,
+          "name": "bokchoylau",
+          "portrait": "image/roleplayersp/roleheadr7luxiya5",
+          "frame": "image/roleplayersp/headframe31",
+          "guildId": 84,
+          "guildName": "Nerazim"
+        },
+        "score": 1856165
+      },
+      {
+        "rank": 80,
+        "player": {
+          "id": 18208367,
+          "name": "Krim✶",
+          "portrait": "image/roleplayersp/roleheadr3yalisha7",
+          "frame": "image/roleplayersp/headframe37",
+          "guildId": 2,
+          "guildName": "永々 ❀ Void"
+        },
+        "score": 1856028
+      },
+      {
+        "rank": 81,
+        "player": {
+          "id": 14732984,
+          "name": "RUST",
+          "portrait": "image/roleplayersp/roleheadaolisuo5",
+          "frame": "",
+          "guildId": 624,
+          "guildName": "Ahjin Automata"
+        },
+        "score": 1856007
+      },
+      {
+        "rank": 82,
+        "player": {
+          "id": 18573717,
+          "name": "BD",
+          "portrait": "image/roleplayersp/roleheadr5sailinna6",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 701,
+          "guildName": "J_nort"
+        },
+        "score": 1855721
+      },
+      {
+        "rank": 83,
+        "player": {
+          "id": 29998161,
+          "name": "Mazikeen",
+          "portrait": "image/roleplayersp/roleheadr7luxiya5",
+          "frame": "image/roleplayersp/headframe31",
+          "guildId": 3543,
+          "guildName": "☾Lunar Enclave☾"
+        },
+        "score": 1855700
+      },
+      {
+        "rank": 84,
+        "player": {
+          "id": 13747857,
+          "name": "Samsa",
+          "portrait": "image/roleplayersp/roleheadveracharactertower6",
+          "frame": "image/roleplayersp/headframe23",
+          "guildId": 627,
+          "guildName": "Abstergo"
+        },
+        "score": 1855610
+      },
+      {
+        "rank": 85,
+        "player": {
+          "id": 16663995,
+          "name": "bimo",
+          "portrait": "image/roleplayersp/roleheadr5sailinna6",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 5,
+          "guildName": "Strike Hawk"
+        },
+        "score": 1855502
+      },
+      {
+        "rank": 86,
+        "player": {
+          "id": 15710769,
+          "name": "Jefe",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe26",
+          "guildId": 3543,
+          "guildName": "☾Lunar Enclave☾"
+        },
+        "score": 1855314
+      },
+      {
+        "rank": 87,
+        "player": {
+          "id": 19490011,
+          "name": "Caperna",
+          "portrait": "image/roleplayersp/roleheadr4luosaita4",
+          "frame": "image/roleplayersp/headframe23",
+          "guildId": 401,
+          "guildName": "Avaritia"
+        },
+        "score": 1854526
+      },
+      {
+        "rank": 88,
+        "player": {
+          "id": 29675131,
+          "name": "DIKZ",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 958,
+          "guildName": "Simping Club"
+        },
+        "score": 1853697
+      },
+      {
+        "rank": 89,
+        "player": {
+          "id": 15503618,
+          "name": "Haidh58",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe26",
+          "guildId": 230,
+          "guildName": "GodsOfTheAbyss"
+        },
+        "score": 1853237
+      },
+      {
+        "rank": 90,
+        "player": {
+          "id": 17384193,
+          "name": "Kaine",
+          "portrait": "image/roleplayersp/roleheadr7luxiya5",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 108,
+          "guildName": "Nemesis"
+        },
+        "score": 1853116
+      },
+      {
+        "rank": 91,
+        "player": {
+          "id": 28857354,
+          "name": "Satoru",
+          "portrait": "image/roleplayersp/roleheadr5sailinna4",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 4914,
+          "guildName": "Hourai EXE"
+        },
+        "score": 1852885
+      },
+      {
+        "rank": 92,
+        "player": {
+          "id": 23972754,
+          "name": "夜` yachio",
+          "portrait": "image/roleplayersp/roleheadr3buouxiong4",
+          "frame": "image/roleplayersp/headframe23",
+          "guildId": 2013,
+          "guildName": "Karuhun 夜’"
+        },
+        "score": 1852785
+      },
+      {
+        "rank": 93,
+        "player": {
+          "id": 23873688,
+          "name": "Avoshu",
+          "portrait": "image/roleplayersp/roleheadr3helentine4",
+          "frame": "image/roleplayersp/headframe23",
+          "guildId": 4544,
+          "guildName": "Dragon Hall"
+        },
+        "score": 1852583
+      },
+      {
+        "rank": 94,
+        "player": {
+          "id": 11985529,
+          "name": "Holo",
+          "portrait": "image/roleplayersp/roleheadr5sailinna6",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 21,
+          "guildName": "「 Home 」"
+        },
+        "score": 1852551
+      },
+      {
+        "rank": 95,
+        "player": {
+          "id": 11175186,
+          "name": "Ketsumi",
+          "portrait": "image/roleplayersp/roleheadr4kalienina7",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 154,
+          "guildName": "FO141"
+        },
+        "score": 1852479
+      },
+      {
+        "rank": 96,
+        "player": {
+          "id": 16278928,
+          "name": "SephieX",
+          "portrait": "image/roleplayersp/roleheadr2jietawei4",
+          "frame": "image/roleplayersp/headframe33",
+          "guildId": 1063,
+          "guildName": "Kronos"
+        },
+        "score": 1852155
+      },
+      {
+        "rank": 97,
+        "player": {
+          "id": 19707873,
+          "name": "愛染",
+          "portrait": "image/roleplayersp/roleheadr5sailinna6",
+          "frame": "image/roleplayersp/headframe28",
+          "guildId": 4911,
+          "guildName": "Scorpion"
+        },
+        "score": 1852098
+      },
+      {
+        "rank": 98,
+        "player": {
+          "id": 10842303,
+          "name": "13erZerker",
+          "portrait": "image/roleplayersp/roleheadr5sailinna4",
+          "frame": "image/roleplayersp/headframe24",
+          "guildId": 610,
+          "guildName": "Tentacult Temple"
+        },
+        "score": 1851341
+      },
+      {
+        "rank": 99,
+        "player": {
+          "id": 11869773,
+          "name": "Carrier Six",
+          "portrait": "image/roleplayersp/roleheadr7luxiya4",
+          "frame": "image/roleplayersp/headframe31",
+          "guildId": 89,
+          "guildName": "Rhodes Island"
+        },
+        "score": 1851146
+      },
+      {
+        "rank": 100,
+        "player": {
+          "id": 10483613,
+          "name": "MD1529ri",
+          "portrait": "image/roleplayersp/roleheadr4li5",
+          "frame": "image/roleplayersp/headframe23",
+          "guildId": 35,
+          "guildName": "Visionary Core"
+        },
+        "score": 1850677
+      }
+    ]
+  }
+}

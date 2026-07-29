@@ -1,0 +1,454 @@
+{
+  "status": "success",
+  "data": {
+    "character": {
+      "id": 1341002,
+      "slug": "daybreak",
+      "characterName": "Jetavie",
+      "frameName": "Daybreak",
+      "frameType": "omniframe",
+      "frameCode": "MAV-01",
+      "frameGender": 1,
+      "priority": 2460,
+      "intro": "Say goodbye to the warm cradle and confront the painful awakening—she has traversed infinite loops to enter the real world with the full might of the matrix.",
+      "image": "image/rolestory/v3300jtwnormal02",
+      "icons": {
+        "normal": "image/rolecharacter/roleheadr2jietawei1",
+        "ultima": "image/rolecharacter/roleheadr2jietawei3",
+        "round": "image/icontools/roleheadr2jietawei2"
+      },
+      "class": "Attacker",
+      "classIcon": "image/icontype/iconcharacter3",
+      "element": "dark",
+      "elements": [
+        {
+          "element": "dark",
+          "percentage": 100
+        }
+      ],
+      "quality": 6,
+      "affix": {
+        "id": 2,
+        "name": "Ignition",
+        "description": "The frame's condensed nitrogen has been replaced with a newly created chemical material with an optimized ignition process, making it easier to set the target on fire and deal damage to it over time through attacks.",
+        "icon": "image/icontype/icontypeburnskill01b"
+      },
+      "specialties": [
+        {
+          "name": "Burst",
+          "description": "Deals massive DMG in a short time."
+        },
+        {
+          "name": "Ignition",
+          "description": "Launches the enemy into the Combustible status and Ignites them."
+        }
+      ],
+      "association": {
+        "name": "Unknown",
+        "icon": "image/uicharacterexhibitionimage/uicharacterexhibitionimageteamicon005"
+      },
+      "associations": [
+        {
+          "name": "Unknown",
+          "icon": "image/uicharacterexhibitionimage/uicharacterexhibitionimageteamicon005"
+        }
+      ],
+      "weaponGroup": {
+        "id": 53,
+        "name": "Fusion Gunsword",
+        "icon": "image/iconskill/r2jetaviepugong1"
+      },
+      "bp": 4742.2748,
+      "level": 80,
+      "stars": 0,
+      "gradeName": "Hero",
+      "gradeIcon": "image/iconrolequlity/charactericonyingxiong",
+      "trustLevel": 1,
+      "awakeningLevel": 3
+    },
+    "fashion": {
+      "skin": "Generic",
+      "iconHead": "image/rolecharacter/roleheadr2jietawei1",
+      "iconWeapon": ""
+    },
+    "skills": [
+      {
+        "id": 132201,
+        "level": {
+          "total": 19,
+          "base": 18,
+          "memory": 0,
+          "borderPact": 1,
+          "harmonization": 0
+        },
+        "name": "Vorpal Hellblade",
+        "icon": "image/iconskill/r2jetaviehong1",
+        "type": 1,
+        "descriptions": [
+          {
+            "title": "Shadow Slash: <color=#0d70bc>Tap Red Orb</color>",
+            "description": "Hurls the gunsword toward the target, dealing Dark DMG.\\n- Deals <color=#D91414>46.32%</color>/<color=#D91414>92.65%</color> Dark DMG based on the number of orbs pinged."
+          },
+          {
+            "title": "Spin Cleave: <color=#0d70bc>At least 1 Cluster Orb + During Shadow Slash + Tap Red Orb</color>",
+            "description": "Spins around and swings the gunsword at the target, dealing Dark DMG.\\n- For every Cluster Orb pinged, casts this skill again to deal <color=#D91414>51.47%</color> Dark DMG."
+          },
+          {
+            "title": "Kinetic Load: <color=#0d70bc>Press and hold Red Orb to charge + Absurdum Points fully charged</color>",
+            "description": "Enters <color=#D91414>Charge Stance</color>, then unleashes a sword strike upon release, dealing Dark DMG.\\n- Deals <color=#D91414>257.35%</color>/<color=#D91414>514.71%</color>/<color=#D91414>772.06%</color>/<color=#D91414>1029.41%</color> Dark DMG and recovers <color=#D91414>2/3/4/5</color> Signature Energy after pinging <color=#D91414>0/1/2/3</color> orbs."
+          },
+          {
+            "title": "Kindled Blaze: <color=#0d70bc>Press and hold Red Orb to charge + Absurdum Points partially charged</color>",
+            "description": "Enters <color=#D91414>Charge Stance</color>, then unleashes a sword strike upon release, dealing Ignition DMG and applying Combustible Charges.\\n- Deals <color=#D91414>257.35%</color>/<color=#D91414>514.71%</color>/<color=#D91414>772.06%</color>/<color=#D91414>1029.41%</color> Ignition DMG, applies <color=#D91414>1250</color> Combustible Charges, and restores <color=#D91414>2/3/4/5</color> Signature Energy after pinging <color=#D91414>0/1/2/3</color> orbs. When <color=#D91414>Absurdum Points</color> are not fully charged, Jetavie continuously gains <color=#D91414>Super Armor</color>."
+          }
+        ]
+      },
+      {
+        "id": 132206,
+        "level": {
+          "total": 19,
+          "base": 18,
+          "memory": 0,
+          "borderPact": 1,
+          "harmonization": 0
+        },
+        "name": "Orbital Barrage",
+        "icon": "image/iconskill/r2jetaviehuang1",
+        "type": 2,
+        "descriptions": [
+          {
+            "title": "Flare Shot: <color=#0d70bc>Tap Yellow Orb</color>",
+            "description": "Leaps backward to spray a barrage of bullets, dealing Dark DMG.\\n- Deals <color=#D91414>123.53%</color>/<color=#D91414>247.06%</color> Dark DMG based on the number of orbs pinged."
+          },
+          {
+            "title": "Sniper's Perch: <color=#0d70bc>Press and hold Yellow Orb to charge</color>",
+            "description": "Leaps backward to enter <color=#D91414>Charge Stance</color>, then fires a shot upon release, dealing Dark DMG.\\n- Deals <color=#D91414>226.47%</color>/<color=#D91414>452.94%</color>/<color=#D91414>555.88%</color>/<color=#D91414>658.82%</color> Dark DMG and recovers <color=#D91414>2/3/4/5</color> Signature Energy after pinging <color=#D91414>0/1/2/3</color> orbs."
+          }
+        ]
+      },
+      {
+        "id": 132211,
+        "level": {
+          "total": 19,
+          "base": 18,
+          "memory": 0,
+          "borderPact": 1,
+          "harmonization": 0
+        },
+        "name": "Ferrous Scarring",
+        "icon": "image/iconskill/r2jetavielan1",
+        "type": 3,
+        "descriptions": [
+          {
+            "title": "Shaded Radiance: <color=#0d70bc>Tap Blue Orb</color>",
+            "description": "Flicks the gunsword upward, firing at the target and dealing Dark DMG.\\n- Deals <color=#D91414>46.32%</color>/<color=#D91414>92.65%</color> Dark DMG based on the number of orbs pinged."
+          },
+          {
+            "title": "Sundered Pith: <color=#0d70bc>Press and hold Blue Orb to charge</color>",
+            "description": "Enters <color=#D91414>Charge Stance</color> while wielding the gunsword to fire continuously, then steps back upon release to deal Dark DMG.\\n- Each burst of shots deals <color=#D91414>30.88%</color> Dark DMG.\\n- Stepping back deals <color=#D91414>102.94%</color>/<color=#D91414>205.88%</color>/<color=#D91414>308.82%</color>/<color=#D91414>411.76%</color> Dark DMG and recovers <color=#D91414>2/3/4/5</color> Signature Energy after pinging <color=#D91414>0/1/2/3</color> orbs."
+          }
+        ]
+      },
+      {
+        "id": 132216,
+        "level": {
+          "total": 19,
+          "base": 18,
+          "memory": 0,
+          "borderPact": 1,
+          "harmonization": 0
+        },
+        "name": "Algorithm Decomposition",
+        "icon": "image/iconskill/r2jetaviepugong1",
+        "type": 4,
+        "descriptions": [
+          {
+            "title": "Iteration: <color=#0d70bc>Tap Basic Attack</color>",
+            "description": "Fires at the target while performing combat maneuvers, dealing Dark DMG.\\n- Basic Attack deals a total of <color=#D91414>350%</color> Dark DMG."
+          },
+          {
+            "title": "Continuation: <color=#0d70bc>Press and hold Basic Attack to charge</color>",
+            "description": "Enters <color=#D91414>Charge Stance</color> while wielding the gunsword to fire continuously at the target, dealing Dark DMG.\\n- Each burst of shots deals <color=#D91414>30.88%</color> Dark DMG."
+          }
+        ]
+      },
+      {
+        "id": 132217,
+        "level": {
+          "total": 19,
+          "base": 18,
+          "memory": 0,
+          "borderPact": 1,
+          "harmonization": 0
+        },
+        "name": "Absolute Deduction",
+        "icon": "image/iconskill/r2jetaviedazhao1",
+        "type": 5,
+        "descriptions": [
+          {
+            "title": "Constant Current: <color=#0d70bc>100 Signature Energy + Tap Signature</color>",
+            "description": "Jetavie enters the <color=#D91414>Panoptic Segmentation</color> Mode, dealing Dark DMG to nearby targets in a large area and summoning a great sword to assist in the attack.\\n- <color=#D91414>Constant Current</color> deals <color=#D91414>1338.24%</color> Dark DMG in total."
+          },
+          {
+            "title": "Tectonic Revolt: <color=#0d70bc>In Panoptic Segmentation + 100 Signature Energy + Tap Signature</color>",
+            "description": "Jetavie leaps into the air and plunges down to strike the target on the ground, dealing damage before exiting the <color=#D91414>Panoptic Segmentation</color> Mode.\\n- Deals <color=#D91414>3088.24%</color> Dark DMG in total.\\n- If Jetavie has <color=#D91414>Coreflame Mark</color>, casts <color=#D91414>Tectonic Revolt: Burn</color> instead, dealing <color=#D91414>2264.71%</color> Ignition DMG, removing the target's Ignition status, and inflicting additional Ignition DMG equal to <color=#D91414>Ignition stacks x<color=#D91414>102.94%</color></color>."
+          }
+        ]
+      },
+      {
+        "id": 132218,
+        "level": {
+          "total": 19,
+          "base": 18,
+          "memory": 0,
+          "borderPact": 1,
+          "harmonization": 0
+        },
+        "name": "Phantom Grid",
+        "icon": "image/iconskill/qte1",
+        "type": 6,
+        "descriptions": [
+          {
+            "title": "QTE: <color=#0d70bc>Tap QTE</color>",
+            "description": "Flicks the gunsword upward, firing at the target and dealing Dark DMG.\\n- Deals <color=#D91414>679.41%</color> Dark DMG in total."
+          }
+        ]
+      },
+      {
+        "id": 132221,
+        "level": {
+          "total": 19,
+          "base": 18,
+          "memory": 0,
+          "borderPact": 1,
+          "harmonization": 0
+        },
+        "name": "Magic Maiden's Strike",
+        "icon": "image/iconskill/r2jetaviehexin1",
+        "type": 7,
+        "descriptions": [
+          {
+            "title": "Cluster Analysis",
+            "description": "Signal Orbs gained are converted into <color=#D91414>Cluster Orbs</color>. When not in the <color=#D91414>Panoptic Segmentation</color> Mode, Jetavie can only cast Yellow or Blue Orb Skills. After she enters <color=#D91414>Panoptic Segmentation</color>, Red Orb Skills will be available. When entering <color=#D91414>Charge Stance</color> by pinging Signal Orbs, continuously restores Signature Energy, up to <color=#D91414>40</color>. Pinging <color=#D91414>Cluster Orbs</color> enhances the corresponding Charged Skill, up to <color=#D91414>3</color> times. When Extreme Dodge is triggered by pressing Dodge, gains <color=#D91414>30</color> Load Points instead of entering Matrix. When Dodge Gauge is empty, she can consume <color=#D91414>10</color> Load Points to perform a Dodge."
+          },
+          {
+            "title": "Reflection Chain: <color=#0d70bc>During Kinetic Load enhanced by Cluster Orbs + Press and hold/Tap Basic Attack</color>",
+            "description": "Dashes toward the target and delivers a slashing attack, dealing Dark DMG while restoring <color=#D91414>80</color> Signature Energy.\\n- Deals <color=#D91414>1852.94%</color> Dark DMG in total."
+          },
+          {
+            "title": "Flaming Gush: <color=#0d70bc>During Kindled Blaze enhanced by Cluster Orbs + Press and hold/Tap Basic Attack</color>",
+            "description": "Leaps down from above to slash the target, converting Combustible into Ignition of equal stacks, dealing Ignition DMG and restoring <color=#D91414>80</color> Signature Energy.\\n- Deals <color=#D91414>2573.53%</color> Ignition DMG in total. Jetavie gains <color=#D91414>Coreflame Mark</color> for <color=#D91414>10</color>s. Duration resets every time it is triggered."
+          },
+          {
+            "title": "Forbidden Borders: <color=#0d70bc>Charge Stance + Release + Successful Dodge</color>",
+            "description": "While in Charge Stance, Jetavie can dodge attacks upon release. A successful dodge increases Extra DMG Bonus of the Charged Skill by <color=#D91414>30%</color>. During <color=#D91414>Kinetic Load</color> or <color=#D91414>Kindled Blaze</color>, a successful dodge additionally returns <color=#D91414>2</color> Cluster Orbs."
+          },
+          {
+            "title": "Sector Reconfiguration",
+            "description": "While in Charge Stance, consumes <color=#D91414>250</color> Dodge Gauge to block each incoming attack. If Dodge Gauge is insufficient, consumes <color=#D91414>10 Load Points</color> per block instead."
+          },
+          {
+            "title": "Overflux Surge: <color=#0d70bc>During sword attacks + Tap Basic Attack repetitively</color>",
+            "description": "Wields the greatsword to continuously attack the target, dealing Dark DMG.\\n- Basic Attack deals a total of <color=#D91414>452.94%</color> Dark DMG."
+          },
+          {
+            "title": "Diffusive Function: <color=#0d70bc>During sword attacks + Dodge + Tap/Press and hold Basic Attack</color>",
+            "description": "During sword attacks, quickly transitions into casting <color=#D91414>Crystalline Impact</color> on the target, dealing Ignition DMG and applying Combustible Charges.\\n- By tapping Dodge, deals <color=#D91414>308.82%</color> Ignition DMG and applies <color=#D91414>1250</color> Combustible Charges in total.\\n- After pressing and holding Dodge, releases to deal <color=#D91414>617.65%</color> Ignition DMG and applies <color=#D91414>2500</color> Combustible Charges in total."
+          },
+          {
+            "title": "Metamorphic Encoding: <color=#0d70bc>During sword attacks + Press and hold Basic Attack to charge</color>",
+            "description": "During sword attacks, quickly transitions into casting <color=#D91414>Kinetic Load/Kindled Blaze</color> on the target, dealing damage. <color=#D91414>Kinetic Load/Kindled Blaze</color> cast this way cannot be followed up with other attacks.\\n- Charges partially to cast <color=#D91414>Kindled Blaze</color>, dealing <color=#D91414>257.35%</color> Ignition DMG in total.\\n- Charges fully to cast <color=#D91414>Kinetic Load</color>, dealing <color=#D91414>257.35%</color> Dark DMG in total."
+          },
+          {
+            "title": "Effect: Ignition",
+            "description": "Combustible: Every <color=#D91414>250</color> Combustible Charges will add <color=#D91414>1</color> Combustible stack, up to 20 stacks.\\nIgnition: Ignited units take Ignition DMG equal to <color=#D91414>Ignition stacks x30%</color> (Tank Skills will not be triggered) every second for 10s.\\n- Upon the death of the last unit on the battlefield, subsequent units will inherit its Combustible/Ignition status."
+          }
+        ]
+      },
+      {
+        "id": 132222,
+        "level": {
+          "total": 1,
+          "base": 1,
+          "memory": 0,
+          "borderPact": 0,
+          "harmonization": 0
+        },
+        "name": "Leader - Gray Zone Telemetry",
+        "icon": "image/iconskill/r2jetaviea1",
+        "type": 8,
+        "descriptions": [
+          {
+            "title": "",
+            "description": "Increases Dark DMG of all members by 10%."
+          }
+        ]
+      },
+      {
+        "id": 132223,
+        "level": {
+          "total": 19,
+          "base": 18,
+          "memory": 0,
+          "borderPact": 1,
+          "harmonization": 0
+        },
+        "name": "Attacker",
+        "icon": "image/iconskill/r2jetaviehexin1",
+        "type": 9,
+        "descriptions": [
+          {
+            "title": "",
+            "description": "Extra DMG Bonus increases by <color=#D91414>20.59%</color>."
+          }
+        ]
+      },
+      {
+        "id": 132227,
+        "level": {
+          "total": 0,
+          "base": 0,
+          "memory": 0,
+          "borderPact": 0,
+          "harmonization": 0
+        },
+        "name": "Ultima Awaken",
+        "icon": "image/iconskill/jiefang1",
+        "type": 10,
+        "descriptions": [
+          {
+            "title": "Gains 3 Signal Orbs when entering battle.",
+            "description": "Gains 3 Signal Orbs when entering battle."
+          }
+        ]
+      },
+      {
+        "id": 132224,
+        "level": {
+          "total": 2,
+          "base": 2,
+          "memory": 0,
+          "borderPact": 0,
+          "harmonization": 0
+        },
+        "name": "Autonomous Code",
+        "icon": "image/iconskill/r2jetavies1",
+        "type": 11,
+        "descriptions": [
+          {
+            "title": "Lv.1: <color=#0d70bc>Unlocked at S5 Rank</color>",
+            "description": "Activates all available QTEs when casting <color=#D91414>Constant Current</color>."
+          },
+          {
+            "title": "Lv.2: <color=#0d70bc>Unlocked at SS Rank</color>",
+            "description": "Gains <color=#D91414>70 Signature Energy</color> each time upon entering battle. Extra DMG Bonus increases by 30% during the <color=#D91414>Panoptic Segmentation</color> Mode. After entering <color=#D91414>Charge Stance</color> and having pinged all <color=#D91414>Cluster Orbs</color>, enhances Charged Skills 1 time for every <color=#D91414>10 Load Points</color> spent."
+          }
+        ]
+      },
+      {
+        "id": 132225,
+        "level": {
+          "total": 2,
+          "base": 2,
+          "memory": 0,
+          "borderPact": 0,
+          "harmonization": 0
+        },
+        "name": "Comprehensive Fitting",
+        "icon": "image/iconskill/r2jetaviess1",
+        "type": 12,
+        "descriptions": [
+          {
+            "title": "Lv.1: <color=#0d70bc>Unlocked at SS3 Rank</color>",
+            "description": "Charged Skill Base DMG of Signal Orbs increases by <color=#D91414>100%</color>. Upon a successful Extreme Dodge, gains <color=#D91414>30 Load Points</color>."
+          },
+          {
+            "title": "Lv.2: <color=#0d70bc>Unlocked at SSS Rank</color>",
+            "description": "Every <color=#D91414>Cluster Orb</color> pinged or <color=#D91414>10 Load Points</color> spent increases the Base DMG of <color=#D91414>Reflection Chain</color> and <color=#D91414>Flaming Gush</color> by <color=#D91414>25%</color>, up to <color=#D91414>75%</color>."
+          }
+        ]
+      },
+      {
+        "id": 132226,
+        "level": {
+          "total": 3,
+          "base": 3,
+          "memory": 0,
+          "borderPact": 0,
+          "harmonization": 0
+        },
+        "name": "Nexus Recursion",
+        "icon": "image/iconskill/r2jetaviesss1",
+        "type": 13,
+        "descriptions": [
+          {
+            "title": "Lv.1: <color=#0d70bc>Unlocked at SSS3 Rank</color>",
+            "description": "Extra DMG Bonus of <color=#D91414>Constant Current</color> increases by <color=#D91414>100%</color>."
+          },
+          {
+            "title": "Lv.2: <color=#0d70bc>Unlocked at SSS6 Rank</color>",
+            "description": "Extra DMG Bonus of <color=#D91414>Kinetic Load</color> and <color=#D91414>Kindled Blaze</color> increases by <color=#D91414>70%</color>."
+          },
+          {
+            "title": "Lv.3: <color=#0d70bc>Unlocked at SSS+ Rank</color>",
+            "description": "Extra DMG Bonus of <color=#D91414>Tectonic Revolt</color> increases by <color=#D91414>40%</color>."
+          }
+        ]
+      }
+    ],
+    "leapSkills": [],
+    "memories": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "suits": [],
+    "weapon": {
+      "id": 2535001,
+      "slug": "lethal-shadow",
+      "name": "Lethal Shadow",
+      "quality": 5,
+      "icon": "image/icontoolssp/e2pistolmd020011sp",
+      "iconBig": "image/icontools/e2pistolmd020011",
+      "suit": 0,
+      "resonances": [
+        {
+          "slot": 1,
+          "name": "Precision Attack I",
+          "description": "ATK +30, CRIT +30",
+          "icon": "image/iconskill/iconskillequipshuxingjingzhungongji",
+          "hypertuned": false,
+          "active": true
+        },
+        {
+          "slot": 2,
+          "name": "Precision Attack II",
+          "description": "ATK +30, CRIT +30",
+          "icon": "image/iconskill/iconskillequipshuxingjingzhungongji",
+          "hypertuned": false,
+          "active": true
+        },
+        {
+          "slot": 3,
+          "name": "Precision Attack III",
+          "description": "ATK +30, CRIT +30",
+          "icon": "image/iconskill/iconskillequipshuxingjingzhungongji",
+          "hypertuned": false,
+          "active": true
+        }
+      ],
+      "weaponSkill": {
+        "name": "Dark Erosion",
+        "description": "Dark DMG increases by 10%"
+      },
+      "level": 45,
+      "breakthrough": 4,
+      "infinitas": false
+    },
+    "cub": null,
+    "updatedAt": "2026-07-29T08:51:22.605948464Z"
+  }
+}

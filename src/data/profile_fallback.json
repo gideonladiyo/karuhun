@@ -1,0 +1,3876 @@
+{
+  "status": "success",
+  "data": {
+    "player": {
+      "id": 12199689,
+      "name": "夜' VICTORIA",
+      "level": 120,
+      "sign": "SAYA BANGGA JADI PRIA SOLO",
+      "portraitId": 9000001,
+      "portrait": "image/roleplayersp/roleplayer01",
+      "frameId": 9090025,
+      "frame": "image/roleplayersp/headframe36",
+      "likes": 5,
+      "guildId": 2013,
+      "guildName": "Karuhun 夜’",
+      "nameplate": null
+    },
+    "privacySettings": {
+      "characters": true,
+      "charactersHidden": false,
+      "frameFashions": true,
+      "weaponFashions": true
+    },
+    "characters": [
+      {
+        "id": 1371002,
+        "characterName": "Discord",
+        "frameName": "Secator",
+        "frameType": "omniframe",
+        "frameCode": "BPN-49",
+        "normalIcon": "image/rolecharacter/roleheadr2xiezou1",
+        "fashionIcon": "image/rolecharacter/roleheadr2xiezou1",
+        "priority": 2510,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 4,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1341002,
+        "characterName": "Jetavie",
+        "frameName": "Daybreak",
+        "frameType": "omniframe",
+        "frameCode": "MAV-01",
+        "normalIcon": "image/rolecharacter/roleheadr2jietawei1",
+        "fashionIcon": "image/rolecharacter/roleheadr2jietawei1",
+        "priority": 2460,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1311002,
+        "characterName": "Yata",
+        "frameName": "Fulgor",
+        "frameType": "omniframe",
+        "frameCode": "BPN-48",
+        "normalIcon": "image/rolecharacter/roleheadr2bazhi1",
+        "fashionIcon": "image/rolecharacter/roleheadr2bazhi1",
+        "priority": 2410,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1301002,
+        "characterName": "Bridget",
+        "frameName": "Ardeo",
+        "frameType": "omniframe",
+        "frameCode": "BPO-42",
+        "normalIcon": "image/rolecharacter/roleheadr2bulijite1",
+        "fashionIcon": "image/rolecharacter/roleheadr2bulijite1",
+        "priority": 2370,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1291002,
+        "characterName": "Teddy",
+        "frameName": "Decryptor",
+        "frameType": "omniframe",
+        "frameCode": "BPD-27",
+        "normalIcon": "image/rolecharacter/roleheadr2buouxiong1",
+        "fashionIcon": "image/rolecharacter/roleheadr2buouxiong1",
+        "priority": 2350,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1251002,
+        "characterName": "Noctis",
+        "frameName": "Indomitus",
+        "frameType": "omniframe",
+        "frameCode": "BPO-03",
+        "normalIcon": "image/rolecharacter/roleheadr2nuoketi1",
+        "fashionIcon": "image/rolecharacter/roleheadr2nuoketi1",
+        "priority": 2290,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1241002,
+        "characterName": "Hanying",
+        "frameName": "Zitherwoe",
+        "frameType": "omniframe",
+        "frameCode": "MPK-12",
+        "normalIcon": "image/rolecharacter/roleheadr2hanying1",
+        "fashionIcon": "image/rolecharacter/roleheadr2hanying1",
+        "priority": 2270,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1231002,
+        "characterName": "Bambinata",
+        "frameName": "Vitrum",
+        "frameType": "omniframe",
+        "frameCode": "BPM-11",
+        "normalIcon": "image/rolecharacter/roleheadr2bangbinata1",
+        "fashionIcon": "image/rolecharacter/roleheadr2bangbinata1",
+        "priority": 2230,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1221002,
+        "characterName": "No. 21",
+        "frameName": "XXI",
+        "frameType": "omniframe",
+        "frameCode": "BPH-22",
+        "normalIcon": "image/rolecharacter/roleheadtwentyone1",
+        "fashionIcon": "image/rolecharacter/roleheadtwentyone1",
+        "priority": 2120,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1211002,
+        "characterName": "Wanshi",
+        "frameName": "Hypnos",
+        "frameType": "omniframe",
+        "frameCode": "BPE-47",
+        "normalIcon": "image/rolecharacter/roleheadwanshi1",
+        "fashionIcon": "image/rolecharacter/roleheadwanshi1",
+        "priority": 2090,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1171004,
+        "characterName": "Luna",
+        "frameName": "Oblivion",
+        "frameType": "omniframe",
+        "frameCode": "CDR-02",
+        "normalIcon": "image/rolecharacter/roleheadr4luna1",
+        "fashionIcon": "image/rolecharacter/roleheadr4luna8",
+        "priority": 2360,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1131002,
+        "characterName": "Vera",
+        "frameName": "Rozen",
+        "frameType": "omniframe",
+        "frameCode": "BPN-13",
+        "normalIcon": "image/rolecharacter/roleheadweila1",
+        "fashionIcon": "image/rolecharacter/roleheadweila1",
+        "priority": 2000,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1111002,
+        "characterName": "Sophia",
+        "frameName": "Silverfang",
+        "frameType": "omniframe",
+        "frameCode": "ADL-22",
+        "normalIcon": "image/rolecharacter/roleheadsufeiya1",
+        "fashionIcon": "image/rolecharacter/roleheadsufeiya1",
+        "priority": 1700,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1091002,
+        "characterName": "Ayla",
+        "frameName": "Brilliance",
+        "frameType": "omniframe",
+        "frameCode": "BPF-22",
+        "normalIcon": "image/rolecharacter/roleheadaila1",
+        "fashionIcon": "image/rolecharacter/roleheadaila1",
+        "priority": 850,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1081003,
+        "characterName": "Watanabe",
+        "frameName": "Astral",
+        "frameType": "omniframe",
+        "frameCode": "BPO-29",
+        "normalIcon": "image/rolecharacter/roleheaddubian1ss",
+        "fashionIcon": "image/rolecharacter/roleheaddubian1ss",
+        "priority": 1500,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1081002,
+        "characterName": "Watanabe",
+        "frameName": "Nightblade",
+        "frameType": "omniframe",
+        "frameCode": "BPO-29",
+        "normalIcon": "image/rolecharacter/roleheaddubian1",
+        "fashionIcon": "image/rolecharacter/roleheaddubian1",
+        "priority": 600,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1051001,
+        "characterName": "Nanami",
+        "frameName": "Storm",
+        "frameType": "omniframe",
+        "frameCode": "MPL-00",
+        "normalIcon": "image/rolecharacter/roleheadyongyechao1",
+        "fashionIcon": "image/rolecharacter/roleheadyongyechao1",
+        "priority": 300,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1041002,
+        "characterName": "Bianca",
+        "frameName": "Zero",
+        "frameType": "omniframe",
+        "frameCode": "BPO-87",
+        "normalIcon": "image/rolecharacter/roleheadaolisuo1",
+        "fashionIcon": "image/rolecharacter/roleheadaolisuo1",
+        "priority": 400,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 2,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1031002,
+        "characterName": "Liv",
+        "frameName": "Lux",
+        "frameType": "omniframe",
+        "frameCode": "BPN-08",
+        "normalIcon": "image/rolecharacter/roleheadlifu1s",
+        "fashionIcon": "image/rolecharacter/roleheadlifu1s",
+        "priority": 700,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1021002,
+        "characterName": "Lucia",
+        "frameName": "Dawn",
+        "frameType": "omniframe",
+        "frameCode": "BPL-01",
+        "normalIcon": "image/rolecharacter/roleheadluxiya1s",
+        "fashionIcon": "image/rolecharacter/roleheadluxiya1s",
+        "priority": 800,
+        "level": 80,
+        "quality": 6,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1401003,
+        "characterName": "Helentine",
+        "frameName": "Lacrimosa",
+        "frameType": "omniframe",
+        "frameCode": "TBA-04",
+        "normalIcon": "image/rolecharacter/roleheadr3helentine1",
+        "fashionIcon": "image/rolecharacter/roleheadr3helentine1",
+        "priority": 2590,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1391003,
+        "characterName": "Nirvatia",
+        "frameName": "Dirge",
+        "frameType": "omniframe",
+        "frameCode": "BPC-03",
+        "normalIcon": "image/rolecharacter/roleheadr3nietiya1",
+        "fashionIcon": "image/rolecharacter/roleheadr3nietiya1",
+        "priority": 2560,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1381003,
+        "characterName": "Veronica",
+        "frameName": "Aegis",
+        "frameType": "omniframe",
+        "frameCode": "MPK-01",
+        "normalIcon": "image/rolecharacter/roleheadr3weiluonika1",
+        "fashionIcon": "image/rolecharacter/roleheadr3weiluonika3",
+        "priority": 2520,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1331003,
+        "characterName": "Lilith",
+        "frameName": "Daemonissa",
+        "frameType": "omniframe",
+        "frameCode": "VAF-38",
+        "normalIcon": "image/rolecharacter/roleheadr3lilith1",
+        "fashionIcon": "image/rolecharacter/roleheadr3lilith1",
+        "priority": 2440,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1321003,
+        "characterName": "Ishmael",
+        "frameName": "Parhelion",
+        "frameType": "omniframe",
+        "frameCode": "GNS-■■■",
+        "normalIcon": "image/rolecharacter/roleheadr3cibeizhe1",
+        "fashionIcon": "image/rolecharacter/roleheadr3cibeizhe3",
+        "priority": 2430,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1291003,
+        "characterName": "Teddy",
+        "frameName": "Spectre",
+        "frameType": "omniframe",
+        "frameCode": "BPD-27",
+        "normalIcon": "image/rolecharacter/roleheadr3buouxiong1",
+        "fashionIcon": "image/rolecharacter/roleheadr3buouxiong1",
+        "priority": 2540,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1261003,
+        "characterName": "Alisa",
+        "frameName": "Echo",
+        "frameType": "omniframe",
+        "frameCode": "UPC-15",
+        "normalIcon": "image/rolecharacter/roleheadr3yalisha1",
+        "fashionIcon": "image/rolecharacter/roleheadr3yalisha3",
+        "priority": 2300,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1241003,
+        "characterName": "Hanying",
+        "frameName": "Solacetune",
+        "frameType": "omniframe",
+        "frameCode": "MPK-12",
+        "normalIcon": "image/rolecharacter/roleheadr3hanying1",
+        "fashionIcon": "image/rolecharacter/roleheadr3hanying3",
+        "priority": 2380,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1211003,
+        "characterName": "Wanshi",
+        "frameName": "Lucid Dreamer",
+        "frameType": "omniframe",
+        "frameCode": "BPE-47",
+        "normalIcon": "image/rolecharacter/roleheadr3wanshi1",
+        "fashionIcon": "image/rolecharacter/roleheadr3wanshi3",
+        "priority": 2390,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1161002,
+        "characterName": "Changyu",
+        "frameName": "Qilin",
+        "frameType": "omniframe",
+        "frameCode": "ADL-17",
+        "normalIcon": "image/rolecharacter/roleheadchangyu1",
+        "fashionIcon": "image/rolecharacter/roleheadchangyu1",
+        "priority": 2040,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1141004,
+        "characterName": "Rosetta",
+        "frameName": "Arete",
+        "frameType": "omniframe",
+        "frameCode": "IH-31C",
+        "normalIcon": "image/rolecharacter/roleheadr4luosaita1",
+        "fashionIcon": "image/rolecharacter/roleheadr4luosaita1",
+        "priority": 2550,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1131004,
+        "characterName": "Vera",
+        "frameName": "Geiravor",
+        "frameType": "omniframe",
+        "frameCode": "BPN-13",
+        "normalIcon": "image/rolecharacter/roleheadr4weila1",
+        "fashionIcon": "image/rolecharacter/roleheadr4weila3",
+        "priority": 2470,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1121002,
+        "characterName": "Chrome",
+        "frameName": "Arclight",
+        "frameType": "omniframe",
+        "frameCode": "BPE-07",
+        "normalIcon": "image/rolecharacter/roleheadkuluomu1",
+        "fashionIcon": "image/rolecharacter/roleheadkuluomu1",
+        "priority": 1800,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1081004,
+        "characterName": "Watanabe",
+        "frameName": "Epitaph",
+        "frameType": "omniframe",
+        "frameCode": "BPO-29",
+        "normalIcon": "image/rolecharacter/roleheadr4dubian1",
+        "fashionIcon": "image/rolecharacter/roleheadr4dubian3",
+        "priority": 2330,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1071002,
+        "characterName": "Karenina",
+        "frameName": "Blast",
+        "frameType": "omniframe",
+        "frameCode": "BPD-72",
+        "normalIcon": "image/rolecharacter/roleheadkalienina1",
+        "fashionIcon": "image/rolecharacter/roleheadkalienina1",
+        "priority": 500,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1061004,
+        "characterName": "Kamui",
+        "frameName": "Aeternion",
+        "frameType": "omniframe",
+        "frameCode": "BPE-72",
+        "normalIcon": "image/rolecharacter/roleheadr4shenwei1",
+        "fashionIcon": "image/rolecharacter/roleheadr4shenwei3",
+        "priority": 2570,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1061002,
+        "characterName": "Kamui",
+        "frameName": "Bastion",
+        "frameType": "omniframe",
+        "frameCode": "BPE-72",
+        "normalIcon": "image/rolecharacter/roleheadshenwei1",
+        "fashionIcon": "image/rolecharacter/roleheadshenwei1",
+        "priority": 200,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1051005,
+        "characterName": "Nanami",
+        "frameName": "Startrail",
+        "frameType": "omniframe",
+        "frameCode": "MPL-00",
+        "normalIcon": "image/rolecharacter/roleheadr6yongyechao1",
+        "fashionIcon": "image/rolecharacter/roleheadr6yongyechao3",
+        "priority": 2420,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1041005,
+        "characterName": "Bianca",
+        "frameName": "Crepuscule",
+        "frameType": "omniframe",
+        "frameCode": "BPO-87",
+        "normalIcon": "image/rolecharacter/roleheadr5bianka1",
+        "fashionIcon": "image/rolecharacter/roleheadr5bianka3",
+        "priority": 2500,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1041004,
+        "characterName": "Bianca",
+        "frameName": "Stigmata",
+        "frameType": "omniframe",
+        "frameCode": "BPO-87",
+        "normalIcon": "image/rolecharacter/roleheadr4bianka1",
+        "fashionIcon": "image/rolecharacter/roleheadr4bianka8",
+        "priority": 2220,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1031005,
+        "characterName": "Liv",
+        "frameName": "Limpidity",
+        "frameType": "omniframe",
+        "frameCode": "BPN-08",
+        "normalIcon": "image/rolecharacter/roleheadr5lifu1",
+        "fashionIcon": "image/rolecharacter/roleheadr5lifu1",
+        "priority": 2530,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1021007,
+        "characterName": "Lucia",
+        "frameName": "Inverse Crown",
+        "frameType": "omniframe",
+        "frameCode": "α",
+        "normalIcon": "image/rolecharacter/roleheadr7luxiya1",
+        "fashionIcon": "image/rolecharacter/roleheadr7luxiya1",
+        "priority": 2580,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1021006,
+        "characterName": "Lucia",
+        "frameName": "Pyroath",
+        "frameType": "omniframe",
+        "frameCode": "BPL-01",
+        "normalIcon": "image/rolecharacter/roleheadr6luxiya1",
+        "fashionIcon": "image/rolecharacter/roleheadr6luxiya5",
+        "priority": 2400,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1021005,
+        "characterName": "Lucia",
+        "frameName": "Crimson Weave",
+        "frameType": "omniframe",
+        "frameCode": "α",
+        "normalIcon": "image/rolecharacter/roleheadr5luxiya1",
+        "fashionIcon": "image/rolecharacter/roleheadr5luxiya5",
+        "priority": 2260,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1011002,
+        "characterName": "Lee",
+        "frameName": "Palefire",
+        "frameType": "omniframe",
+        "frameCode": "BPN-06",
+        "normalIcon": "image/rolecharacter/roleheadli1",
+        "fashionIcon": "image/rolecharacter/roleheadli1",
+        "priority": 100,
+        "level": 80,
+        "quality": 5,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1031001,
+        "characterName": "Liv",
+        "frameName": "Eclipse",
+        "frameType": "omniframe",
+        "frameCode": "BPN-08",
+        "normalIcon": "image/rolecharacter/roleheadlifu1",
+        "fashionIcon": "image/rolecharacter/roleheadlifu1",
+        "priority": 90,
+        "level": 50,
+        "quality": 5,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1531005,
+        "characterName": "Selena",
+        "frameName": "Pianissimo",
+        "frameType": "omniframe",
+        "frameCode": "BPF-06",
+        "normalIcon": "image/rolecharacter/roleheadr5sailinna1",
+        "fashionIcon": "image/rolecharacter/roleheadr5sailinna3",
+        "priority": 2450,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1531004,
+        "characterName": "Selena",
+        "frameName": "Capriccio",
+        "frameType": "omniframe",
+        "frameCode": "BPF-06",
+        "normalIcon": "image/rolecharacter/roleheadr3sailinna1",
+        "fashionIcon": "image/rolecharacter/roleheadr3sailinna1",
+        "priority": 2160,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 4,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1521004,
+        "characterName": "Qu",
+        "frameName": "Shukra",
+        "frameType": "omniframe",
+        "frameCode": "KCS-00",
+        "normalIcon": "image/rolecharacter/roleheadr3qu1",
+        "fashionIcon": "image/rolecharacter/roleheadr3qu3",
+        "priority": 2340,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1511003,
+        "characterName": "Camu",
+        "frameName": "Crocotta",
+        "frameType": "uniframe",
+        "frameCode": "EXN-03",
+        "normalIcon": "image/rolecharacter/roleheadkamu1",
+        "fashionIcon": "image/rolecharacter/roleheadkamu1",
+        "priority": 2010,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 4,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1221003,
+        "characterName": "No. 21",
+        "frameName": "Feral",
+        "frameType": "omniframe",
+        "frameCode": "BPH-22",
+        "normalIcon": "image/rolecharacter/roleheadr3twentyone1",
+        "fashionIcon": "image/rolecharacter/roleheadr3twentyone1",
+        "priority": 2280,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1141003,
+        "characterName": "Rosetta",
+        "frameName": "Rigor",
+        "frameType": "omniframe",
+        "frameCode": "IH-31C",
+        "normalIcon": "image/rolecharacter/roleheadluosaita1",
+        "fashionIcon": "image/rolecharacter/roleheadluosaita1",
+        "priority": 2020,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 4,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1131003,
+        "characterName": "Vera",
+        "frameName": "Garnet",
+        "frameType": "omniframe",
+        "frameCode": "BPN-13",
+        "normalIcon": "image/rolecharacter/roleheadr3weila1",
+        "fashionIcon": "image/rolecharacter/roleheadr3weila1",
+        "priority": 2130,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1061003,
+        "characterName": "Kamui",
+        "frameName": "Tenebrion",
+        "frameType": "omniframe",
+        "frameCode": "BPE-72",
+        "normalIcon": "image/rolecharacter/roleheadshenwei1ss",
+        "fashionIcon": "image/rolecharacter/roleheadshenwei1ss",
+        "priority": 1100,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1051004,
+        "characterName": "Nanami",
+        "frameName": "Starfarer",
+        "frameType": "omniframe",
+        "frameCode": "MPL-00",
+        "normalIcon": "image/rolecharacter/roleheadr5yongyechao1",
+        "fashionIcon": "image/rolecharacter/roleheadr5yongyechao1",
+        "priority": 2180,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1031004,
+        "characterName": "Liv",
+        "frameName": "Empyrea",
+        "frameType": "omniframe",
+        "frameCode": "BPN-08",
+        "normalIcon": "image/rolecharacter/roleheadr4lifu1",
+        "fashionIcon": "image/rolecharacter/roleheadr4lifu1",
+        "priority": 2150,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 4,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1031003,
+        "characterName": "Liv",
+        "frameName": "Luminance",
+        "frameType": "omniframe",
+        "frameCode": "BPN-08",
+        "normalIcon": "image/rolecharacter/roleheadlifu1ss",
+        "fashionIcon": "image/rolecharacter/roleheadlifu1ss",
+        "priority": 1000,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1021003,
+        "characterName": "Lucia",
+        "frameName": "Crimson Abyss",
+        "frameType": "omniframe",
+        "frameCode": "α",
+        "normalIcon": "image/rolecharacter/roleheadluxiyaaerfa1ss",
+        "fashionIcon": "image/rolecharacter/roleheadluxiyaaerfa2ss",
+        "priority": 1400,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1021001,
+        "characterName": "Lucia",
+        "frameName": "Lotus",
+        "frameType": "omniframe",
+        "frameCode": "BPL-01",
+        "normalIcon": "image/rolecharacter/roleheadluxiya1",
+        "fashionIcon": "image/rolecharacter/roleheadluxiya1",
+        "priority": 80,
+        "level": 80,
+        "quality": 4,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1171003,
+        "characterName": "Luna",
+        "frameName": "Laurel",
+        "frameType": "omniframe",
+        "frameCode": "CDR-02",
+        "normalIcon": "image/rolecharacter/roleheadluna1",
+        "fashionIcon": "image/rolecharacter/roleheadluna1",
+        "priority": 2050,
+        "level": 80,
+        "quality": 3,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1121003,
+        "characterName": "Chrome",
+        "frameName": "Glory",
+        "frameType": "omniframe",
+        "frameCode": "BPE-07",
+        "normalIcon": "image/rolecharacter/roleheadr3kuluomu1",
+        "fashionIcon": "image/rolecharacter/roleheadr3kuluomu1",
+        "priority": 2110,
+        "level": 80,
+        "quality": 3,
+        "awakeningLevel": 3,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1091003,
+        "characterName": "Ayla",
+        "frameName": "Kaleido",
+        "frameType": "omniframe",
+        "frameCode": "BPF-22",
+        "normalIcon": "image/rolecharacter/roleheadr3aila1",
+        "fashionIcon": "image/rolecharacter/roleheadr3aila1",
+        "priority": 2250,
+        "level": 80,
+        "quality": 3,
+        "awakeningLevel": 5,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1361003,
+        "characterName": "Dante",
+        "frameName": "Dante",
+        "frameType": "omniframe",
+        "frameCode": "Dante",
+        "normalIcon": "image/rolecharacter/roleheadr2danding1",
+        "fashionIcon": "image/rolecharacter/roleheadr2danding1",
+        "priority": 2490,
+        "level": 1,
+        "quality": 3,
+        "awakeningLevel": 1,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1051003,
+        "characterName": "Nanami",
+        "frameName": "Pulse",
+        "frameType": "omniframe",
+        "frameCode": "MPL-00",
+        "normalIcon": "image/rolecharacter/roleheadyongyechao1ss",
+        "fashionIcon": "image/rolecharacter/roleheadyongyechao1ss",
+        "priority": 1300,
+        "level": 1,
+        "quality": 3,
+        "awakeningLevel": 1,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1281002,
+        "characterName": "BLACK★ROCK SHOOTER",
+        "frameName": "BLACK★ROCK SHOOTER",
+        "frameType": "omniframe",
+        "frameCode": "Unknown",
+        "normalIcon": "image/rolecharacter/roleheadr2blackrock1",
+        "fashionIcon": "image/rolecharacter/roleheadr2blackrock1",
+        "priority": 2320,
+        "level": 80,
+        "quality": 2,
+        "awakeningLevel": 2,
+        "acquired": true,
+        "visible": true
+      },
+      {
+        "id": 1571003,
+        "characterName": "Noan",
+        "frameName": "Arca",
+        "frameType": "uniframe",
+        "frameCode": "BPZ-01",
+        "normalIcon": "image/rolecharacter/roleheadnuoan1",
+        "fashionIcon": "image/rolecharacter/roleheadnuoan1",
+        "priority": 2210,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1561003,
+        "characterName": "Haicma",
+        "frameName": "Starveil",
+        "frameType": "uniframe",
+        "frameCode": "MPA-01",
+        "normalIcon": "image/rolecharacter/roleheadhakama1",
+        "fashionIcon": "image/rolecharacter/roleheadhakama1",
+        "priority": 2190,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1551003,
+        "characterName": "Pulao",
+        "frameName": "Dragontoll",
+        "frameType": "uniframe",
+        "frameCode": "KCS-54",
+        "normalIcon": "image/rolecharacter/roleheadpulao1",
+        "fashionIcon": "image/rolecharacter/roleheadpulao1",
+        "priority": 2170,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1541003,
+        "characterName": "Roland",
+        "frameName": "Flambeau",
+        "frameType": "uniframe",
+        "frameCode": "BPB-26",
+        "normalIcon": "image/rolecharacter/roleheadluolan1",
+        "fashionIcon": "image/rolecharacter/roleheadluolan1",
+        "priority": 2140,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1531003,
+        "characterName": "Selena",
+        "frameName": "Tempest",
+        "frameType": "uniframe",
+        "frameCode": "BPF-06",
+        "normalIcon": "image/rolecharacter/roleheadsailinna1",
+        "fashionIcon": "image/rolecharacter/roleheadsailinna1",
+        "priority": 2100,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1521003,
+        "characterName": "Qu",
+        "frameName": "Pavo",
+        "frameType": "uniframe",
+        "frameCode": "KCS-01",
+        "normalIcon": "image/rolecharacter/roleheadqu1",
+        "fashionIcon": "image/rolecharacter/roleheadqu1",
+        "priority": 2030,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1351003,
+        "characterName": "Vergil",
+        "frameName": "Vergil",
+        "frameType": "omniframe",
+        "frameCode": "Vergil",
+        "normalIcon": "image/rolecharacter/roleheadr2weijier1",
+        "fashionIcon": "image/rolecharacter/roleheadr2weijier1",
+        "priority": 2480,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1271003,
+        "characterName": "Lamia",
+        "frameName": "Lost Lullaby",
+        "frameType": "omniframe",
+        "frameCode": "ATL-01",
+        "normalIcon": "image/rolecharacter/roleheadr3lamiya1",
+        "fashionIcon": "image/rolecharacter/roleheadr3lamiya1",
+        "priority": 2310,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1201003,
+        "characterName": "A2",
+        "frameName": "A2",
+        "frameType": "omniframe",
+        "frameCode": "A2",
+        "normalIcon": "image/rolecharacter/roleheadatwo1",
+        "fashionIcon": "image/rolecharacter/roleheadatwo1",
+        "priority": 2080,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1191003,
+        "characterName": "9S",
+        "frameName": "9S",
+        "frameType": "omniframe",
+        "frameCode": "9S",
+        "normalIcon": "image/rolecharacter/roleheadnines1",
+        "fashionIcon": "image/rolecharacter/roleheadnines1",
+        "priority": 2070,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1181003,
+        "characterName": "2B",
+        "frameName": "2B",
+        "frameType": "omniframe",
+        "frameCode": "2B",
+        "normalIcon": "image/rolecharacter/roleheadtwob1",
+        "fashionIcon": "image/rolecharacter/roleheadtwob1",
+        "priority": 2060,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1071004,
+        "characterName": "Karenina",
+        "frameName": "Scire",
+        "frameType": "omniframe",
+        "frameCode": "BPD-72",
+        "normalIcon": "image/rolecharacter/roleheadr4kalienina1",
+        "fashionIcon": "image/rolecharacter/roleheadr4kalienina1",
+        "priority": 2200,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1071003,
+        "characterName": "Karenina",
+        "frameName": "Ember",
+        "frameType": "omniframe",
+        "frameCode": "BPD-72",
+        "normalIcon": "image/rolecharacter/roleheadkalienina1ss",
+        "fashionIcon": "image/rolecharacter/roleheadkalienina1ss",
+        "priority": 1200,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1041003,
+        "characterName": "Bianca",
+        "frameName": "Veritas",
+        "frameType": "omniframe",
+        "frameCode": "BPO-87",
+        "normalIcon": "image/rolecharacter/roleheadbianka1ss",
+        "fashionIcon": "image/rolecharacter/roleheadbianka1ss",
+        "priority": 1600,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1021004,
+        "characterName": "Lucia",
+        "frameName": "Plume",
+        "frameType": "omniframe",
+        "frameCode": "BPL-01",
+        "normalIcon": "image/rolecharacter/roleheadr4luxiya1",
+        "fashionIcon": "image/rolecharacter/roleheadr4luxiya1",
+        "priority": 1900,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1011004,
+        "characterName": "Lee",
+        "frameName": "Hyperreal",
+        "frameType": "omniframe",
+        "frameCode": "BPN-06",
+        "normalIcon": "image/rolecharacter/roleheadr4li1",
+        "fashionIcon": "image/rolecharacter/roleheadr4li1",
+        "priority": 2240,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      },
+      {
+        "id": 1011003,
+        "characterName": "Lee",
+        "frameName": "Entropy",
+        "frameType": "omniframe",
+        "frameCode": "BPN-06",
+        "normalIcon": "image/rolecharacter/roleheadli1ss",
+        "fashionIcon": "image/rolecharacter/roleheadli1ss",
+        "priority": 900,
+        "level": 0,
+        "quality": 0,
+        "awakeningLevel": 0,
+        "acquired": false,
+        "visible": false
+      }
+    ],
+    "characterRating": 145530,
+    "frameFashions": [
+      {
+        "id": 6003304,
+        "characterId": 1261003,
+        "name": "Nocturnal Watch",
+        "quality": 6,
+        "icon": "image/icontools/clo12610039011",
+        "acquired": true
+      },
+      {
+        "id": 6003907,
+        "characterId": 1171004,
+        "name": "Graffiti Code",
+        "quality": 6,
+        "icon": "image/icontools/clo11710049031",
+        "acquired": true
+      },
+      {
+        "id": 6005004,
+        "characterId": 1131004,
+        "name": "Hollow Crown",
+        "quality": 6,
+        "icon": "image/icontools/clo11310049011",
+        "acquired": true
+      },
+      {
+        "id": 6002806,
+        "characterId": 1091003,
+        "name": "Blue Crush",
+        "quality": 6,
+        "icon": "image/icontools/clo10910039271",
+        "acquired": true
+      },
+      {
+        "id": 6002505,
+        "characterId": 1041004,
+        "name": "Solitary Dream",
+        "quality": 6,
+        "icon": "image/icontools/clo10410049241",
+        "acquired": true
+      },
+      {
+        "id": 6005605,
+        "characterId": 1031005,
+        "name": "Fluttering Ballet",
+        "quality": 6,
+        "icon": "image/icontools/clo10310059371",
+        "acquired": true
+      },
+      {
+        "id": 6310304,
+        "characterId": 1031003,
+        "name": "Skeletal Bride",
+        "quality": 6,
+        "icon": "image/icontools/clo10310070101",
+        "acquired": true
+      },
+      {
+        "id": 6004304,
+        "characterId": 1021006,
+        "name": "Prestigious Accolade",
+        "quality": 6,
+        "icon": "image/icontools/clo10210069091",
+        "acquired": true
+      },
+      {
+        "id": 6002904,
+        "characterId": 1021005,
+        "name": "Zhuolu's Rain",
+        "quality": 6,
+        "icon": "image/icontools/clo10210059011",
+        "acquired": true
+      },
+      {
+        "id": 6002405,
+        "characterId": 1571003,
+        "name": "Summer Glimmer",
+        "quality": 5,
+        "icon": "image/icontools/clo15710039381",
+        "acquired": true
+      },
+      {
+        "id": 6000406,
+        "characterId": 1511003,
+        "name": "Prince of Darkness",
+        "quality": 5,
+        "icon": "image/icontools/clo15110039202",
+        "acquired": true
+      },
+      {
+        "id": 6005904,
+        "characterId": 1391003,
+        "name": "Sylvan Intercessor",
+        "quality": 5,
+        "icon": "image/icontools/clo13910039011",
+        "acquired": true
+      },
+      {
+        "id": 6005405,
+        "characterId": 1371002,
+        "name": "Blossom Breeze",
+        "quality": 5,
+        "icon": "image/icontools/clo13710029141",
+        "acquired": true
+      },
+      {
+        "id": 6004905,
+        "characterId": 1341002,
+        "name": "Sunny Splash",
+        "quality": 5,
+        "icon": "image/icontools/clo13410029271",
+        "acquired": true
+      },
+      {
+        "id": 6004704,
+        "characterId": 1331003,
+        "name": "Conceited Mirage",
+        "quality": 5,
+        "icon": "image/icontools/clo13310039231",
+        "acquired": true
+      },
+      {
+        "id": 6004005,
+        "characterId": 1301002,
+        "name": "Radiant Formula",
+        "quality": 5,
+        "icon": "image/icontools/clo13010029031",
+        "acquired": true
+      },
+      {
+        "id": 6003806,
+        "characterId": 1291002,
+        "name": "Blush of Daybreak",
+        "quality": 5,
+        "icon": "image/icontools/clo12910029141",
+        "acquired": true
+      },
+      {
+        "id": 6003805,
+        "characterId": 1291002,
+        "name": "Good Vibrations",
+        "quality": 5,
+        "icon": "image/icontools/clo12910029092",
+        "acquired": true
+      },
+      {
+        "id": 6003205,
+        "characterId": 1251002,
+        "name": "Sky Rider",
+        "quality": 5,
+        "icon": "image/icontools/clo12510029141",
+        "acquired": true
+      },
+      {
+        "id": 6003204,
+        "characterId": 1251002,
+        "name": "Punk Dynamo",
+        "quality": 5,
+        "icon": "image/icontools/clo12510029091",
+        "acquired": true
+      },
+      {
+        "id": 6003005,
+        "characterId": 1241002,
+        "name": "Arboreal Slumber",
+        "quality": 5,
+        "icon": "image/icontools/clo12410029012",
+        "acquired": true
+      },
+      {
+        "id": 6002606,
+        "characterId": 1231002,
+        "name": "Dreamland Waltz",
+        "quality": 5,
+        "icon": "image/icontools/clo12310029201",
+        "acquired": true
+      },
+      {
+        "id": 6001506,
+        "characterId": 1221002,
+        "name": "Silent Seal",
+        "quality": 5,
+        "icon": "image/icontools/clo12210029201",
+        "acquired": true
+      },
+      {
+        "id": 6004204,
+        "characterId": 1211003,
+        "name": "Frosty Perch",
+        "quality": 5,
+        "icon": "image/icontools/clo12110039141",
+        "acquired": true
+      },
+      {
+        "id": 6003604,
+        "characterId": 1081004,
+        "name": "Sandstream",
+        "quality": 5,
+        "icon": "image/icontools/clo10810049091",
+        "acquired": true
+      },
+      {
+        "id": 6510104,
+        "characterId": 1051001,
+        "name": "Gray Feathers: Storm",
+        "quality": 5,
+        "icon": "image/icontools/clo10510090102",
+        "acquired": true
+      },
+      {
+        "id": 6410105,
+        "characterId": 1041002,
+        "name": "Gray Feathers: Zero",
+        "quality": 5,
+        "icon": "image/icontools/clo10410070102",
+        "acquired": true
+      },
+      {
+        "id": 6002909,
+        "characterId": 1021005,
+        "name": "Hunt of Retribution",
+        "quality": 5,
+        "icon": "image/icontools/clo10210059031",
+        "acquired": true
+      },
+      {
+        "id": 6002908,
+        "characterId": 1021005,
+        "name": "Stride of Vigor",
+        "quality": 5,
+        "icon": "image/icontools/clo10210059394",
+        "acquired": true
+      },
+      {
+        "id": 6210106,
+        "characterId": 1021001,
+        "name": "Rain Walking",
+        "quality": 5,
+        "icon": "image/icontools/clo10210090303",
+        "acquired": true
+      },
+      {
+        "id": 6002005,
+        "characterId": 1551003,
+        "name": "Dreamweaver",
+        "quality": 6,
+        "icon": "image/icontools/clo15510039091",
+        "acquired": false
+      },
+      {
+        "id": 6004806,
+        "characterId": 1531005,
+        "name": "Shimmering Tide",
+        "quality": 6,
+        "icon": "image/icontools/clo15310059271",
+        "acquired": false
+      },
+      {
+        "id": 6004805,
+        "characterId": 1531005,
+        "name": "Threads of Destiny",
+        "quality": 6,
+        "icon": "image/icontools/clo15310059371",
+        "acquired": false
+      },
+      {
+        "id": 6004804,
+        "characterId": 1531005,
+        "name": "Obsidian Balladeer",
+        "quality": 6,
+        "icon": "image/icontools/clo15310059011",
+        "acquired": false
+      },
+      {
+        "id": 6001906,
+        "characterId": 1531004,
+        "name": "Flowing Dreams",
+        "quality": 6,
+        "icon": "image/icontools/clo15310049331",
+        "acquired": false
+      },
+      {
+        "id": 6001905,
+        "characterId": 1531004,
+        "name": "Vox Solaris",
+        "quality": 6,
+        "icon": "image/icontools/clo15310049261",
+        "acquired": false
+      },
+      {
+        "id": 6001305,
+        "characterId": 1531003,
+        "name": "Aria of Nymph",
+        "quality": 6,
+        "icon": "image/icontools/clo15310039271",
+        "acquired": false
+      },
+      {
+        "id": 6003706,
+        "characterId": 1521004,
+        "name": "Sparragon's Triumph",
+        "quality": 6,
+        "icon": "image/icontools/clo15210049142",
+        "acquired": false
+      },
+      {
+        "id": 6003705,
+        "characterId": 1521004,
+        "name": "Resplendent Debut",
+        "quality": 6,
+        "icon": "image/icontools/clo15210049141",
+        "acquired": false
+      },
+      {
+        "id": 6003704,
+        "characterId": 1521004,
+        "name": "Ashen Wings",
+        "quality": 6,
+        "icon": "image/icontools/clo15210049281",
+        "acquired": false
+      },
+      {
+        "id": 6000705,
+        "characterId": 1521003,
+        "name": "Scarlet Spring",
+        "quality": 6,
+        "icon": "image/icontools/clo15210039141",
+        "acquired": false
+      },
+      {
+        "id": 6006204,
+        "characterId": 1401003,
+        "name": "Azure Embrace",
+        "quality": 6,
+        "icon": "image/icontools/clo14010039271",
+        "acquired": false
+      },
+      {
+        "id": 6005505,
+        "characterId": 1381003,
+        "name": "Stygian Pinion",
+        "quality": 6,
+        "icon": "image/icontools/clo13810039421",
+        "acquired": false
+      },
+      {
+        "id": 6005504,
+        "characterId": 1381003,
+        "name": "Sash of Silence",
+        "quality": 6,
+        "icon": "image/icontools/clo13810039011",
+        "acquired": false
+      },
+      {
+        "id": 6004706,
+        "characterId": 1331003,
+        "name": "Roulette of Stolen Time",
+        "quality": 6,
+        "icon": "image/icontools/clo13310039281",
+        "acquired": false
+      },
+      {
+        "id": 6004705,
+        "characterId": 1331003,
+        "name": "Fatal Temptation",
+        "quality": 6,
+        "icon": "image/icontools/clo13310039041",
+        "acquired": false
+      },
+      {
+        "id": 6004606,
+        "characterId": 1321003,
+        "name": "Nightfall Finale",
+        "quality": 6,
+        "icon": "image/icontools/clo13210039231",
+        "acquired": false
+      },
+      {
+        "id": 6004605,
+        "characterId": 1321003,
+        "name": "Ritual of Souls",
+        "quality": 6,
+        "icon": "image/icontools/clo13210039141",
+        "acquired": false
+      },
+      {
+        "id": 6004604,
+        "characterId": 1321003,
+        "name": "Wings of Equilibrium",
+        "quality": 6,
+        "icon": "image/icontools/clo13210039011",
+        "acquired": false
+      },
+      {
+        "id": 6005704,
+        "characterId": 1291003,
+        "name": "Poetic Journey",
+        "quality": 6,
+        "icon": "image/icontools/clo12910039011",
+        "acquired": false
+      },
+      {
+        "id": 6003406,
+        "characterId": 1271003,
+        "name": "Carmine Ripples",
+        "quality": 6,
+        "icon": "image/icontools/clo12710039141",
+        "acquired": false
+      },
+      {
+        "id": 6003405,
+        "characterId": 1271003,
+        "name": "Solitary Longings",
+        "quality": 6,
+        "icon": "image/icontools/clo12710039092",
+        "acquired": false
+      },
+      {
+        "id": 6003404,
+        "characterId": 1271003,
+        "name": "Abyssal Dye",
+        "quality": 6,
+        "icon": "image/icontools/clo12710039091",
+        "acquired": false
+      },
+      {
+        "id": 6003306,
+        "characterId": 1261003,
+        "name": "Sandy Spectrum",
+        "quality": 6,
+        "icon": "image/icontools/clo12610039271",
+        "acquired": false
+      },
+      {
+        "id": 6003305,
+        "characterId": 1261003,
+        "name": "Twilight Veil",
+        "quality": 6,
+        "icon": "image/icontools/clo12610039391",
+        "acquired": false
+      },
+      {
+        "id": 6004106,
+        "characterId": 1241003,
+        "name": "Tapestry of Spring",
+        "quality": 6,
+        "icon": "image/icontools/clo12410039141",
+        "acquired": false
+      },
+      {
+        "id": 6004105,
+        "characterId": 1241003,
+        "name": "River Dancer",
+        "quality": 6,
+        "icon": "image/icontools/clo12410039092",
+        "acquired": false
+      },
+      {
+        "id": 6004104,
+        "characterId": 1241003,
+        "name": "Flying Apsara",
+        "quality": 6,
+        "icon": "image/icontools/clo12410039091",
+        "acquired": false
+      },
+      {
+        "id": 6003106,
+        "characterId": 1221003,
+        "name": "Tiny Bad Wolf",
+        "quality": 6,
+        "icon": "image/icontools/clo12210039091",
+        "acquired": false
+      },
+      {
+        "id": 6003105,
+        "characterId": 1221003,
+        "name": "Revival Remedy",
+        "quality": 6,
+        "icon": "image/icontools/clo12210039141",
+        "acquired": false
+      },
+      {
+        "id": 6004205,
+        "characterId": 1211003,
+        "name": "Infernal Deliverance",
+        "quality": 6,
+        "icon": "image/icontools/clo12110039281",
+        "acquired": false
+      },
+      {
+        "id": 6003906,
+        "characterId": 1171004,
+        "name": "Tainted Moonrise",
+        "quality": 6,
+        "icon": "image/icontools/clo11710049281",
+        "acquired": false
+      },
+      {
+        "id": 6003905,
+        "characterId": 1171004,
+        "name": "Crystalline Glance",
+        "quality": 6,
+        "icon": "image/icontools/clo11710049092",
+        "acquired": false
+      },
+      {
+        "id": 6003904,
+        "characterId": 1171004,
+        "name": "Moonlight Soliloquy",
+        "quality": 6,
+        "icon": "image/icontools/clo11710049091",
+        "acquired": false
+      },
+      {
+        "id": 6000806,
+        "characterId": 1171003,
+        "name": "Fiery Moon",
+        "quality": 6,
+        "icon": "image/icontools/clo11710039251",
+        "acquired": false
+      },
+      {
+        "id": 6000805,
+        "characterId": 1171003,
+        "name": "Street Rebellion",
+        "quality": 6,
+        "icon": "image/icontools/clo11710039091",
+        "acquired": false
+      },
+      {
+        "id": 6000804,
+        "characterId": 1171003,
+        "name": "Wispthorn",
+        "quality": 6,
+        "icon": "image/icontools/clo11710039071",
+        "acquired": false
+      },
+      {
+        "id": 6005804,
+        "characterId": 1141004,
+        "name": "Gilded Creed",
+        "quality": 6,
+        "icon": "image/icontools/clo11410049011",
+        "acquired": false
+      },
+      {
+        "id": 6000506,
+        "characterId": 1141003,
+        "name": "Niki US1000",
+        "quality": 6,
+        "icon": "image/icontools/clo11410039351",
+        "acquired": false
+      },
+      {
+        "id": 6000505,
+        "characterId": 1141003,
+        "name": "Howling Crown",
+        "quality": 6,
+        "icon": "image/icontools/clo11410039241",
+        "acquired": false
+      },
+      {
+        "id": 6005005,
+        "characterId": 1131004,
+        "name": "Sanguine Justice",
+        "quality": 6,
+        "icon": "image/icontools/clo11310049101",
+        "acquired": false
+      },
+      {
+        "id": 6001607,
+        "characterId": 1131003,
+        "name": "Grandiose Glamor",
+        "quality": 6,
+        "icon": "image/icontools/clo11310039141",
+        "acquired": false
+      },
+      {
+        "id": 6001606,
+        "characterId": 1131003,
+        "name": "Mesektet",
+        "quality": 6,
+        "icon": "image/icontools/clo11310039251",
+        "acquired": false
+      },
+      {
+        "id": 6001605,
+        "characterId": 1131003,
+        "name": "Wavebender",
+        "quality": 6,
+        "icon": "image/icontools/clo11310039331",
+        "acquired": false
+      },
+      {
+        "id": 6001406,
+        "characterId": 1121003,
+        "name": "Radiant Respite",
+        "quality": 6,
+        "icon": "image/icontools/clo10410049011",
+        "acquired": false
+      },
+      {
+        "id": 6001405,
+        "characterId": 1121003,
+        "name": "Nosferatu",
+        "quality": 6,
+        "icon": "image/icontools/clo11210039281",
+        "acquired": false
+      },
+      {
+        "id": 6001404,
+        "characterId": 1121003,
+        "name": "Honor Model",
+        "quality": 6,
+        "icon": "image/icontools/clo11210039231",
+        "acquired": false
+      },
+      {
+        "id": 6000205,
+        "characterId": 1121002,
+        "name": "Golden Days",
+        "quality": 6,
+        "icon": "image/icontools/clo11210029101",
+        "acquired": false
+      },
+      {
+        "id": 6002805,
+        "characterId": 1091003,
+        "name": "Dazzler",
+        "quality": 6,
+        "icon": "image/icontools/clo10910039031",
+        "acquired": false
+      },
+      {
+        "id": 6003605,
+        "characterId": 1081004,
+        "name": "Hell Sing",
+        "quality": 6,
+        "icon": "image/icontools/clo10810049071",
+        "acquired": false
+      },
+      {
+        "id": 6002307,
+        "characterId": 1071004,
+        "name": "Warding Ritualist",
+        "quality": 6,
+        "icon": "image/icontools/clo10710049091",
+        "acquired": false
+      },
+      {
+        "id": 6002306,
+        "characterId": 1071004,
+        "name": "Neon Dynamite ☆",
+        "quality": 6,
+        "icon": "image/icontools/clo10710049381",
+        "acquired": false
+      },
+      {
+        "id": 6002305,
+        "characterId": 1071004,
+        "name": "March Hare",
+        "quality": 6,
+        "icon": "image/icontools/clo10710049131",
+        "acquired": false
+      },
+      {
+        "id": 6710308,
+        "characterId": 1071003,
+        "name": "Deed of Snow Leopard",
+        "quality": 6,
+        "icon": "image/icontools/clo10710039101",
+        "acquired": false
+      },
+      {
+        "id": 6710306,
+        "characterId": 1071003,
+        "name": "Tulle Redbud",
+        "quality": 6,
+        "icon": "image/icontools/clo10710039161",
+        "acquired": false
+      },
+      {
+        "id": 6006004,
+        "characterId": 1061004,
+        "name": "Unending Pursuit",
+        "quality": 6,
+        "icon": "image/icontools/clo10610049421",
+        "acquired": false
+      },
+      {
+        "id": 6610307,
+        "characterId": 1061003,
+        "name": "Tiger Imperium",
+        "quality": 6,
+        "icon": "image/icontools/clo10610039131",
+        "acquired": false
+      },
+      {
+        "id": 6610306,
+        "characterId": 1061003,
+        "name": "Spectral Parade",
+        "quality": 6,
+        "icon": "image/icontools/clo10610039201",
+        "acquired": false
+      },
+      {
+        "id": 6004506,
+        "characterId": 1051005,
+        "name": "Chromatic ☆ Night",
+        "quality": 6,
+        "icon": "image/icontools/clo10510059031",
+        "acquired": false
+      },
+      {
+        "id": 6004505,
+        "characterId": 1051005,
+        "name": "Starward Dragon",
+        "quality": 6,
+        "icon": "image/icontools/clo10510059071",
+        "acquired": false
+      },
+      {
+        "id": 6004504,
+        "characterId": 1051005,
+        "name": "Candy Rider",
+        "quality": 6,
+        "icon": "image/icontools/clo10510059011",
+        "acquired": false
+      },
+      {
+        "id": 6510307,
+        "characterId": 1051003,
+        "name": "Beach Frolics",
+        "quality": 6,
+        "icon": "image/icontools/clo10510039271",
+        "acquired": false
+      },
+      {
+        "id": 6005305,
+        "characterId": 1041005,
+        "name": "Night Sonata",
+        "quality": 6,
+        "icon": "image/icontools/clo10410059241",
+        "acquired": false
+      },
+      {
+        "id": 6005304,
+        "characterId": 1041005,
+        "name": "Thorns of Crimson",
+        "quality": 6,
+        "icon": "image/icontools/clo10410059011",
+        "acquired": false
+      },
+      {
+        "id": 6002506,
+        "characterId": 1041004,
+        "name": "Pyrewatch",
+        "quality": 6,
+        "icon": "image/icontools/clo10410049242",
+        "acquired": false
+      },
+      {
+        "id": 6002504,
+        "characterId": 1041004,
+        "name": "Exorcist",
+        "quality": 6,
+        "icon": "image/icontools/clo10410049331",
+        "acquired": false
+      },
+      {
+        "id": 6410307,
+        "characterId": 1041003,
+        "name": "Spring Huntress",
+        "quality": 6,
+        "icon": "image/icontools/clo10410039131",
+        "acquired": false
+      },
+      {
+        "id": 6410306,
+        "characterId": 1041003,
+        "name": "Grace",
+        "quality": 6,
+        "icon": "image/icontools/clo10410039191",
+        "acquired": false
+      },
+      {
+        "id": 6410305,
+        "characterId": 1041003,
+        "name": "Ink-lit Hermit",
+        "quality": 6,
+        "icon": "image/icontools/clo10410039141",
+        "acquired": false
+      },
+      {
+        "id": 6005604,
+        "characterId": 1031005,
+        "name": "Lotus Ballad",
+        "quality": 6,
+        "icon": "image/icontools/clo10310059011",
+        "acquired": false
+      },
+      {
+        "id": 6001805,
+        "characterId": 1031004,
+        "name": "Dreamcatcher",
+        "quality": 6,
+        "icon": "image/icontools/clo10310049331",
+        "acquired": false
+      },
+      {
+        "id": 6001804,
+        "characterId": 1031004,
+        "name": "Wings of Dawn",
+        "quality": 6,
+        "icon": "image/icontools/clo10310049291",
+        "acquired": false
+      },
+      {
+        "id": 6310306,
+        "characterId": 1031003,
+        "name": "Puella Subnautica",
+        "quality": 6,
+        "icon": "image/icontools/clo10310039161",
+        "acquired": false
+      },
+      {
+        "id": 6310205,
+        "characterId": 1031002,
+        "name": "Florescence",
+        "quality": 6,
+        "icon": "image/icontools/clo10310029191",
+        "acquired": false
+      },
+      {
+        "id": 6006104,
+        "characterId": 1021007,
+        "name": "Nightshroud Coronet",
+        "quality": 6,
+        "icon": "image/icontools/clo10210079421",
+        "acquired": false
+      },
+      {
+        "id": 6004306,
+        "characterId": 1021006,
+        "name": "Rippling Luminescence",
+        "quality": 6,
+        "icon": "image/icontools/clo10210069271",
+        "acquired": false
+      },
+      {
+        "id": 6004305,
+        "characterId": 1021006,
+        "name": "Love's Dawn",
+        "quality": 6,
+        "icon": "image/icontools/clo10210069371",
+        "acquired": false
+      },
+      {
+        "id": 6002907,
+        "characterId": 1021005,
+        "name": "Tsubaki",
+        "quality": 6,
+        "icon": "image/icontools/clo10210059393",
+        "acquired": false
+      },
+      {
+        "id": 6002906,
+        "characterId": 1021005,
+        "name": "Vow of Dragon",
+        "quality": 6,
+        "icon": "image/icontools/clo10210059392",
+        "acquired": false
+      },
+      {
+        "id": 6002905,
+        "characterId": 1021005,
+        "name": "Nightbreaker",
+        "quality": 6,
+        "icon": "image/icontools/clo10210059391",
+        "acquired": false
+      },
+      {
+        "id": 6210406,
+        "characterId": 1021004,
+        "name": "Vermillion Bargain",
+        "quality": 6,
+        "icon": "image/icontools/clo10210049281",
+        "acquired": false
+      },
+      {
+        "id": 6210405,
+        "characterId": 1021004,
+        "name": "Dance of Ripplets",
+        "quality": 6,
+        "icon": "image/icontools/clo10210049271",
+        "acquired": false
+      },
+      {
+        "id": 6210404,
+        "characterId": 1021004,
+        "name": "Eventide Glow",
+        "quality": 6,
+        "icon": "image/icontools/clo10210049141",
+        "acquired": false
+      },
+      {
+        "id": 6902301,
+        "characterId": 1021003,
+        "name": "Volatile Priestess",
+        "quality": 6,
+        "icon": "image/icontools/clo10310029221",
+        "acquired": false
+      },
+      {
+        "id": 6210306,
+        "characterId": 1021003,
+        "name": "Seaside Sunbath",
+        "quality": 6,
+        "icon": "image/icontools/clo10210039161",
+        "acquired": false
+      },
+      {
+        "id": 6002705,
+        "characterId": 1011004,
+        "name": "Diving Shadow",
+        "quality": 6,
+        "icon": "image/icontools/clo10110049331",
+        "acquired": false
+      },
+      {
+        "id": 6110307,
+        "characterId": 1011003,
+        "name": "Illusionist",
+        "quality": 6,
+        "icon": "image/icontools/clo10110039101",
+        "acquired": false
+      },
+      {
+        "id": 6110306,
+        "characterId": 1011003,
+        "name": "Oceanic Blues",
+        "quality": 6,
+        "icon": "image/icontools/clo10110039161",
+        "acquired": false
+      },
+      {
+        "id": 6002404,
+        "characterId": 1571003,
+        "name": "Homecoming",
+        "quality": 5,
+        "icon": "image/icontools/clo15710039011",
+        "acquired": false
+      },
+      {
+        "id": 6002204,
+        "characterId": 1561003,
+        "name": "Fantastical Fellowship",
+        "quality": 5,
+        "icon": "image/icontools/clo15610039011",
+        "acquired": false
+      },
+      {
+        "id": 6002004,
+        "characterId": 1551003,
+        "name": "Dragonwood",
+        "quality": 5,
+        "icon": "image/icontools/clo15510039311",
+        "acquired": false
+      },
+      {
+        "id": 6001705,
+        "characterId": 1541003,
+        "name": "Billowing Indigo",
+        "quality": 5,
+        "icon": "image/icontools/clo15410039141",
+        "acquired": false
+      },
+      {
+        "id": 6001704,
+        "characterId": 1541003,
+        "name": "Fool's Fables",
+        "quality": 5,
+        "icon": "image/icontools/clo15410039261",
+        "acquired": false
+      },
+      {
+        "id": 6001904,
+        "characterId": 1531004,
+        "name": "Irisfall Ballad",
+        "quality": 5,
+        "icon": "image/icontools/clo15310049301",
+        "acquired": false
+      },
+      {
+        "id": 6001304,
+        "characterId": 1531003,
+        "name": "Nightingale and Rose",
+        "quality": 5,
+        "icon": "image/icontools/clo15310039231",
+        "acquired": false
+      },
+      {
+        "id": 6000704,
+        "characterId": 1521003,
+        "name": "Flawless Tempo",
+        "quality": 5,
+        "icon": "image/icontools/clo15210039091",
+        "acquired": false
+      },
+      {
+        "id": 6000404,
+        "characterId": 1511003,
+        "name": "Yaksha Undertow",
+        "quality": 5,
+        "icon": "image/icontools/clo15110039161",
+        "acquired": false
+      },
+      {
+        "id": 6005404,
+        "characterId": 1371002,
+        "name": "Moonweave Shorn",
+        "quality": 5,
+        "icon": "image/icontools/clo13710029011",
+        "acquired": false
+      },
+      {
+        "id": 6004904,
+        "characterId": 1341002,
+        "name": "Mischievous Wings",
+        "quality": 5,
+        "icon": "image/icontools/clo13410029011",
+        "acquired": false
+      },
+      {
+        "id": 6004404,
+        "characterId": 1311002,
+        "name": "Higanbana",
+        "quality": 5,
+        "icon": "image/icontools/clo13110029091",
+        "acquired": false
+      },
+      {
+        "id": 6004004,
+        "characterId": 1301002,
+        "name": "Ardent Trek",
+        "quality": 5,
+        "icon": "image/icontools/clo13010029091",
+        "acquired": false
+      },
+      {
+        "id": 6003804,
+        "characterId": 1291002,
+        "name": "Pixelpop",
+        "quality": 5,
+        "icon": "image/icontools/clo12910029091",
+        "acquired": false
+      },
+      {
+        "id": 6003502,
+        "characterId": 1281002,
+        "name": "Elder Flame",
+        "quality": 5,
+        "icon": "image/icontools/clo12810039031",
+        "acquired": false
+      },
+      {
+        "id": 6003004,
+        "characterId": 1241002,
+        "name": "Heartseeker",
+        "quality": 5,
+        "icon": "image/icontools/clo12410029011",
+        "acquired": false
+      },
+      {
+        "id": 6002605,
+        "characterId": 1231002,
+        "name": "Catwalk",
+        "quality": 5,
+        "icon": "image/icontools/clo12310029012",
+        "acquired": false
+      },
+      {
+        "id": 6002604,
+        "characterId": 1231002,
+        "name": "Swan Lake",
+        "quality": 5,
+        "icon": "image/icontools/clo12310029011",
+        "acquired": false
+      },
+      {
+        "id": 6003104,
+        "characterId": 1221003,
+        "name": "Little Lost Nightmare",
+        "quality": 5,
+        "icon": "image/icontools/clo12210039041",
+        "acquired": false
+      },
+      {
+        "id": 6001505,
+        "characterId": 1221002,
+        "name": "Solar Frost",
+        "quality": 5,
+        "icon": "image/icontools/clo12210029331",
+        "acquired": false
+      },
+      {
+        "id": 6001504,
+        "characterId": 1221002,
+        "name": "Red Hoodie",
+        "quality": 5,
+        "icon": "image/icontools/clo12210029091",
+        "acquired": false
+      },
+      {
+        "id": 6001205,
+        "characterId": 1211002,
+        "name": "Night Fume",
+        "quality": 5,
+        "icon": "image/icontools/clo12110029101",
+        "acquired": false
+      },
+      {
+        "id": 6001204,
+        "characterId": 1211002,
+        "name": "Hawk Scout",
+        "quality": 5,
+        "icon": "image/icontools/clo12110029011",
+        "acquired": false
+      },
+      {
+        "id": 6001102,
+        "characterId": 1201003,
+        "name": "Destroyer Outfit",
+        "quality": 5,
+        "icon": "image/icontools/clo12010039211",
+        "acquired": false
+      },
+      {
+        "id": 6001101,
+        "characterId": 1201003,
+        "name": "YoRHa Type A No.2",
+        "quality": 5,
+        "icon": "image/icontools/clo12010030101",
+        "acquired": false
+      },
+      {
+        "id": 6001002,
+        "characterId": 1191003,
+        "name": "Young Man's Outfit",
+        "quality": 5,
+        "icon": "image/icontools/clo11910039211",
+        "acquired": false
+      },
+      {
+        "id": 6001001,
+        "characterId": 1191003,
+        "name": "YoRHa No.9 Type S",
+        "quality": 5,
+        "icon": "image/icontools/clo11910030101",
+        "acquired": false
+      },
+      {
+        "id": 6000902,
+        "characterId": 1181003,
+        "name": "Revealing Outfit",
+        "quality": 5,
+        "icon": "image/icontools/clo11810039211",
+        "acquired": false
+      },
+      {
+        "id": 6000901,
+        "characterId": 1181003,
+        "name": "YoRHa No.2 Type B",
+        "quality": 5,
+        "icon": "image/icontools/clo11810030101",
+        "acquired": false
+      },
+      {
+        "id": 6000605,
+        "characterId": 1161002,
+        "name": "Ginkgo Ridge",
+        "quality": 5,
+        "icon": "image/icontools/clo11610029141",
+        "acquired": false
+      },
+      {
+        "id": 6000604,
+        "characterId": 1161002,
+        "name": "Winter Hunter",
+        "quality": 5,
+        "icon": "image/icontools/clo11610029071",
+        "acquired": false
+      },
+      {
+        "id": 6000504,
+        "characterId": 1141003,
+        "name": "Einherjar",
+        "quality": 5,
+        "icon": "image/icontools/clo11410039031",
+        "acquired": false
+      },
+      {
+        "id": 6001604,
+        "characterId": 1131003,
+        "name": "Sorrowful Rose",
+        "quality": 5,
+        "icon": "image/icontools/clo11310039091",
+        "acquired": false
+      },
+      {
+        "id": 6000305,
+        "characterId": 1131002,
+        "name": "Agony Break",
+        "quality": 5,
+        "icon": "image/icontools/clo11310029041",
+        "acquired": false
+      },
+      {
+        "id": 6000304,
+        "characterId": 1131002,
+        "name": "Night Fever",
+        "quality": 5,
+        "icon": "image/icontools/clo11310029181",
+        "acquired": false
+      },
+      {
+        "id": 6000204,
+        "characterId": 1121002,
+        "name": "Dream Eater",
+        "quality": 5,
+        "icon": "image/icontools/clo11210029071",
+        "acquired": false
+      },
+      {
+        "id": 6000106,
+        "characterId": 1111002,
+        "name": "Mandala Dance",
+        "quality": 5,
+        "icon": "image/icontools/clo11010029231",
+        "acquired": false
+      },
+      {
+        "id": 6000105,
+        "characterId": 1111002,
+        "name": "Starry Desert",
+        "quality": 5,
+        "icon": "image/icontools/clo11010019031",
+        "acquired": false
+      },
+      {
+        "id": 6000104,
+        "characterId": 1111002,
+        "name": "Chief Mechanic",
+        "quality": 5,
+        "icon": "image/icontools/clo11010019011",
+        "acquired": false
+      },
+      {
+        "id": 6002804,
+        "characterId": 1091003,
+        "name": "Morningstar",
+        "quality": 5,
+        "icon": "image/icontools/clo10910039011",
+        "acquired": false
+      },
+      {
+        "id": 6910106,
+        "characterId": 1091002,
+        "name": "Lost Butterfly",
+        "quality": 5,
+        "icon": "image/icontools/clo10910029301",
+        "acquired": false
+      },
+      {
+        "id": 6910105,
+        "characterId": 1091002,
+        "name": "Aster Hare",
+        "quality": 5,
+        "icon": "image/icontools/clo10910029031",
+        "acquired": false
+      },
+      {
+        "id": 6910104,
+        "characterId": 1091002,
+        "name": "Adventurous Spirit",
+        "quality": 5,
+        "icon": "image/icontools/clo10910029011",
+        "acquired": false
+      },
+      {
+        "id": 6810306,
+        "characterId": 1081003,
+        "name": "Captain Hook",
+        "quality": 5,
+        "icon": "image/icontools/clo10810039271",
+        "acquired": false
+      },
+      {
+        "id": 6810305,
+        "characterId": 1081003,
+        "name": "Skyline Trial",
+        "quality": 5,
+        "icon": "image/icontools/clo10810039031",
+        "acquired": false
+      },
+      {
+        "id": 6810304,
+        "characterId": 1081003,
+        "name": "Field Training",
+        "quality": 5,
+        "icon": "image/icontools/clo10810039011",
+        "acquired": false
+      },
+      {
+        "id": 6810104,
+        "characterId": 1081002,
+        "name": "Gray Feathers: Nightblade",
+        "quality": 5,
+        "icon": "image/icontools/clo10810020201",
+        "acquired": false
+      },
+      {
+        "id": 6002304,
+        "characterId": 1071004,
+        "name": "Maleficent",
+        "quality": 5,
+        "icon": "image/icontools/clo10710049011",
+        "acquired": false
+      },
+      {
+        "id": 6907301,
+        "characterId": 1071003,
+        "name": "Bloody Love",
+        "quality": 5,
+        "icon": "image/icontools/clo10710039251",
+        "acquired": false
+      },
+      {
+        "id": 6710307,
+        "characterId": 1071003,
+        "name": "Silver White",
+        "quality": 5,
+        "icon": "image/icontools/clo10710039191",
+        "acquired": false
+      },
+      {
+        "id": 6710305,
+        "characterId": 1071003,
+        "name": "Machina",
+        "quality": 5,
+        "icon": "image/icontools/clo10710030401",
+        "acquired": false
+      },
+      {
+        "id": 6710304,
+        "characterId": 1071003,
+        "name": "Gray Feathers: Ember",
+        "quality": 5,
+        "icon": "image/icontools/clo10710030201",
+        "acquired": false
+      },
+      {
+        "id": 6710105,
+        "characterId": 1071002,
+        "name": "Crack 'n Blast",
+        "quality": 5,
+        "icon": "image/icontools/clo10710029131",
+        "acquired": false
+      },
+      {
+        "id": 6710104,
+        "characterId": 1071002,
+        "name": "Gray Feathers: Blast",
+        "quality": 5,
+        "icon": "image/icontools/clo10710020201",
+        "acquired": false
+      },
+      {
+        "id": 6610305,
+        "characterId": 1061003,
+        "name": "Shadow Vanguard",
+        "quality": 5,
+        "icon": "image/icontools/clo10610039031",
+        "acquired": false
+      },
+      {
+        "id": 6610304,
+        "characterId": 1061003,
+        "name": "Gray Feathers: Tenebrion",
+        "quality": 5,
+        "icon": "image/icontools/clo10610030201",
+        "acquired": false
+      },
+      {
+        "id": 6610105,
+        "characterId": 1061002,
+        "name": "Gray Feathers: Bastion",
+        "quality": 5,
+        "icon": "image/icontools/clo10610010702",
+        "acquired": false
+      },
+      {
+        "id": 6610104,
+        "characterId": 1061002,
+        "name": "End Messenger",
+        "quality": 5,
+        "icon": "image/icontools/clo10610010701",
+        "acquired": false
+      },
+      {
+        "id": 6002104,
+        "characterId": 1051004,
+        "name": "Night Navigator",
+        "quality": 5,
+        "icon": "image/icontools/clo10510049321",
+        "acquired": false
+      },
+      {
+        "id": 6905301,
+        "characterId": 1051003,
+        "name": "Jolly Santanami",
+        "quality": 5,
+        "icon": "image/icontools/clo10510039111",
+        "acquired": false
+      },
+      {
+        "id": 6510305,
+        "characterId": 1051003,
+        "name": "Shooting Star",
+        "quality": 5,
+        "icon": "image/icontools/clo10510039071",
+        "acquired": false
+      },
+      {
+        "id": 6510304,
+        "characterId": 1051003,
+        "name": "Gray Feathers: Pulse",
+        "quality": 5,
+        "icon": "image/icontools/clo10510039011",
+        "acquired": false
+      },
+      {
+        "id": 6410304,
+        "characterId": 1041003,
+        "name": "Pact of Zero",
+        "quality": 5,
+        "icon": "image/icontools/clo10410039101",
+        "acquired": false
+      },
+      {
+        "id": 6410104,
+        "characterId": 1041002,
+        "name": "Thistle",
+        "quality": 5,
+        "icon": "image/icontools/clo10410070101",
+        "acquired": false
+      },
+      {
+        "id": 6903301,
+        "characterId": 1031003,
+        "name": "Snowbreak Bloom",
+        "quality": 5,
+        "icon": "image/icontools/clo10310039221",
+        "acquired": false
+      },
+      {
+        "id": 6310305,
+        "characterId": 1031003,
+        "name": "Gray Feathers: Luminance",
+        "quality": 5,
+        "icon": "image/icontools/clo10310039011",
+        "acquired": false
+      },
+      {
+        "id": 6903201,
+        "characterId": 1031002,
+        "name": "Spring Breeze",
+        "quality": 5,
+        "icon": "image/icontools/clo10210039221",
+        "acquired": false
+      },
+      {
+        "id": 6310206,
+        "characterId": 1031002,
+        "name": "Lingering Fragrance",
+        "quality": 5,
+        "icon": "image/icontools/clo10310019021",
+        "acquired": false
+      },
+      {
+        "id": 6310204,
+        "characterId": 1031002,
+        "name": "Gray Feathers: Lux",
+        "quality": 5,
+        "icon": "image/icontools/clo10310020201",
+        "acquired": false
+      },
+      {
+        "id": 6310109,
+        "characterId": 1031001,
+        "name": "Agent Peacock",
+        "quality": 5,
+        "icon": "image/icontools/clo10310019341",
+        "acquired": false
+      },
+      {
+        "id": 6310107,
+        "characterId": 1031001,
+        "name": "Christmas Promise",
+        "quality": 5,
+        "icon": "image/icontools/clo10310019111",
+        "acquired": false
+      },
+      {
+        "id": 6310106,
+        "characterId": 1031001,
+        "name": "Maid of Time",
+        "quality": 5,
+        "icon": "image/icontools/clo10310019101",
+        "acquired": false
+      },
+      {
+        "id": 6310105,
+        "characterId": 1031001,
+        "name": "Gray Feathers: Eclipse",
+        "quality": 5,
+        "icon": "image/icontools/clo10310090102",
+        "acquired": false
+      },
+      {
+        "id": 6310104,
+        "characterId": 1031001,
+        "name": "Tiara",
+        "quality": 5,
+        "icon": "image/icontools/clo10310090101",
+        "acquired": false
+      },
+      {
+        "id": 6210305,
+        "characterId": 1021003,
+        "name": "Final Journey",
+        "quality": 5,
+        "icon": "image/icontools/clo10210039071",
+        "acquired": false
+      },
+      {
+        "id": 6210304,
+        "characterId": 1021003,
+        "name": "Gray Feathers: Crimson Abyss",
+        "quality": 5,
+        "icon": "image/icontools/clo10210039011",
+        "acquired": false
+      },
+      {
+        "id": 6210206,
+        "characterId": 1021002,
+        "name": "Holiday of Eden",
+        "quality": 5,
+        "icon": "image/icontools/clo10210029171",
+        "acquired": false
+      },
+      {
+        "id": 6210205,
+        "characterId": 1021002,
+        "name": "Gray Feathers: Dawn",
+        "quality": 5,
+        "icon": "image/icontools/clo10210020201",
+        "acquired": false
+      },
+      {
+        "id": 6210204,
+        "characterId": 1021002,
+        "name": "Gothic",
+        "quality": 5,
+        "icon": "image/icontools/clo10210020701",
+        "acquired": false
+      },
+      {
+        "id": 6210105,
+        "characterId": 1021001,
+        "name": "Gray Feathers: Lotus",
+        "quality": 5,
+        "icon": "image/icontools/clo10210090302",
+        "acquired": false
+      },
+      {
+        "id": 6210104,
+        "characterId": 1021001,
+        "name": "Daybreak",
+        "quality": 5,
+        "icon": "image/icontools/clo10210090301",
+        "acquired": false
+      },
+      {
+        "id": 6002704,
+        "characterId": 1011004,
+        "name": "Scarlet Redeemer",
+        "quality": 5,
+        "icon": "image/icontools/clo10110049011",
+        "acquired": false
+      },
+      {
+        "id": 6110305,
+        "characterId": 1011003,
+        "name": "Ashen End",
+        "quality": 5,
+        "icon": "image/icontools/clo10110030301",
+        "acquired": false
+      },
+      {
+        "id": 6110304,
+        "characterId": 1011003,
+        "name": "Gray Feathers: Entropy",
+        "quality": 5,
+        "icon": "image/icontools/clo10110030201",
+        "acquired": false
+      },
+      {
+        "id": 6110105,
+        "characterId": 1011002,
+        "name": "Ivy",
+        "quality": 5,
+        "icon": "image/icontools/clo10110019091",
+        "acquired": false
+      },
+      {
+        "id": 6110104,
+        "characterId": 1011002,
+        "name": "Gray Feathers: Palefire",
+        "quality": 5,
+        "icon": "image/icontools/clo10110090102",
+        "acquired": false
+      }
+    ],
+    "weaponFashions": [
+      {
+        "id": 12630001,
+        "name": "Bluemoon Reaper",
+        "quality": 5,
+        "icon": "image/icontools/e3sicklemd020011",
+        "acquired": true
+      },
+      {
+        "id": 12620002,
+        "name": "Molten Measure",
+        "quality": 5,
+        "icon": "image/icontools/e3halberdmd030011",
+        "acquired": true
+      },
+      {
+        "id": 12600002,
+        "name": "Crystalline Whimsy",
+        "quality": 5,
+        "icon": "image/icontools/e3lotusblademd030011",
+        "acquired": true
+      },
+      {
+        "id": 12590002,
+        "name": "Holy Night's Hymn",
+        "quality": 5,
+        "icon": "image/icontools/e3dragonlancemd030011",
+        "acquired": true
+      },
+      {
+        "id": 12580002,
+        "name": "Shearing Willow",
+        "quality": 5,
+        "icon": "image/icontools/e3shearsmd030011",
+        "acquired": true
+      },
+      {
+        "id": 12580001,
+        "name": "Scissors of Fate",
+        "quality": 5,
+        "icon": "image/icontools/e3shearsmd020011",
+        "acquired": true
+      },
+      {
+        "id": 12540002,
+        "name": "Wrathvanquish",
+        "quality": 5,
+        "icon": "image/icontools/e3bladespearmd030011",
+        "acquired": true
+      },
+      {
+        "id": 12530002,
+        "name": "Seafoam Sparkler",
+        "quality": 5,
+        "icon": "image/icontools/e3pistolmd030011",
+        "acquired": true
+      },
+      {
+        "id": 12510001,
+        "name": "Blatant Flamboyance",
+        "quality": 5,
+        "icon": "image/icontools/e3brollymd020011",
+        "acquired": true
+      },
+      {
+        "id": 12480001,
+        "name": "Aka Oni",
+        "quality": 5,
+        "icon": "image/icontools/e3packmd020011",
+        "acquired": true
+      },
+      {
+        "id": 12460001,
+        "name": "Obsidian Owl",
+        "quality": 5,
+        "icon": "image/icontools/e3revolvermd020011",
+        "acquired": true
+      },
+      {
+        "id": 12450004,
+        "name": "Moonlit Autumn",
+        "quality": 5,
+        "icon": "image/icontools/e3pipamd050011",
+        "acquired": true
+      },
+      {
+        "id": 12440002,
+        "name": "Full Throttle",
+        "quality": 5,
+        "icon": "image/icontools/e3tonfamd030011",
+        "acquired": true
+      },
+      {
+        "id": 12440001,
+        "name": "Safety Pledge",
+        "quality": 5,
+        "icon": "image/icontools/e3tonfamd020011",
+        "acquired": true
+      },
+      {
+        "id": 12430004,
+        "name": "Neon Midway",
+        "quality": 5,
+        "icon": "image/icontools/e3circlemd050011",
+        "acquired": true
+      },
+      {
+        "id": 12420002,
+        "name": "Synthetic Waves",
+        "quality": 5,
+        "icon": "image/icontools/e3headsetmd030011",
+        "acquired": true
+      },
+      {
+        "id": 12420001,
+        "name": "Party Maker",
+        "quality": 5,
+        "icon": "image/icontools/e3headsetmd020011",
+        "acquired": true
+      },
+      {
+        "id": 12370001,
+        "name": "Star Dragon Fist",
+        "quality": 5,
+        "icon": "image/icontools/e3armmd020011",
+        "acquired": true
+      },
+      {
+        "id": 12350001,
+        "name": "Cyan Strings",
+        "quality": 5,
+        "icon": "image/icontools/e3fanmd020011",
+        "acquired": true
+      },
+      {
+        "id": 12340005,
+        "name": "Nocturnal Edge",
+        "quality": 5,
+        "icon": "image/icontools/e3alphamd060011",
+        "acquired": true
+      },
+      {
+        "id": 12340001,
+        "name": "Cobalt Soul",
+        "quality": 5,
+        "icon": "image/icontools/e3alphamd020011",
+        "acquired": true
+      },
+      {
+        "id": 12330002,
+        "name": "Prismatic Waves",
+        "quality": 5,
+        "icon": "image/icontools/e3beamlancemd030011",
+        "acquired": true
+      },
+      {
+        "id": 12320001,
+        "name": "Woe's Wonder",
+        "quality": 5,
+        "icon": "image/icontools/e3superliboxmd030011",
+        "acquired": true
+      },
+      {
+        "id": 12310002,
+        "name": "Dancing Delight",
+        "quality": 5,
+        "icon": "image/icontools/e3bangbinatamd030011",
+        "acquired": true
+      },
+      {
+        "id": 12300002,
+        "name": "Snow Oath",
+        "quality": 5,
+        "icon": "image/icontools/e3bigswordmd030011",
+        "acquired": true
+      },
+      {
+        "id": 12290001,
+        "name": "Paper Song",
+        "quality": 5,
+        "icon": "image/icontools/e3nuoanmd020011",
+        "acquired": true
+      },
+      {
+        "id": 12140001,
+        "name": "Cosmic Gamble",
+        "quality": 5,
+        "icon": "image/icontools/e3glovemd020011",
+        "acquired": true
+      },
+      {
+        "id": 12090001,
+        "name": "Budding Wish",
+        "quality": 5,
+        "icon": "image/icontools/e3sickmd110011",
+        "acquired": true
+      },
+      {
+        "id": 12080001,
+        "name": "World Drifter",
+        "quality": 5,
+        "icon": "image/icontools/e3daggermd020011",
+        "acquired": true
+      },
+      {
+        "id": 12070004,
+        "name": "Summer Waves",
+        "quality": 5,
+        "icon": "image/icontools/e3sleevemd110011",
+        "acquired": true
+      },
+      {
+        "id": 12040005,
+        "name": "Somber Arc",
+        "quality": 5,
+        "icon": "image/icontools/e3bowmd140011",
+        "acquired": true
+      },
+      {
+        "id": 12010002,
+        "name": "Sharks-buster",
+        "quality": 5,
+        "icon": "image/icontools/e3gunmd130011",
+        "acquired": true
+      },
+      {
+        "id": 12660001,
+        "name": "Serenading Waves",
+        "quality": 5,
+        "icon": "image/icontools/e3chainsawmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12650001,
+        "name": "Evernight Solitude",
+        "quality": 5,
+        "icon": "image/icontools/e3ssalphamd020011",
+        "acquired": false
+      },
+      {
+        "id": 12640002,
+        "name": "Buttery Chime",
+        "quality": 5,
+        "icon": "image/icontools/e3greatswordmd030011",
+        "acquired": false
+      },
+      {
+        "id": 12640001,
+        "name": "Argent Radiance",
+        "quality": 5,
+        "icon": "image/icontools/e3greatswordmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12620001,
+        "name": "Frost Incineration",
+        "quality": 5,
+        "icon": "image/icontools/e3halberdmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12610001,
+        "name": "Honeyed Pathfinder",
+        "quality": 5,
+        "icon": "image/icontools/e3shoesmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12600001,
+        "name": "Glimpsed Grace",
+        "quality": 5,
+        "icon": "image/icontools/e3lotusblademd020011",
+        "acquired": false
+      },
+      {
+        "id": 12590003,
+        "name": "Nether Shade",
+        "quality": 5,
+        "icon": "image/icontools/e3dragonlancemd040011",
+        "acquired": false
+      },
+      {
+        "id": 12590001,
+        "name": "Slumbering Sands",
+        "quality": 5,
+        "icon": "image/icontools/e3dragonlancemd020011",
+        "acquired": false
+      },
+      {
+        "id": 12570002,
+        "name": "E Dormivan le Stelle",
+        "quality": 5,
+        "icon": "image/icontools/e3chainswordmd030011",
+        "acquired": false
+      },
+      {
+        "id": 12570001,
+        "name": "The Ordinance",
+        "quality": 5,
+        "icon": "image/icontools/e3chainswordmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12540003,
+        "name": "Glory's Claim",
+        "quality": 5,
+        "icon": "image/icontools/e3bladespearmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12540001,
+        "name": "Crimson Dawn",
+        "quality": 5,
+        "icon": "image/icontools/e3bladespearmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12530001,
+        "name": "Whimsical Oracle",
+        "quality": 5,
+        "icon": "image/icontools/e3pistolmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12520003,
+        "name": "Summer Strings",
+        "quality": 5,
+        "icon": "image/icontools/e3lyreswordmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12520002,
+        "name": "Vernal Blessing",
+        "quality": 5,
+        "icon": "image/icontools/e3lyreswordmd030011",
+        "acquired": false
+      },
+      {
+        "id": 12520001,
+        "name": "Poet of Iris",
+        "quality": 5,
+        "icon": "image/icontools/e3lyreswordmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12510003,
+        "name": "Flawless Deception",
+        "quality": 5,
+        "icon": "image/icontools/e3brollymd040011",
+        "acquired": false
+      },
+      {
+        "id": 12510002,
+        "name": "Stygian Parasol",
+        "quality": 5,
+        "icon": "image/icontools/e3brollymd030011",
+        "acquired": false
+      },
+      {
+        "id": 12500003,
+        "name": "Everlight Oath",
+        "quality": 5,
+        "icon": "image/icontools/e3keywandmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12500002,
+        "name": "Mistbound Mystique",
+        "quality": 5,
+        "icon": "image/icontools/e3keywandmd030011",
+        "acquired": false
+      },
+      {
+        "id": 12500001,
+        "name": "The All-Seeing Key",
+        "quality": 5,
+        "icon": "image/icontools/e3keywandmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12490003,
+        "name": "Iridescent Galaxy",
+        "quality": 5,
+        "icon": "image/icontools/e3swordaxemd040011",
+        "acquired": false
+      },
+      {
+        "id": 12490002,
+        "name": "Wild Hunt",
+        "quality": 5,
+        "icon": "image/icontools/e3swordaxemd030011",
+        "acquired": false
+      },
+      {
+        "id": 12490001,
+        "name": "Momotaro",
+        "quality": 5,
+        "icon": "image/icontools/e3swordaxemd020011",
+        "acquired": false
+      },
+      {
+        "id": 12470004,
+        "name": "Dusktide Ripples",
+        "quality": 5,
+        "icon": "image/icontools/e3tachiamd050011",
+        "acquired": false
+      },
+      {
+        "id": 12470003,
+        "name": "Blade Skewer",
+        "quality": 5,
+        "icon": "image/icontools/e3tachiamd040011",
+        "acquired": false
+      },
+      {
+        "id": 12470002,
+        "name": "Blossom Aflame",
+        "quality": 5,
+        "icon": "image/icontools/e3tachiamd030011",
+        "acquired": false
+      },
+      {
+        "id": 12470001,
+        "name": "Resplendence",
+        "quality": 5,
+        "icon": "image/icontools/e3tachiamd020011",
+        "acquired": false
+      },
+      {
+        "id": 12460002,
+        "name": "Argent Requiem",
+        "quality": 5,
+        "icon": "image/icontools/e3revolvermd030011",
+        "acquired": false
+      },
+      {
+        "id": 12450003,
+        "name": "Wintersweet Flush",
+        "quality": 5,
+        "icon": "image/icontools/e3pipamd040011",
+        "acquired": false
+      },
+      {
+        "id": 12450002,
+        "name": "Lotus Melody",
+        "quality": 5,
+        "icon": "image/icontools/e3pipamd030011",
+        "acquired": false
+      },
+      {
+        "id": 12450001,
+        "name": "Timeless Tune",
+        "quality": 5,
+        "icon": "image/icontools/e3pipamd020011",
+        "acquired": false
+      },
+      {
+        "id": 12430003,
+        "name": "Dystopian Verdict",
+        "quality": 5,
+        "icon": "image/icontools/e3circlemd040011",
+        "acquired": false
+      },
+      {
+        "id": 12430002,
+        "name": "Ocean Leap",
+        "quality": 5,
+        "icon": "image/icontools/e3circlemd030011",
+        "acquired": false
+      },
+      {
+        "id": 12430001,
+        "name": "Frostdyed",
+        "quality": 5,
+        "icon": "image/icontools/e3circlemd020011",
+        "acquired": false
+      },
+      {
+        "id": 12420003,
+        "name": "Awakening Prunus",
+        "quality": 5,
+        "icon": "image/icontools/e3headsetmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12410003,
+        "name": "Vermilion Clangs",
+        "quality": 5,
+        "icon": "image/icontools/e3jianmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12410002,
+        "name": "Fallen Plumage",
+        "quality": 5,
+        "icon": "image/icontools/e3jianmd030011",
+        "acquired": false
+      },
+      {
+        "id": 12410001,
+        "name": "Flaming Snow",
+        "quality": 5,
+        "icon": "image/icontools/e3jianmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12400001,
+        "name": "Rebellion Woe",
+        "quality": 5,
+        "icon": "image/icontools/e3sabremd030011",
+        "acquired": false
+      },
+      {
+        "id": 12380003,
+        "name": "Silken Piercer",
+        "quality": 5,
+        "icon": "image/icontools/e3lamiyamd040011",
+        "acquired": false
+      },
+      {
+        "id": 12380002,
+        "name": "Nostalgic Isolation",
+        "quality": 5,
+        "icon": "image/icontools/e3lamiyamd030011",
+        "acquired": false
+      },
+      {
+        "id": 12380001,
+        "name": "Terminator Line",
+        "quality": 5,
+        "icon": "image/icontools/e3lamiyamd020011",
+        "acquired": false
+      },
+      {
+        "id": 12360002,
+        "name": "Neverafter",
+        "quality": 5,
+        "icon": "image/icontools/e3clawmd030011",
+        "acquired": false
+      },
+      {
+        "id": 12360001,
+        "name": "Bloom and Boom",
+        "quality": 5,
+        "icon": "image/icontools/e3clawmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12340004,
+        "name": "Penance Flame",
+        "quality": 5,
+        "icon": "image/icontools/e3alphamd050011",
+        "acquired": false
+      },
+      {
+        "id": 12340003,
+        "name": "Firescale",
+        "quality": 5,
+        "icon": "image/icontools/e3alphamd040011",
+        "acquired": false
+      },
+      {
+        "id": 12340002,
+        "name": "Stellar Thunder",
+        "quality": 5,
+        "icon": "image/icontools/e3alphamd030011",
+        "acquired": false
+      },
+      {
+        "id": 12330001,
+        "name": "Inktrail",
+        "quality": 5,
+        "icon": "image/icontools/e3beamlancemd020011",
+        "acquired": false
+      },
+      {
+        "id": 12320002,
+        "name": "Water Leisure",
+        "quality": 5,
+        "icon": "image/icontools/e3superliboxmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12310003,
+        "name": "Balletic Innocence",
+        "quality": 5,
+        "icon": "image/icontools/e3bangbinatamd040011",
+        "acquired": false
+      },
+      {
+        "id": 12310001,
+        "name": "Swan Feather",
+        "quality": 5,
+        "icon": "image/icontools/e3bangbinatamd020011",
+        "acquired": false
+      },
+      {
+        "id": 12300003,
+        "name": "Awakened Dusk",
+        "quality": 5,
+        "icon": "image/icontools/e3bigswordmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12300001,
+        "name": "Southern Cross",
+        "quality": 5,
+        "icon": "image/icontools/e3bigswordmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12280003,
+        "name": "Thunder Talisman",
+        "quality": 5,
+        "icon": "image/icontools/e3hammermd040011",
+        "acquired": false
+      },
+      {
+        "id": 12280002,
+        "name": "Glamorous Star",
+        "quality": 5,
+        "icon": "image/icontools/e3hammermd030011",
+        "acquired": false
+      },
+      {
+        "id": 12280001,
+        "name": "Rabbit Fire",
+        "quality": 5,
+        "icon": "image/icontools/e3hammermd020011",
+        "acquired": false
+      },
+      {
+        "id": 12260001,
+        "name": "Red Blossom",
+        "quality": 5,
+        "icon": "image/icontools/e3boomerangmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12250002,
+        "name": "Echoing Ripples",
+        "quality": 5,
+        "icon": "image/icontools/e3fluntmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12250001,
+        "name": "Wind Wisher",
+        "quality": 5,
+        "icon": "image/icontools/e3fluntmd030011",
+        "acquired": false
+      },
+      {
+        "id": 12240003,
+        "name": "Titania",
+        "quality": 5,
+        "icon": "image/icontools/e3wandmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12240002,
+        "name": "Spring's Rising",
+        "quality": 5,
+        "icon": "image/icontools/e3wandmd030011",
+        "acquired": false
+      },
+      {
+        "id": 12240001,
+        "name": "Firmament",
+        "quality": 5,
+        "icon": "image/icontools/e3wandmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12230004,
+        "name": "Spear Champion",
+        "quality": 5,
+        "icon": "image/icontools/e3lancemd060011",
+        "acquired": false
+      },
+      {
+        "id": 12230003,
+        "name": "Ankh",
+        "quality": 5,
+        "icon": "image/icontools/e3lancemd040011",
+        "acquired": false
+      },
+      {
+        "id": 12230002,
+        "name": "Theros' Bloom",
+        "quality": 5,
+        "icon": "image/icontools/e3lancemd030011",
+        "acquired": false
+      },
+      {
+        "id": 12230001,
+        "name": "Shining Banner",
+        "quality": 5,
+        "icon": "image/icontools/e3lancemd020011",
+        "acquired": false
+      },
+      {
+        "id": 12220001,
+        "name": "Blue Slumber",
+        "quality": 5,
+        "icon": "image/icontools/e3luolanmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12200003,
+        "name": "Leisure Time",
+        "quality": 5,
+        "icon": "image/icontools/e3gunblademd040011",
+        "acquired": false
+      },
+      {
+        "id": 12200002,
+        "name": "Gray Moon Embrace",
+        "quality": 5,
+        "icon": "image/icontools/e3gunblademd030011",
+        "acquired": false
+      },
+      {
+        "id": 12200001,
+        "name": "Lion Glory",
+        "quality": 5,
+        "icon": "image/icontools/e3gunblademd020011",
+        "acquired": false
+      },
+      {
+        "id": 12190001,
+        "name": "Moonlight Fantasia",
+        "quality": 5,
+        "icon": "image/icontools/e3cellomd020011",
+        "acquired": false
+      },
+      {
+        "id": 12180001,
+        "name": "Soaker Mk.81 Redux",
+        "quality": 5,
+        "icon": "image/icontools/e3riflemd030011",
+        "acquired": false
+      },
+      {
+        "id": 12170004,
+        "name": "Dawn's Judgment",
+        "quality": 5,
+        "icon": "image/icontools/e3ringmd050011",
+        "acquired": false
+      },
+      {
+        "id": 12170003,
+        "name": "Lunar Clouds",
+        "quality": 5,
+        "icon": "image/icontools/e3ringmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12170002,
+        "name": "Open Annulus",
+        "quality": 5,
+        "icon": "image/icontools/e3ringmd030011",
+        "acquired": false
+      },
+      {
+        "id": 12170001,
+        "name": "Thorn Aria",
+        "quality": 5,
+        "icon": "image/icontools/e3ringmd020011",
+        "acquired": false
+      },
+      {
+        "id": 12130002,
+        "name": "Birth at Silent Night",
+        "quality": 5,
+        "icon": "image/icontools/e3qumd030011",
+        "acquired": false
+      },
+      {
+        "id": 12130001,
+        "name": "Starry Clouds",
+        "quality": 5,
+        "icon": "image/icontools/e3sabremd020011",
+        "acquired": false
+      },
+      {
+        "id": 12110003,
+        "name": "Glistening Oath",
+        "quality": 5,
+        "icon": "image/icontools/e3spearmd050011",
+        "acquired": false
+      },
+      {
+        "id": 12110002,
+        "name": "Crimson Banner",
+        "quality": 5,
+        "icon": "image/icontools/e3spearmd040011",
+        "acquired": false
+      },
+      {
+        "id": 12110001,
+        "name": "Yggdrasil",
+        "quality": 5,
+        "icon": "image/icontools/e3spearmd030011",
+        "acquired": false
+      },
+      {
+        "id": 12100001,
+        "name": "Dragonboat",
+        "quality": 5,
+        "icon": "image/icontools/e3kamumd030011",
+        "acquired": false
+      },
+      {
+        "id": 12070003,
+        "name": "Flame Beast",
+        "quality": 5,
+        "icon": "image/icontools/e3sleevemd100011",
+        "acquired": false
+      },
+      {
+        "id": 12070002,
+        "name": "Palm Snow",
+        "quality": 5,
+        "icon": "image/icontools/e3sleevemd090011",
+        "acquired": false
+      },
+      {
+        "id": 12070001,
+        "name": "Firecrackers",
+        "quality": 5,
+        "icon": "image/icontools/e2sleevemd110011",
+        "acquired": false
+      },
+      {
+        "id": 12060004,
+        "name": "Shadow Blade",
+        "quality": 5,
+        "icon": "image/icontools/e3claymoremd110011",
+        "acquired": false
+      },
+      {
+        "id": 12060003,
+        "name": "Oceanic Assault",
+        "quality": 5,
+        "icon": "image/icontools/e3claymoremd100011",
+        "acquired": false
+      },
+      {
+        "id": 12060002,
+        "name": "Star of Bethlehem",
+        "quality": 5,
+        "icon": "image/icontools/e2claymoremd110011",
+        "acquired": false
+      },
+      {
+        "id": 12060001,
+        "name": "Danza Macabra",
+        "quality": 5,
+        "icon": "image/icontools/e3claymoremd090011",
+        "acquired": false
+      },
+      {
+        "id": 12051001,
+        "name": "Hymn of Stars",
+        "quality": 5,
+        "icon": "image/icontools/e3sawmd090011",
+        "acquired": false
+      },
+      {
+        "id": 12050002,
+        "name": "Giggling Pumpkin",
+        "quality": 5,
+        "icon": "image/icontools/e3sawmd120011",
+        "acquired": false
+      },
+      {
+        "id": 12050001,
+        "name": "Shark Fang",
+        "quality": 5,
+        "icon": "image/icontools/e3sawmd110011",
+        "acquired": false
+      },
+      {
+        "id": 12040007,
+        "name": "Summer Rain-Bow",
+        "quality": 5,
+        "icon": "image/icontools/e3bowmd160011",
+        "acquired": false
+      },
+      {
+        "id": 12040006,
+        "name": "Eternal Nightfall: Dreamless Ode",
+        "quality": 5,
+        "icon": "image/icontools/e3bowmd150011",
+        "acquired": false
+      },
+      {
+        "id": 12040004,
+        "name": "Elpis, Release!",
+        "quality": 5,
+        "icon": "image/icontools/e3bowmd120011",
+        "acquired": false
+      },
+      {
+        "id": 12040003,
+        "name": "Nightflyer",
+        "quality": 5,
+        "icon": "image/icontools/e3bowmd110011",
+        "acquired": false
+      },
+      {
+        "id": 12040002,
+        "name": "White Acclaim",
+        "quality": 5,
+        "icon": "image/icontools/e3bowmd100011",
+        "acquired": false
+      },
+      {
+        "id": 12040001,
+        "name": "Iris",
+        "quality": 5,
+        "icon": "image/icontools/e3bowmd090011",
+        "acquired": false
+      },
+      {
+        "id": 12031001,
+        "name": "Light Silk",
+        "quality": 5,
+        "icon": "image/icontools/e3floatmd110011",
+        "acquired": false
+      },
+      {
+        "id": 12030002,
+        "name": "Platinum Swan",
+        "quality": 5,
+        "icon": "image/icontools/e3floatmd120011",
+        "acquired": false
+      },
+      {
+        "id": 12030001,
+        "name": "Caldwell - 49",
+        "quality": 5,
+        "icon": "image/icontools/e3floatmd100011",
+        "acquired": false
+      },
+      {
+        "id": 12021001,
+        "name": "Floranum",
+        "quality": 5,
+        "icon": "image/icontools/e3swordmd170011",
+        "acquired": false
+      },
+      {
+        "id": 12020005,
+        "name": "Red Sky Ritual",
+        "quality": 5,
+        "icon": "image/icontools/e3swordmd190011",
+        "acquired": false
+      },
+      {
+        "id": 12020004,
+        "name": "Bonescale Blade",
+        "quality": 5,
+        "icon": "image/icontools/e3swordmd180011",
+        "acquired": false
+      },
+      {
+        "id": 12020001,
+        "name": "Benizakura",
+        "quality": 5,
+        "icon": "image/icontools/e3swordmd140111",
+        "acquired": false
+      },
+      {
+        "id": 12010001,
+        "name": "Black Sheep",
+        "quality": 5,
+        "icon": "image/icontools/e3gunmd120011",
+        "acquired": false
+      }
+    ],
+    "startDate": "2024-01-26T00:00:00Z",
+    "updatedAt": "2026-07-29T08:44:29.446588402Z"
+  }
+}
