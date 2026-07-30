@@ -132,6 +132,11 @@ export interface MemoryData {
   suitId?: number;
   suitName?: string;
   position?: number;
+  resonance?: {
+    name?: string;
+    description?: string;
+  };
+  resonances?: Array<{ name?: string; description?: string }>;
 }
 
 export interface SuitBonus {
@@ -209,6 +214,10 @@ export interface CharacterDetailInfo {
     star: number;
     quality?: number;
   };
+  level?: number;
+  bp?: number;
+  gradeName?: string;
+  awakeningLevel?: number;
 }
 
 export interface CharacterDetailResponse {
