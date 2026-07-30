@@ -52,54 +52,54 @@ export function extractYoutubeVideoId(url: string): string {
 
 export const INITIAL_PROTOTYPE_REFERENCES: ReferenceItem[] = [
   {
-    id: 'ref-1',
+    id: '11111111-1111-4111-a111-111111111111',
     category: 'guild_challenge',
     subcategory: 'Zone Boss',
     title: 'Guild Challenge - Zone Boss Reference Run',
     youtubeUrl: 'https://youtu.be/cVxAQcUtZn0?si=0lS_x0kz-jjrFgnU',
     videoId: 'cVxAQcUtZn0',
     thumbnailUrl: 'https://img.youtube.com/vi/cVxAQcUtZn0/hqdefault.jpg',
-    description: '### Rotasi & Strategi Zone Boss\nReferensi rotasi dan strategi komprehensif untuk penyelesaian **Zone Boss** pada *Guild Challenge*.\n\n> **Catatan:** Pastikan timing ult disesuaikan dengan stun window.',
+    description: `### Rotation & Strategy Guide\nComprehensive reference run and team rotation strategy for clearing **Zone Boss** in *Guild Challenge*.\n\n> **Note:** Align ultimate ability timings with boss vulnerability windows.`,
     tips: [
-      'Perhatikan waktu swap character untuk menjaga kontinuitas burst DMG.',
-      'Gunakan ultimate ability saat boss memasuki stun / vulnerability window.',
-      'Pastikan matriks dodge di-trigger tepat sebelum serangan sweep area.'
+      'Pay close attention to character swap timing to maintain burst DMG continuity.',
+      'Trigger ultimate abilities during boss vulnerability / stun windows.',
+      'Ensure dodge matrix is activated right before area sweeps.'
     ],
     author: 'Karuhun Corps',
     dateAdded: '2026-07-29',
     isPublished: true
   },
   {
-    id: 'ref-2',
+    id: '22222222-2222-4222-a222-222222222222',
     category: 'warzone',
     subcategory: 'Nihil',
     title: 'Warzone Nihil 12M+ Score Run',
     youtubeUrl: 'https://www.youtube.com/watch?v=L9D3wqtzZKQ',
     videoId: 'L9D3wqtzZKQ',
     thumbnailUrl: 'https://img.youtube.com/vi/L9D3wqtzZKQ/hqdefault.jpg',
-    description: '## High Score Rotation\nHigh score rotation **12M+ poin** untuk Warzone Nihil weather.\n\n- Rotasi karakter tanpa jeda\n- Pemilihan orb yang presisi',
+    description: `## High Score Rotation\nHigh score rotation **12M+ points** for Warzone Nihil weather.\n\n- Seamless character swap loop\n- Precise 3-ping orb management`,
     tips: [
-      'Manfaatkan bonus pasif Nihil weather untuk melipatgandakan akumulasi poin wave.',
-      'Jaga ritme 3-ping orb agar tidak ada jeda animasi rotasi karakter utama.',
-      'Gunakan CUB pet skill saat wave musuh spawn secara bersamaan.'
+      'Capitalize on Nihil passive weather bonuses to multiply wave points.',
+      'Maintain 3-ping orb rhythm to minimize swap animation delay.',
+      'Deploy CUB pet skills when multiple enemy waves spawn.'
     ],
     author: 'Karuhun Corps',
     dateAdded: '2026-07-29',
     isPublished: true
   },
   {
-    id: 'ref-3',
+    id: '33333333-3333-4333-a333-333333333333',
     category: 'ppc',
     subcategory: 'Intensive Battle',
     title: 'PPC Intensive Battle High Score Clear',
     youtubeUrl: 'https://www.youtube.com/watch?v=Y_Qn5-fj-Rw',
     videoId: 'Y_Qn5-fj-Rw',
     thumbnailUrl: 'https://img.youtube.com/vi/Y_Qn5-fj-Rw/hqdefault.jpg',
-    description: '### High Score Clear Strategy\nPanduan dan strategi optimal menyelesaikan **PPC Intensive Battle mode** dengan waktu kill cepat.\n\n> Gunakan burst instan pembuka untuk menghindari invincible phase.',
+    description: `### High Score Clear Strategy\nOptimal guide and strategy for clearing **PPC Intensive Battle mode** with fast kill timer.\n\n> Use opener burst to bypass invincible phase.`,
     tips: [
-      'Fokus pada dodge matrix pembuka di 0.5 detik pertama.',
-      'Eksekusi burst DMG instan sebelum boss masuk ke invincible phase.',
-      'Perhatikan pergerakan opener delay timer untuk sinkronisasi waktu kill.'
+      'Focus on dodge matrix within the first 0.5s of the battle.',
+      'Execute instant burst DMG before boss enters invulnerability phase.',
+      'Watch opener delay timer for precise kill sync.'
     ],
     author: 'Karuhun Corps',
     dateAdded: '2026-07-29',
@@ -110,7 +110,7 @@ export const INITIAL_PROTOTYPE_REFERENCES: ReferenceItem[] = [
 const STORAGE_KEY = 'karuhun_reffs_db_v1';
 
 /**
- * Fetch references list (supports Supabase API or LocalStorage fallback)
+ * Fetch references list from LocalStorage fallback
  */
 export function getStoredReferences(): ReferenceItem[] {
   try {
@@ -128,7 +128,7 @@ export function getStoredReferences(): ReferenceItem[] {
 }
 
 /**
- * Async fetch from Supabase if credentials are set, otherwise returns sync stored references
+ * Async fetch from Supabase if configured, falling back to LocalStorage
  */
 export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
   if (isSupabaseConfigured() && supabase) {
@@ -194,9 +194,9 @@ export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
 }
 
 /**
- * Save / Update a reference item
+ * Save / Update a reference item (Syncs to Supabase live DB + LocalStorage)
  */
-export function saveStoredReference(item: ReferenceItem): ReferenceItem[] {
+export async function saveStoredReference(item: ReferenceItem): Promise<ReferenceItem[]> {
   const current = getStoredReferences();
   const existingIdx = current.findIndex((r) => r.id === item.id);
   
@@ -211,34 +211,70 @@ export function saveStoredReference(item: ReferenceItem): ReferenceItem[] {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
   } catch (err) {
-    console.error('Failed to save reference', err);
+    console.error('Failed to save reference to localStorage', err);
   }
+
+  // Live Supabase Sync
+  if (isSupabaseConfigured() && supabase) {
+    try {
+      await supabase
+        .from('video_references')
+        .upsert({
+          id: item.id.includes('-') && item.id.length > 20 ? item.id : undefined,
+          title: item.title,
+          youtube_url: item.youtubeUrl,
+          youtube_video_id: item.videoId,
+          thumbnail_url: item.thumbnailUrl,
+          description: item.description,
+          author_name: item.author || 'Karuhun Corps',
+          is_published: item.isPublished !== false
+        });
+    } catch (err) {
+      console.warn('Failed to sync save to Supabase', err);
+    }
+  }
+
   return updatedList;
 }
 
 /**
- * Delete a reference item by ID
+ * Delete a reference item by ID (Syncs to Supabase live DB + LocalStorage)
  */
-export function deleteStoredReference(id: string): ReferenceItem[] {
+export async function deleteStoredReference(id: string): Promise<ReferenceItem[]> {
   const current = getStoredReferences();
   const updatedList = current.filter((r) => r.id !== id);
 
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
   } catch (err) {
-    console.error('Failed to delete reference', err);
+    console.error('Failed to delete reference from localStorage', err);
   }
+
+  // Live Supabase Sync
+  if (isSupabaseConfigured() && supabase) {
+    try {
+      await supabase
+        .from('video_references')
+        .delete()
+        .eq('id', id);
+    } catch (err) {
+      console.warn('Failed to sync delete to Supabase', err);
+    }
+  }
+
   return updatedList;
 }
 
 /**
- * Toggle publication status (Published / Draft)
+ * Toggle publication status (Published / Draft) (Syncs to Supabase live DB + LocalStorage)
  */
-export function toggleStoredReferencePublish(id: string): ReferenceItem[] {
+export async function toggleStoredReferencePublish(id: string): Promise<ReferenceItem[]> {
   const current = getStoredReferences();
+  let targetNewStatus = false;
   const updatedList = current.map((r) => {
     if (r.id === id) {
-      return { ...r, isPublished: !r.isPublished };
+      targetNewStatus = !r.isPublished;
+      return { ...r, isPublished: targetNewStatus };
     }
     return r;
   });
@@ -246,7 +282,20 @@ export function toggleStoredReferencePublish(id: string): ReferenceItem[] {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
   } catch (err) {
-    console.error('Failed to toggle publish status', err);
+    console.error('Failed to toggle publish status in localStorage', err);
   }
+
+  // Live Supabase Sync
+  if (isSupabaseConfigured() && supabase) {
+    try {
+      await supabase
+        .from('video_references')
+        .update({ is_published: targetNewStatus })
+        .eq('id', id);
+    } catch (err) {
+      console.warn('Failed to sync toggle publish to Supabase', err);
+    }
+  }
+
   return updatedList;
 }
