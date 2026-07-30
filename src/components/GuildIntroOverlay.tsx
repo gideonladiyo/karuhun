@@ -61,7 +61,7 @@ export const GuildIntroOverlay: React.FC<GuildIntroOverlayProps> = ({ onEnter })
           onClick={handleStart}
           className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-zinc-900/80 border border-zinc-700 hover:border-white text-xs font-tech font-bold text-zinc-300 hover:text-white transition-all backdrop-blur-md"
         >
-          <span>LEWATI INTRO</span>
+          <span>SKIP INTRO</span>
           <SkipForward className="w-4 h-4" />
         </button>
       </div>
@@ -96,15 +96,10 @@ export const GuildIntroOverlay: React.FC<GuildIntroOverlayProps> = ({ onEnter })
             onClick={handleStart}
             className="w-full sm:w-auto inline-flex items-center justify-center space-x-3 px-8 py-4 rounded-2xl bg-white hover:bg-zinc-200 text-black font-heading font-black text-sm transition-all duration-300 shadow-2xl shadow-white/20 hover:scale-105 uppercase tracking-wider group"
           >
-            <span>MASUK KE WEBSITE</span>
+            <span>ENTER WEBSITE PORTAL</span>
             <ArrowRight className="w-5 h-5 text-black group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
-      </div>
-
-      {/* Footer watermark */}
-      <div className="absolute bottom-6 z-10 text-[10px] font-tech text-zinc-500 uppercase tracking-widest">
-        Punishing: Gray Raven • Karuhun Guild Portal 2026
       </div>
     </div>
   );

@@ -143,7 +143,7 @@ export const GuildHub: React.FC<GuildHubProps> = ({
             )}
 
             {/* Guild Metrics Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-2">
               <div className="bg-black/60 border border-[#27272a] rounded-xl p-4 text-center">
                 <Users className="w-4 h-4 text-zinc-400 mx-auto mb-1" />
                 <span className="text-[10px] font-tech uppercase text-zinc-400 block">Total Members</span>
@@ -165,14 +165,6 @@ export const GuildHub: React.FC<GuildHubProps> = ({
                 <span className="text-[10px] font-tech uppercase text-zinc-400 block">Weekly Contrib</span>
                 <span className="font-heading font-bold text-lg text-white">
                   {weeklyContrib > 0 ? weeklyContrib.toLocaleString() : '-'}
-                </span>
-              </div>
-
-              <div className="bg-black/60 border border-[#27272a] rounded-xl p-4 text-center">
-                <Shield className="w-4 h-4 text-zinc-400 mx-auto mb-1" />
-                <span className="text-[10px] font-tech uppercase text-zinc-400 block">Total Contrib</span>
-                <span className="font-heading font-bold text-lg text-white">
-                  {totalContrib > 0 ? totalContrib.toLocaleString() : '-'}
                 </span>
               </div>
             </div>

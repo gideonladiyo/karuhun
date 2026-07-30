@@ -188,12 +188,6 @@ export const AdminPage: React.FC = () => {
             </button>
           </form>
 
-          <div className="text-center pt-2">
-            <span className="text-[11px] font-tech text-zinc-500">
-              Default Passcode: <code className="text-zinc-300">karuhun2026</code>
-            </span>
-          </div>
-
         </div>
       </div>
     );
