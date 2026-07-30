@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ReferenceItem, getStoredReferences, saveStoredReference, deleteStoredReference, toggleStoredReferencePublish, extractYoutubeVideoId } from '../data/reffs_data';
+import { ReferenceItem, fetchLiveReferences, saveStoredReference, deleteStoredReference, toggleStoredReferencePublish, extractYoutubeVideoId } from '../data/reffs_data';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { Lock, Plus, Edit, Trash2, Eye, CheckCircle, Clock, Video, Shield, Key, Search, ExternalLink, RefreshCw, Check } from 'lucide-react';
 
@@ -38,9 +38,9 @@ export const AdminPage: React.FC = () => {
   // Description tab state: 'edit' | 'preview'
   const [descTab, setDescTab] = useState<'edit' | 'preview'>('edit');
 
-  const loadData = () => {
+  const loadData = async () => {
     setLoading(true);
-    const data = getStoredReferences();
+    const data = await fetchLiveReferences();
     setReferences(data);
     setLoading(false);
   };
@@ -96,7 +96,7 @@ export const AdminPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const ytId = extractYoutubeVideoId(formYoutubeUrl) || 'cVxAQcUtZn0';
     const thumbUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
@@ -116,21 +116,21 @@ export const AdminPage: React.FC = () => {
       tips: formTips.filter((t) => t.trim().length > 0)
     };
 
-    saveStoredReference(newRef);
+    await saveStoredReference(newRef);
     setIsModalOpen(false);
-    loadData();
+    await loadData();
   };
 
-  const handleDelete = (refId: string) => {
+  const handleDelete = async (refId: string) => {
     if (window.confirm('Are you sure you want to delete this reference video?')) {
-      deleteStoredReference(refId);
-      loadData();
+      await deleteStoredReference(refId);
+      await loadData();
     }
   };
 
-  const handleTogglePublish = (refId: string) => {
-    toggleStoredReferencePublish(refId);
-    loadData();
+  const handleTogglePublish = async (refId: string) => {
+    await toggleStoredReferencePublish(refId);
+    await loadData();
   };
 
   // If not authenticated, render Login Screen
