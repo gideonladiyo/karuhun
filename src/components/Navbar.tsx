@@ -191,16 +191,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Skull className="w-4 h-4" />
               <span>PPC TOOLS</span>
             </button>
-
-            <button
-              onClick={() => handleMobileNav('admin')}
-              className={`w-full flex items-center space-x-3 p-3 rounded-xl text-xs font-heading font-bold ${
-                activeTab === 'admin' ? 'bg-white text-black' : 'text-zinc-300 bg-[#121215]'
-              }`}
-            >
-              <Lock className="w-4 h-4" />
-              <span>ADMIN PANEL</span>
-            </button>
           </div>
         )}
       </header>
