@@ -13,6 +13,7 @@ import ppcFallback from '../data/ppc_fallback.json';
 import warzoneFallback from '../data/warzone_fallback.json';
 
 const HUAXU_BASE_URL = import.meta.env.VITE_HUAXU_API_URL || 'https://api.huaxu.app';
+const HUAXU_API_KEY = import.meta.env.VITE_HUAXU_API_KEY || 'hxu-sWhLLMiqNnbAJRmYRMmnAknPmkWpderauqUxAsCvV7ppohcbugoqeKVdkPCJ';
 const FETCH_TIMEOUT_MS = 4000;
 const CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes cache
 
@@ -35,8 +36,14 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}): Promise
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
+    const headers = {
+      'x-api-key': HUAXU_API_KEY,
+      ...(options.headers || {})
+    };
+
     const response = await fetch(url, {
       ...options,
+      headers,
       signal: controller.signal
     });
     clearTimeout(id);
