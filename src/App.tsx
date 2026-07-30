@@ -241,6 +241,7 @@ export default function App() {
             {activeTab === 'hub' && (
               <GuildHub
                 currentGuild={currentGuild}
+                members={members}
                 loading={loadingGuild}
                 selectedBranchId={selectedBranchId}
                 onSelectBranch={(bId: number) => handleNavigateTab('hub', bId)}
