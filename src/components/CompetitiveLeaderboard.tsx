@@ -60,82 +60,93 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
         return name.includes('夜') || name.startsWith('Karuhun');
       };
 
-      results.forEach((res) => {
+      // 1. Process Warzone Leaderboard Responses (Indices 0 to 3)
+      results.slice(0, 4).forEach((res) => {
         if (res.status !== 'fulfilled' || !res.value || !res.value.data) return;
         const data = res.value.data as any;
 
-        // Warzone data
-        if (data.warzone && data.rankings) {
-          const srv = data.warzone.server || 'na';
-          const divRank = data.warzone.challenge || 16;
-          const divLabel = divRank === 16 ? 'Legend' : divRank === 15 ? 'Hero' : 'Leader';
+        const wzRankings = (data.warzone && data.warzone.rankings) || (data.rankings && !data.ppc ? data.rankings : null);
+        if (!wzRankings || !Array.isArray(wzRankings)) return;
 
-          data.rankings.forEach((item: any) => {
-            const p = item.player || item;
-            const name = p.name || item.name || '';
-            const gname = p.guildName || item.guildName || '';
-            const pid = p.id || item.playerId;
+        const srv = (data.warzone && data.warzone.server) || 'na';
+        const divRank = (data.warzone && data.warzone.challenge) || 16;
+        const divLabel = divRank === 16 ? 'Legend' : divRank === 15 ? 'Hero' : 'Leader';
 
-            if (pid && isKaruhun(name, gname)) {
-              if (!achievementsMap[pid]) {
-                achievementsMap[pid] = {
-                  id: pid,
-                  name,
-                  guildName: gname || 'Karuhun 夜',
-                  server: srv,
-                  portrait: p.portrait || item.portrait || 'image/roleplayersp/roleplayer01',
-                  frame: p.frame || item.frame,
-                  warzone: null,
-                  ppc: null
-                };
-              }
+        wzRankings.forEach((item: any) => {
+          const p = item.player || item;
+          const name = p.name || item.name || '';
+          const gname = p.guildName || item.guildName || '';
+          const pid = p.id || item.playerId || item.id;
 
+          if (pid && isKaruhun(name, gname)) {
+            if (!achievementsMap[pid]) {
+              achievementsMap[pid] = {
+                id: pid,
+                name,
+                guildName: gname || 'Karuhun 夜',
+                server: srv,
+                portrait: p.portrait || item.portrait || 'image/roleplayersp/roleplayer01',
+                frame: p.frame || item.frame,
+                warzone: null,
+                ppc: null
+              };
+            }
+
+            if (!achievementsMap[pid].warzone || item.score > (achievementsMap[pid].warzone?.score || 0)) {
               achievementsMap[pid].warzone = {
-                rank: item.rank,
+                rank: item.rank || item.ranking || 1,
                 division: divLabel,
                 divisionRank: divRank,
-                score: item.score,
+                score: item.score || 0,
                 team: item.zones?.[0]?.characters || item.team || []
               };
             }
-          });
-        }
+          }
+        });
+      });
 
-        // PPC data
-        if (data.ppc && data.ranking) {
-          const srv = data.ppc.server || 'na';
-          const lvlId = data.ppc.level?.id || 4;
-          const lvlLabel = lvlId === 4 ? 'Ultimate' : 'Advanced';
+      // 2. Process PPC Leaderboard Responses (Indices 4 to 7)
+      results.slice(4, 8).forEach((res) => {
+        if (res.status !== 'fulfilled' || !res.value || !res.value.data) return;
+        const data = res.value.data as any;
 
-          data.ranking.forEach((item: any) => {
-            const p = item.player || item;
-            const name = p.name || item.name || '';
-            const gname = p.guildName || item.guildName || '';
-            const pid = p.id || item.playerId;
+        const ppcRankings = (data.ppc && (data.ppc.ranking || data.ppc.rankings)) || (data.ranking ? data.ranking : null);
+        if (!ppcRankings || !Array.isArray(ppcRankings)) return;
 
-            if (pid && isKaruhun(name, gname)) {
-              if (!achievementsMap[pid]) {
-                achievementsMap[pid] = {
-                  id: pid,
-                  name,
-                  guildName: gname || 'Karuhun 夜',
-                  server: srv,
-                  portrait: p.portrait || item.portrait || 'image/roleplayersp/roleplayer01',
-                  frame: p.frame || item.frame,
-                  warzone: null,
-                  ppc: null
-                };
-              }
+        const srv = (data.ppc && data.ppc.server) || 'na';
+        const lvlId = (data.ppc && data.ppc.level?.id) || 4;
+        const lvlLabel = lvlId === 4 ? 'Ultimate' : 'Advanced';
 
-              achievementsMap[pid].ppc = {
-                rank: item.rank,
-                level: lvlLabel,
-                levelId: lvlId,
-                score: item.score
+        ppcRankings.forEach((item: any) => {
+          const p = item.player || item;
+          const name = p.name || item.name || '';
+          const gname = p.guildName || item.guildName || '';
+          const pid = p.id || item.playerId || item.id;
+
+          if (pid && isKaruhun(name, gname)) {
+            if (!achievementsMap[pid]) {
+              achievementsMap[pid] = {
+                id: pid,
+                name,
+                guildName: gname || 'Karuhun 夜',
+                server: srv,
+                portrait: p.portrait || item.portrait || 'image/roleplayersp/roleplayer01',
+                frame: p.frame || item.frame,
+                warzone: null,
+                ppc: null
               };
             }
-          });
-        }
+
+            if (!achievementsMap[pid].ppc || item.score > (achievementsMap[pid].ppc?.score || 0)) {
+              achievementsMap[pid].ppc = {
+                rank: item.rank || item.ranking || 1,
+                level: lvlLabel,
+                levelId: lvlId,
+                score: item.score || 0
+              };
+            }
+          }
+        });
       });
 
       const list = Object.values(achievementsMap);
@@ -185,6 +196,7 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
+      
       {/* Header Banner */}
       <div className="minimal-card p-5 sm:p-8 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -197,17 +209,17 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
               GUILD MEMBER <span className="text-zinc-500 font-normal">COMPETITIVE LEADERBOARD</span>
             </h1>
             <p className="text-xs font-tech text-zinc-400">
-              Standing urutan member tertinggi Karuhun Alliance pada Warzone &amp; Phantom Pain Cage (PPC)
+              Standing rank of Karuhun Alliance members on Warzone &amp; Phantom Pain Cage (PPC)
             </p>
           </div>
 
-          {/* Server & Search Controls (Mobile Friendly Stack) */}
+          {/* Server & Search Controls */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <div className="relative min-w-[200px]">
               <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Cari Member / ID..."
+                placeholder="Search Commander / ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
@@ -219,7 +231,7 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
               onChange={(e) => setSelectedServer(e.target.value as any)}
               className="bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
             >
-              <option value="all">Server: Semua (AP &amp; NA)</option>
+              <option value="all">Server: All (AP &amp; NA)</option>
               <option value="na">Server NA</option>
               <option value="ap">Server AP</option>
             </select>
@@ -229,10 +241,10 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
               onChange={(e) => setSortBy(e.target.value as any)}
               className="bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
             >
-              <option value="rank">Urutan: Highest Achievement</option>
-              <option value="warzone">Urutan: Warzone Rank</option>
-              <option value="ppc">Urutan: PPC Rank</option>
-              <option value="name">Urutan: Nama Member</option>
+              <option value="rank">Sort: Highest Achievement</option>
+              <option value="warzone">Sort: Warzone Rank</option>
+              <option value="ppc">Sort: PPC Rank</option>
+              <option value="name">Sort: Member Name A-Z</option>
             </select>
           </div>
         </div>
@@ -257,19 +269,15 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
           </div>
         ) : filteredAndSortedMembers.length === 0 ? (
           <div className="text-center py-16 text-zinc-400 font-tech text-sm">
-            Tidak ada member Karuhun yang tercatat di leaderboard saat ini.
+            No Karuhun members recorded on current leaderboard.
           </div>
         ) : (
           <div className="space-y-3 sm:space-y-4">
             {filteredAndSortedMembers.map((member, idx) => (
-              <a
+              <div
                 key={member.id}
-                href={`#/player/${member.server}/${member.id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  onSelectPlayer(member.id, member.server);
-                }}
-                className="minimal-card-interactive p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 block group"
+                onClick={() => onSelectPlayer(member.id, member.server)}
+                className="minimal-card-interactive p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 cursor-pointer group"
               >
                 {/* Left - Rank # & Member Info */}
                 <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
@@ -359,11 +367,12 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
                   </div>
 
                 </div>
-              </a>
+              </div>
             ))}
           </div>
         )}
       </div>
+
     </div>
   );
 };

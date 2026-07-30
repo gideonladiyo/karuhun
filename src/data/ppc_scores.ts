@@ -589,3 +589,28 @@ export const getPpcTotalScore = (
     total: knight + chaos + hell
   };
 };
+
+export interface PPCBossInfo {
+  name: string;
+  slug: string;
+  difficulty: 'Ultimate' | 'Advanced';
+  hpKnight: number;
+  hpChaos: number;
+  hpHell: number;
+  startTimeSec: number;
+  weakness: string;
+  imageUrl: string;
+}
+
+export const PPC_BOSSES: PPCBossInfo[] = FULL_PPC_BOSSES.map((b: PpcBossDetail) => ({
+  name: b.boss,
+  slug: b.slug,
+  difficulty: 'Ultimate',
+  hpKnight: parseInt(b.knight.replace(/\D/g, '')) || 0,
+  hpChaos: parseInt(b.chaos.replace(/\D/g, '')) || 0,
+  hpHell: parseInt(b.hell.replace(/\D/g, '')) || 0,
+  startTimeSec: parseFloat(b.start_time) || 0,
+  weakness: b.weakness || 'No elemental weakness spec.',
+  imageUrl: b.img_url
+}));
+

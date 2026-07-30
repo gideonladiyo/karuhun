@@ -1,11 +1,11 @@
 import React from 'react';
-import { Shield, Users, Trophy, ExternalLink, Globe, PlayCircle, Skull, Calculator } from 'lucide-react';
+import { Shield, Video, Trophy, ExternalLink, Globe, PlayCircle, Skull, Lock } from 'lucide-react';
 import { GUILD_BRANCHES } from '../services/imageUtils';
 import karuhunLogo from '../Logo__4_-removebg-preview.png';
 
 interface NavbarProps {
-  activeTab: 'hub' | 'members' | 'leaderboards' | 'bosses' | 'calculator';
-  onNavigate: (tab: 'hub' | 'members' | 'leaderboards' | 'bosses' | 'calculator', branchId?: number) => void;
+  activeTab: 'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin';
+  onNavigate: (tab: 'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin', branchId?: number) => void;
   selectedBranchId: number;
   onReplayIntro?: () => void;
 }
@@ -50,7 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </a>
 
-          {/* Desktop Navigation Links (Clean URLs) */}
+          {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center space-x-1">
             <a
               href={`/guild/${selectedBranchId}`}
@@ -66,16 +66,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             </a>
 
             <a
-              href={`/members/${selectedBranchId}`}
-              onClick={(e) => { e.preventDefault(); onNavigate('members'); }}
+              href="/reffs"
+              onClick={(e) => { e.preventDefault(); onNavigate('reffs'); }}
               className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-heading font-bold transition-all ${
-                activeTab === 'members'
+                activeTab === 'reffs'
                   ? 'bg-white text-black shadow-sm'
                   : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
               }`}
             >
-              <Users className="w-3.5 h-3.5" />
-              <span>MEMBERS</span>
+              <Video className="w-3.5 h-3.5" />
+              <span>REFFS</span>
             </a>
 
             <a
@@ -92,29 +92,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             </a>
 
             <a
-              href="/bosses"
-              onClick={(e) => { e.preventDefault(); onNavigate('bosses'); }}
+              href="/ppc"
+              onClick={(e) => { e.preventDefault(); onNavigate('ppc'); }}
               className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-heading font-bold transition-all ${
-                activeTab === 'bosses'
+                activeTab === 'ppc'
                   ? 'bg-white text-black shadow-sm'
                   : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
               }`}
             >
               <Skull className="w-3.5 h-3.5" />
-              <span>BOSSES</span>
-            </a>
-
-            <a
-              href="/calculator"
-              onClick={(e) => { e.preventDefault(); onNavigate('calculator'); }}
-              className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-heading font-bold transition-all ${
-                activeTab === 'calculator'
-                  ? 'bg-white text-black shadow-sm'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
-              }`}
-            >
-              <Calculator className="w-3.5 h-3.5" />
-              <span>CALCULATOR</span>
+              <span>PPC TOOLS</span>
             </a>
           </nav>
 
@@ -141,66 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
-        </div>
-      </div>
 
-      {/* Mobile Fixed Bottom Navigation Bar (Clean URLs) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#09090b]/95 border-t border-[#27272a] backdrop-blur-lg px-2 py-2">
-        <div className="grid grid-cols-5 gap-1 text-center">
-          <a
-            href={`/guild/${selectedBranchId}`}
-            onClick={(e) => { e.preventDefault(); onNavigate('hub'); }}
-            className={`flex flex-col items-center justify-center py-1.5 rounded-xl text-[10px] font-heading font-bold transition-all ${
-              activeTab === 'hub' ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Shield className="w-4 h-4 mb-0.5" />
-            <span>HUB</span>
-          </a>
-
-          <a
-            href={`/members/${selectedBranchId}`}
-            onClick={(e) => { e.preventDefault(); onNavigate('members'); }}
-            className={`flex flex-col items-center justify-center py-1.5 rounded-xl text-[10px] font-heading font-bold transition-all ${
-              activeTab === 'members' ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Users className="w-4 h-4 mb-0.5" />
-            <span>MEMBERS</span>
-          </a>
-
-          <a
-            href="/rankings"
-            onClick={(e) => { e.preventDefault(); onNavigate('leaderboards'); }}
-            className={`flex flex-col items-center justify-center py-1.5 rounded-xl text-[10px] font-heading font-bold transition-all ${
-              activeTab === 'leaderboards' ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Trophy className="w-4 h-4 mb-0.5" />
-            <span>RANKINGS</span>
-          </a>
-
-          <a
-            href="/bosses"
-            onClick={(e) => { e.preventDefault(); onNavigate('bosses'); }}
-            className={`flex flex-col items-center justify-center py-1.5 rounded-xl text-[10px] font-heading font-bold transition-all ${
-              activeTab === 'bosses' ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Skull className="w-4 h-4 mb-0.5" />
-            <span>BOSSES</span>
-          </a>
-
-          <a
-            href="/calculator"
-            onClick={(e) => { e.preventDefault(); onNavigate('calculator'); }}
-            className={`flex flex-col items-center justify-center py-1.5 rounded-xl text-[10px] font-heading font-bold transition-all ${
-              activeTab === 'calculator' ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Calculator className="w-4 h-4 mb-0.5" />
-            <span>CALC</span>
-          </a>
         </div>
       </div>
     </header>

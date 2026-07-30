@@ -1,139 +1,105 @@
-import React, { useState } from 'react';
-import { getPpcStageScore, getPpcTotalScore, FULL_PPC_BOSSES } from '../data/ppc_scores';
-import { Calculator, Trophy, Swords, Scale, Copy, Check, Sparkles, RefreshCw, Zap, Plus, Minus } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ADVANCED_PPC_SCORES, ULTIMATE_PPC_SCORES, PPC_BOSSES, PPCBossInfo } from '../data/ppc_scores';
+import { Calculator, Copy, Check, Clock, Trophy, Flame, Sparkles, Sliders, ArrowRight } from 'lucide-react';
 
 interface ScoreCalculatorPageProps {
   initialBossSlug?: string;
 }
 
-interface BossRunTimers {
-  k: number;
-  c: number;
-  h: number;
-}
-
-export const ScoreCalculatorPage: React.FC<ScoreCalculatorPageProps> = () => {
-  const [selectedCommand, setSelectedCommand] = useState<'ulttotal' | 'advtotal' | 'ult' | 'adv' | 'comparetotal'>('ulttotal');
+export const ScoreCalculatorPage: React.FC<ScoreCalculatorPageProps> = ({ initialBossSlug }) => {
+  const [calcMode, setCalcMode] = useState<'single' | 'compare'>('compare');
+  const [tier, setTier] = useState<'ultimate' | 'advanced'>('ultimate');
   
-  // State for total calculation
-  const [ppcType, setPpcType] = useState<'ultimate' | 'advanced'>('ultimate');
-  const [knightTime, setKnightTime] = useState<number>(5);
-  const [chaosTime, setChaosTime] = useState<number>(5);
-  const [hellTime, setHellTime] = useState<number>(10);
+  // Single mode state
+  const [knightSec, setKnightSec] = useState<number>(5);
+  const [chaosSec, setChaosSec] = useState<number>(10);
+  const [hellSec, setHellSec] = useState<number>(15);
 
-  // State for single stage calculation
-  const [singleDifficulty, setSingleDifficulty] = useState<'knight' | 'chaos' | 'hell'>('hell');
-  const [singleTime, setSingleTime] = useState<number>(10);
-
-  // State for compare total calculation
+  // Compare mode state (Run A, Run B, Run C)
   const [compareRunsCount, setCompareRunsCount] = useState<2 | 3>(2);
-  const [bossesPerRunCount, setBossesPerRunCount] = useState<1 | 2 | 3>(1); // 1 Boss (3 timers), 2 Bosses (6 timers), 3 Bosses (9 timers)
+  const [bossesCount, setBossesCount] = useState<1 | 2 | 3>(1); // 1 Boss (3 timers), 2 Bosses (6 timers), 3 Bosses (9 timers)
 
-  // Dynamic Boss Run Timers Arrays
-  // RUN A (1 to 3 bosses)
-  const [runABosses, setRunABosses] = useState<BossRunTimers[]>([
-    { k: 5, c: 6, h: 10 },
-    { k: 4, c: 5, h: 8 },
-    { k: 3, c: 4, h: 6 },
-  ]);
-
-  // RUN B (1 to 3 bosses)
-  const [runBBosses, setRunBBosses] = useState<BossRunTimers[]>([
-    { k: 8, c: 9, h: 12 },
-    { k: 6, c: 7, h: 11 },
-    { k: 5, c: 6, h: 9 },
-  ]);
-
-  // RUN C (1 to 3 bosses)
-  const [runCBosses, setRunCBosses] = useState<BossRunTimers[]>([
-    { k: 10, c: 12, h: 15 },
-    { k: 8, c: 10, h: 14 },
-    { k: 7, c: 8, h: 12 },
-  ]);
+  // Timers array for Run A, Run B, Run C (max 9 timers per run)
+  const [runATimers, setRunATimers] = useState<number[]>([5, 10, 15, 5, 10, 15, 5, 10, 15]);
+  const [runBTimers, setRunBTimers] = useState<number[]>([8, 12, 18, 8, 12, 18, 8, 12, 18]);
+  const [runCTimers, setRunCTimers] = useState<number[]>([10, 15, 20, 10, 15, 20, 10, 15, 20]);
 
   const [copied, setCopied] = useState<boolean>(false);
 
-  // Helper to update specific boss timer in a run
-  const updateBossTimer = (
-    runSetter: React.Dispatch<React.SetStateAction<BossRunTimers[]>>,
-    bossIdx: number,
-    field: 'k' | 'c' | 'h',
-    val: number
-  ) => {
-    runSetter((prev) => {
-      const next = [...prev];
-      next[bossIdx] = { ...next[bossIdx], [field]: val };
-      return next;
-    });
+  const scoresTable = tier === 'ultimate' ? ULTIMATE_PPC_SCORES : ADVANCED_PPC_SCORES;
+
+  const getScoreForSec = (sec: number, diff: 'knight' | 'chaos' | 'hell') => {
+    const clamped = Math.max(0, Math.min(60, sec));
+    const entry = scoresTable[clamped];
+    if (!entry) return 0;
+    return entry[diff] || 0;
   };
 
-  // Helper to compute total score for a run based on active bosses count
-  const computeRunTotal = (bosses: BossRunTimers[]) => {
-    let sum = 0;
-    for (let i = 0; i < bossesPerRunCount; i++) {
-      const b = bosses[i] || { k: 0, c: 0, h: 0 };
-      const score = getPpcTotalScore('ultimate', b.k, b.c, b.h);
-      sum += score.total;
+  // Compute total for an array of timers based on bossesCount
+  const calculateRunTotal = (timers: number[]) => {
+    const totalTimersNeeded = bossesCount * 3;
+    let total = 0;
+
+    for (let i = 0; i < totalTimersNeeded; i += 3) {
+      const k = getScoreForSec(timers[i] || 0, 'knight');
+      const c = getScoreForSec(timers[i + 1] || 0, 'chaos');
+      const h = getScoreForSec(timers[i + 2] || 0, 'hell');
+      total += k + c + h;
     }
-    return sum;
+
+    return total;
   };
 
-  // Helper to format timers string for a run
-  const formatRunTimersString = (bosses: BossRunTimers[]) => {
-    const parts: number[] = [];
-    for (let i = 0; i < bossesPerRunCount; i++) {
-      const b = bosses[i] || { k: 0, c: 0, h: 0 };
-      parts.push(b.k, b.c, b.h);
+  const handleUpdateTimer = (run: 'A' | 'B' | 'C', index: number, value: number) => {
+    const clamped = Math.max(0, Math.min(60, value));
+    if (run === 'A') {
+      const next = [...runATimers];
+      next[index] = clamped;
+      setRunATimers(next);
+    } else if (run === 'B') {
+      const next = [...runBTimers];
+      next[index] = clamped;
+      setRunBTimers(next);
+    } else if (run === 'C') {
+      const next = [...runCTimers];
+      next[index] = clamped;
+      setRunCTimers(next);
     }
-    return parts.join(' ');
   };
 
-  // Preset Handlers
-  const handleApplyPreset = (k: number, c: number, h: number) => {
-    setKnightTime(k);
-    setChaosTime(c);
-    setHellTime(h);
-  };
+  // Single mode calculation
+  const singleKnightScore = getScoreForSec(knightSec, 'knight');
+  const singleChaosScore = getScoreForSec(chaosSec, 'chaos');
+  const singleHellScore = getScoreForSec(hellSec, 'hell');
+  const singleTotalScore = singleKnightScore + singleChaosScore + singleHellScore;
 
-  // Total Calculations
-  const totalResult = getPpcTotalScore(ppcType, knightTime, chaosTime, hellTime);
-  const maxPossibleTotal = ppcType === 'ultimate' ? (92700 + 185401 + 370802) : (62420 + 112340 + 212180);
-  const totalPercentage = ((totalResult.total / maxPossibleTotal) * 100).toFixed(1);
+  // Compare mode calculations
+  const totalA = calculateRunTotal(runATimers);
+  const totalB = calculateRunTotal(runBTimers);
+  const totalC = calculateRunTotal(runCTimers);
 
-  const singleScore = getPpcStageScore(ppcType, singleDifficulty, singleTime);
-
-  // Compare Runs Calculations
-  const runATotal = computeRunTotal(runABosses);
-  const runBTotal = computeRunTotal(runBBosses);
-  const runCTotal = computeRunTotal(runCBosses);
-
-  const runsList = compareRunsCount === 2
-    ? [
-        { name: 'RUN A', total: runATotal, timers: formatRunTimersString(runABosses) },
-        { name: 'RUN B', total: runBTotal, timers: formatRunTimersString(runBBosses) }
-      ]
-    : [
-        { name: 'RUN A', total: runATotal, timers: formatRunTimersString(runABosses) },
-        { name: 'RUN B', total: runBTotal, timers: formatRunTimersString(runBBosses) },
-        { name: 'RUN C', total: runCTotal, timers: formatRunTimersString(runCBosses) }
-      ];
-
-  const sortedRuns = [...runsList].sort((a, b) => b.total - a.total);
-
-  // Discord command generator string
-  const getDiscordCommand = () => {
-    if (selectedCommand === 'ulttotal') return `!ulttotal ${knightTime} ${chaosTime} ${hellTime}`;
-    if (selectedCommand === 'advtotal') return `!advtotal ${knightTime} ${chaosTime} ${hellTime}`;
-    if (selectedCommand === 'ult') return `!ult ${singleDifficulty} ${singleTime}`;
-    if (selectedCommand === 'adv') return `!adv ${singleDifficulty} ${singleTime}`;
-    if (compareRunsCount === 3) {
-      return `!comparetotal ${formatRunTimersString(runABosses)} vs ${formatRunTimersString(runBBosses)} vs ${formatRunTimersString(runCBosses)}`;
+  // Formatted Discord Agus Bot Command String Generator
+  const generateDiscordCommand = () => {
+    const botPrefix = tier === 'ultimate' ? '!ult' : '!adv';
+    
+    if (calcMode === 'single') {
+      return `${botPrefix}total ${knightSec} ${chaosSec} ${hellSec}`;
     }
-    return `!comparetotal ${formatRunTimersString(runABosses)} vs ${formatRunTimersString(runBBosses)}`;
+
+    const totalTimersNeeded = bossesCount * 3;
+    const timersAStr = runATimers.slice(0, totalTimersNeeded).join(' ');
+    const timersBStr = runBTimers.slice(0, totalTimersNeeded).join(' ');
+    
+    if (compareRunsCount === 2) {
+      return `!comparetotal ${timersAStr} vs ${timersBStr}`;
+    } else {
+      const timersCStr = runCTimers.slice(0, totalTimersNeeded).join(' ');
+      return `!comparetotal ${timersAStr} vs ${timersBStr} vs ${timersCStr}`;
+    }
   };
 
   const handleCopyCommand = () => {
-    const cmd = getDiscordCommand();
+    const cmd = generateDiscordCommand();
     navigator.clipboard.writeText(cmd);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -148,639 +114,310 @@ export const ScoreCalculatorPage: React.FC<ScoreCalculatorPageProps> = () => {
           <div className="space-y-2">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a] text-zinc-300 text-xs font-tech font-bold uppercase tracking-wider">
               <Calculator className="w-3.5 h-3.5 text-white" />
-              <span>PPC Bot Score Calculator Simulator</span>
+              <span>Agus Bot Command Simulator Engine</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white">
-              PPC SCORE <span className="text-zinc-500 font-normal">COMMAND SIMULATOR</span>
+              PPC SCORE <span className="text-zinc-500 font-normal">SIMULATOR &amp; COMPARE</span>
             </h1>
             <p className="text-xs font-tech text-zinc-400">
-              Kalkulator presisi skor PPC berdasarkan command Agus Bot: <code className="text-zinc-300">ulttotal</code>, <code className="text-zinc-300">advtotal</code>, <code className="text-zinc-300">comparetotal</code>
+              Calculate PPC total scores and compare multi-run outcomes (3, 6, or 9 timers) for Discord bot commands
             </p>
           </div>
 
-          {/* Quick Copy Generated Command */}
-          <div className="bg-black p-3.5 rounded-2xl border border-[#27272a] flex items-center justify-between gap-4">
-            <div>
-              <span className="text-[10px] font-tech text-zinc-400 block uppercase font-bold">Discord Command</span>
-              <code className="font-tech font-bold text-xs text-white">{getDiscordCommand()}</code>
-            </div>
+          {/* Mode Switcher Tabs */}
+          <div className="flex items-center bg-black p-1 rounded-xl border border-[#27272a]">
             <button
-              onClick={handleCopyCommand}
-              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs transition-all shadow-sm flex-shrink-0"
+              onClick={() => setCalcMode('compare')}
+              className={`px-4 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
+                calcMode === 'compare' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
+              }`}
             >
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copied ? 'COPIED!' : 'COPY'}</span>
+              COMPARE RUNS
+            </button>
+            <button
+              onClick={() => setCalcMode('single')}
+              className={`px-4 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
+                calcMode === 'single' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              SINGLE RUN
             </button>
           </div>
         </div>
       </div>
 
-      {/* Main Interactive Tool Container */}
-      <div className="minimal-card p-5 sm:p-8 space-y-8">
-        
-        {/* Command Selector Tabs */}
-        <div className="space-y-3">
-          <label className="text-xs font-heading font-bold text-zinc-300 uppercase tracking-wider block">
-            PILIH COMMAND KALKULATOR
-          </label>
+      {/* Calculator Configuration Controls */}
+      <div className="minimal-card p-5 space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <button
-              onClick={() => { setSelectedCommand('ulttotal'); setPpcType('ultimate'); }}
-              className={`p-3.5 rounded-xl border text-left transition-all ${
-                selectedCommand === 'ulttotal'
-                  ? 'bg-white text-black border-white shadow-md'
-                  : 'bg-[#09090b] text-zinc-400 border-[#27272a] hover:text-white hover:border-zinc-500'
-              }`}
+          {/* Tier Select */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+              PPC DIFFICULTY TIER
+            </label>
+            <select
+              value={tier}
+              onChange={(e) => setTier(e.target.value as any)}
+              className="w-full bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
             >
-              <span className="text-[10px] font-tech font-bold block uppercase opacity-70">!ulttotal</span>
-              <span className="font-heading font-bold text-xs sm:text-sm">Ultimate Total</span>
-            </button>
+              <option value="ultimate">Ultimate PPC (High Score Cap)</option>
+              <option value="advanced">Advanced PPC</option>
+            </select>
+          </div>
 
-            <button
-              onClick={() => { setSelectedCommand('advtotal'); setPpcType('advanced'); }}
-              className={`p-3.5 rounded-xl border text-left transition-all ${
-                selectedCommand === 'advtotal'
-                  ? 'bg-white text-black border-white shadow-md'
-                  : 'bg-[#09090b] text-zinc-400 border-[#27272a] hover:text-white hover:border-zinc-500'
-              }`}
-            >
-              <span className="text-[10px] font-tech font-bold block uppercase opacity-70">!advtotal</span>
-              <span className="font-heading font-bold text-xs sm:text-sm">Advanced Total</span>
-            </button>
+          {calcMode === 'compare' && (
+            <>
+              {/* Number of Runs Compare Select */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                  COMPARE RUNS COUNT
+                </label>
+                <select
+                  value={compareRunsCount}
+                  onChange={(e) => setCompareRunsCount(Number(e.target.value) as any)}
+                  className="w-full bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
+                >
+                  <option value={2}>2 Runs (Run A vs Run B)</option>
+                  <option value={3}>3 Runs (Run A vs Run B vs Run C)</option>
+                </select>
+              </div>
 
-            <button
-              onClick={() => { setSelectedCommand('ult'); setPpcType('ultimate'); }}
-              className={`p-3.5 rounded-xl border text-left transition-all ${
-                selectedCommand === 'ult'
-                  ? 'bg-white text-black border-white shadow-md'
-                  : 'bg-[#09090b] text-zinc-400 border-[#27272a] hover:text-white hover:border-zinc-500'
-              }`}
-            >
-              <span className="text-[10px] font-tech font-bold block uppercase opacity-70">!ult</span>
-              <span className="font-heading font-bold text-xs sm:text-sm">Single Ultimate</span>
-            </button>
+              {/* Number of Bosses (3, 6, 9 Timers) Select */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                  STAGE STACK / BOSS COUNT
+                </label>
+                <select
+                  value={bossesCount}
+                  onChange={(e) => setBossesCount(Number(e.target.value) as any)}
+                  className="w-full bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
+                >
+                  <option value={1}>1 Boss (3 Timers - K / C / H)</option>
+                  <option value={2}>2 Bosses (6 Timers - 2 Bosses Clearance)</option>
+                  <option value={3}>3 Bosses (9 Timers - Full PPC Season)</option>
+                </select>
+              </div>
+            </>
+          )}
 
-            <button
-              onClick={() => { setSelectedCommand('adv'); setPpcType('advanced'); }}
-              className={`p-3.5 rounded-xl border text-left transition-all ${
-                selectedCommand === 'adv'
-                  ? 'bg-white text-black border-white shadow-md'
-                  : 'bg-[#09090b] text-zinc-400 border-[#27272a] hover:text-white hover:border-zinc-500'
-              }`}
-            >
-              <span className="text-[10px] font-tech font-bold block uppercase opacity-70">!adv</span>
-              <span className="font-heading font-bold text-xs sm:text-sm">Single Advanced</span>
-            </button>
+        </div>
+      </div>
 
-            <button
-              onClick={() => setSelectedCommand('comparetotal')}
-              className={`p-3.5 rounded-xl border text-left transition-all col-span-2 sm:col-span-1 ${
-                selectedCommand === 'comparetotal'
-                  ? 'bg-white text-black border-white shadow-md'
-                  : 'bg-[#09090b] text-zinc-400 border-[#27272a] hover:text-white hover:border-zinc-500'
-              }`}
-            >
-              <span className="text-[10px] font-tech font-bold block uppercase opacity-70">!comparetotal</span>
-              <span className="font-heading font-bold text-xs sm:text-sm">Compare Runs</span>
-            </button>
+      {/* MODE 1: COMPARE RUNS SIMULATOR */}
+      {calcMode === 'compare' && (
+        <div className="space-y-6">
+          
+          {/* Comparison Cards Grid */}
+          <div className={`grid grid-cols-1 ${compareRunsCount === 3 ? 'lg:grid-cols-3' : 'md:grid-cols-2'} gap-5`}>
+            
+            {/* RUN A CARD */}
+            <div className="minimal-card p-5 space-y-4 border border-[#27272a]">
+              <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
+                <h3 className="font-heading font-bold text-lg text-white">RUN A</h3>
+                <span className="font-heading font-bold text-xl text-white">
+                  {totalA.toLocaleString()} <span className="text-xs font-tech text-zinc-400 font-normal">PTS</span>
+                </span>
+              </div>
+
+              {/* Sliders Grid */}
+              <div className="space-y-3">
+                {Array.from({ length: bossesCount }).map((_, bIdx) => (
+                  <div key={bIdx} className="bg-black p-3.5 rounded-xl border border-[#27272a] space-y-2">
+                    <span className="text-[10px] font-tech text-zinc-400 uppercase font-bold block">
+                      BOSS #{bIdx + 1} TIMERS
+                    </span>
+                    <div className="grid grid-cols-3 gap-2">
+                      {['Knight', 'Chaos', 'Hell'].map((diffName, dIdx) => {
+                        const timerIndex = bIdx * 3 + dIdx;
+                        const currentSec = runATimers[timerIndex] || 0;
+                        return (
+                          <div key={dIdx} className="space-y-1">
+                            <span className="text-[9px] font-tech text-zinc-500 uppercase block">{diffName} (s)</span>
+                            <input
+                              type="number"
+                              min={0}
+                              max={60}
+                              value={currentSec}
+                              onChange={(e) => handleUpdateTimer('A', timerIndex, Number(e.target.value))}
+                              className="w-full bg-[#121215] text-xs font-tech text-white border border-[#27272a] rounded-lg px-2 py-1.5 text-center focus:outline-none focus:border-white"
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* RUN B CARD */}
+            <div className="minimal-card p-5 space-y-4 border border-[#27272a]">
+              <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
+                <h3 className="font-heading font-bold text-lg text-white">RUN B</h3>
+                <span className="font-heading font-bold text-xl text-white">
+                  {totalB.toLocaleString()} <span className="text-xs font-tech text-zinc-400 font-normal">PTS</span>
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {Array.from({ length: bossesCount }).map((_, bIdx) => (
+                  <div key={bIdx} className="bg-black p-3.5 rounded-xl border border-[#27272a] space-y-2">
+                    <span className="text-[10px] font-tech text-zinc-400 uppercase font-bold block">
+                      BOSS #{bIdx + 1} TIMERS
+                    </span>
+                    <div className="grid grid-cols-3 gap-2">
+                      {['Knight', 'Chaos', 'Hell'].map((diffName, dIdx) => {
+                        const timerIndex = bIdx * 3 + dIdx;
+                        const currentSec = runBTimers[timerIndex] || 0;
+                        return (
+                          <div key={dIdx} className="space-y-1">
+                            <span className="text-[9px] font-tech text-zinc-500 uppercase block">{diffName} (s)</span>
+                            <input
+                              type="number"
+                              min={0}
+                              max={60}
+                              value={currentSec}
+                              onChange={(e) => handleUpdateTimer('B', timerIndex, Number(e.target.value))}
+                              className="w-full bg-[#121215] text-xs font-tech text-white border border-[#27272a] rounded-lg px-2 py-1.5 text-center focus:outline-none focus:border-white"
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* RUN C CARD (If compareRunsCount === 3) */}
+            {compareRunsCount === 3 && (
+              <div className="minimal-card p-5 space-y-4 border border-[#27272a]">
+                <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
+                  <h3 className="font-heading font-bold text-lg text-white">RUN C</h3>
+                  <span className="font-heading font-bold text-xl text-white">
+                    {totalC.toLocaleString()} <span className="text-xs font-tech text-zinc-400 font-normal">PTS</span>
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  {Array.from({ length: bossesCount }).map((_, bIdx) => (
+                    <div key={bIdx} className="bg-black p-3.5 rounded-xl border border-[#27272a] space-y-2">
+                      <span className="text-[10px] font-tech text-zinc-400 uppercase font-bold block">
+                        BOSS #{bIdx + 1} TIMERS
+                      </span>
+                      <div className="grid grid-cols-3 gap-2">
+                        {['Knight', 'Chaos', 'Hell'].map((diffName, dIdx) => {
+                          const timerIndex = bIdx * 3 + dIdx;
+                          const currentSec = runCTimers[timerIndex] || 0;
+                          return (
+                            <div key={dIdx} className="space-y-1">
+                              <span className="text-[9px] font-tech text-zinc-500 uppercase block">{diffName} (s)</span>
+                              <input
+                                type="number"
+                                min={0}
+                                max={60}
+                                value={currentSec}
+                                onChange={(e) => handleUpdateTimer('C', timerIndex, Number(e.target.value))}
+                                className="w-full bg-[#121215] text-xs font-tech text-white border border-[#27272a] rounded-lg px-2 py-1.5 text-center focus:outline-none focus:border-white"
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+          </div>
+
+        </div>
+      )}
+
+      {/* MODE 2: SINGLE RUN CALCULATOR */}
+      {calcMode === 'single' && (
+        <div className="minimal-card p-6 space-y-6">
+          <div className="flex items-center justify-between border-b border-[#27272a] pb-4">
+            <h3 className="font-heading font-bold text-xl text-white">SINGLE RUN SCORE CALCULATOR</h3>
+            <span className="font-heading font-bold text-2xl text-white">
+              {singleTotalScore.toLocaleString()} <span className="text-xs font-tech text-zinc-400 font-normal">PTS</span>
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div className="bg-black p-4 rounded-2xl border border-[#27272a] space-y-3">
+              <span className="text-xs font-tech text-zinc-400 font-bold uppercase block">KNIGHT STAGE</span>
+              <input
+                type="range"
+                min={0}
+                max={60}
+                value={knightSec}
+                onChange={(e) => setKnightSec(Number(e.target.value))}
+                className="w-full accent-white cursor-pointer"
+              />
+              <div className="flex justify-between text-xs font-tech">
+                <span>Time: <strong>{knightSec}s</strong></span>
+                <span>Score: <strong className="text-white">{singleKnightScore.toLocaleString()}</strong></span>
+              </div>
+            </div>
+
+            <div className="bg-black p-4 rounded-2xl border border-[#27272a] space-y-3">
+              <span className="text-xs font-tech text-zinc-400 font-bold uppercase block">CHAOS STAGE</span>
+              <input
+                type="range"
+                min={0}
+                max={60}
+                value={chaosSec}
+                onChange={(e) => setChaosSec(Number(e.target.value))}
+                className="w-full accent-white cursor-pointer"
+              />
+              <div className="flex justify-between text-xs font-tech">
+                <span>Time: <strong>{chaosSec}s</strong></span>
+                <span>Score: <strong className="text-white">{singleChaosScore.toLocaleString()}</strong></span>
+              </div>
+            </div>
+
+            <div className="bg-black p-4 rounded-2xl border border-[#27272a] space-y-3">
+              <span className="text-xs font-tech text-zinc-400 font-bold uppercase block">HELL STAGE</span>
+              <input
+                type="range"
+                min={0}
+                max={60}
+                value={hellSec}
+                onChange={(e) => setHellSec(Number(e.target.value))}
+                className="w-full accent-white cursor-pointer"
+              />
+              <div className="flex justify-between text-xs font-tech">
+                <span>Time: <strong>{hellSec}s</strong></span>
+                <span>Score: <strong className="text-white">{singleHellScore.toLocaleString()}</strong></span>
+              </div>
+            </div>
           </div>
         </div>
+      )}
 
-        {/* MODE 1: TOTAL SCORE CALCULATOR (!ulttotal & !advtotal) */}
-        {(selectedCommand === 'ulttotal' || selectedCommand === 'advtotal') && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fadeIn">
-            
-            {/* Left Inputs */}
-            <div className="lg:col-span-7 space-y-6">
-              
-              {/* Presets Bar */}
-              <div className="space-y-2">
-                <span className="text-xs font-tech text-zinc-400 font-bold uppercase tracking-wider block">
-                  SPEEDRUN PRESETS
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => handleApplyPreset(0, 0, 0)}
-                    className="px-3 py-1.5 rounded-lg bg-[#09090b] hover:bg-[#18181b] border border-[#27272a] text-xs font-tech font-bold text-zinc-300 hover:text-white"
-                  >
-                    ⚡ Max Speed (0s 0s 0s)
-                  </button>
-                  <button
-                    onClick={() => handleApplyPreset(3, 4, 6)}
-                    className="px-3 py-1.5 rounded-lg bg-[#09090b] hover:bg-[#18181b] border border-[#27272a] text-xs font-tech font-bold text-zinc-300 hover:text-white"
-                  >
-                    🔥 High Rank (3s 4s 6s)
-                  </button>
-                  <button
-                    onClick={() => handleApplyPreset(8, 10, 15)}
-                    className="px-3 py-1.5 rounded-lg bg-[#09090b] hover:bg-[#18181b] border border-[#27272a] text-xs font-tech font-bold text-zinc-300 hover:text-white"
-                  >
-                    🎯 Standard (8s 10s 15s)
-                  </button>
-                </div>
-              </div>
+      {/* DISCORD AGUS BOT COMMAND OUTPUT BAR */}
+      <div className="minimal-card p-5 space-y-3 bg-[#121215] border border-white/40">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-tech text-zinc-300 font-bold uppercase tracking-wider flex items-center space-x-2">
+            <Sparkles className="w-4 h-4 text-white" />
+            <span>GENERATED AGUS BOT DISCORD COMMAND</span>
+          </span>
+          <button
+            onClick={handleCopyCommand}
+            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs transition-all shadow-sm"
+          >
+            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+            <span>{copied ? 'COPIED!' : 'COPY COMMAND'}</span>
+          </button>
+        </div>
 
-              {/* Stage Timers Inputs */}
-              <div className="space-y-5 bg-black p-5 sm:p-6 rounded-2xl border border-[#27272a]">
-                <h3 className="font-heading font-bold text-base text-white uppercase tracking-wider">
-                  ENTER KILL TIMES (SECONDS)
-                </h3>
-
-                {/* Knight Stage Time */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center text-xs font-tech">
-                    <label className="text-zinc-300 font-bold uppercase">Knight Stage Kill Time</label>
-                    <span className="text-white font-bold">{knightTime}s</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="range"
-                      min="0"
-                      max="60"
-                      value={knightTime}
-                      onChange={(e) => setKnightTime(Number(e.target.value))}
-                      className="flex-1 accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer"
-                    />
-                    <input
-                      type="number"
-                      min="0"
-                      max="60"
-                      value={knightTime}
-                      onChange={(e) => setKnightTime(Math.max(0, Math.min(60, Number(e.target.value))))}
-                      className="w-16 bg-[#09090b] border border-[#27272a] rounded-lg text-center font-bold text-sm text-white py-1.5 focus:outline-none focus:border-white"
-                    />
-                  </div>
-                </div>
-
-                {/* Chaos Stage Time */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center text-xs font-tech">
-                    <label className="text-zinc-300 font-bold uppercase">Chaos Stage Kill Time</label>
-                    <span className="text-white font-bold">{chaosTime}s</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="range"
-                      min="0"
-                      max="60"
-                      value={chaosTime}
-                      onChange={(e) => setChaosTime(Number(e.target.value))}
-                      className="flex-1 accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer"
-                    />
-                    <input
-                      type="number"
-                      min="0"
-                      max="60"
-                      value={chaosTime}
-                      onChange={(e) => setChaosTime(Math.max(0, Math.min(60, Number(e.target.value))))}
-                      className="w-16 bg-[#09090b] border border-[#27272a] rounded-lg text-center font-bold text-sm text-white py-1.5 focus:outline-none focus:border-white"
-                    />
-                  </div>
-                </div>
-
-                {/* Hell Stage Time */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center text-xs font-tech">
-                    <label className="text-zinc-300 font-bold uppercase">Hell Stage Kill Time</label>
-                    <span className="text-white font-bold">{hellTime}s</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="range"
-                      min="0"
-                      max="60"
-                      value={hellTime}
-                      onChange={(e) => setHellTime(Number(e.target.value))}
-                      className="flex-1 accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer"
-                    />
-                    <input
-                      type="number"
-                      min="0"
-                      max="60"
-                      value={hellTime}
-                      onChange={(e) => setHellTime(Math.max(0, Math.min(60, Number(e.target.value))))}
-                      className="w-16 bg-[#09090b] border border-[#27272a] rounded-lg text-center font-bold text-sm text-white py-1.5 focus:outline-none focus:border-white"
-                    />
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            {/* Right Calculated Result Display Card */}
-            <div className="lg:col-span-5 bg-black border border-[#27272a] rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl text-center">
-              <span className="text-xs font-tech uppercase text-zinc-400 block tracking-widest font-bold">
-                CALCULATED TOTAL SCORE ({ppcType.toUpperCase()})
-              </span>
-
-              <div className="space-y-1">
-                <h2 className="text-4xl sm:text-5xl font-heading font-black text-white tracking-tight">
-                  {totalResult.total.toLocaleString()}
-                </h2>
-                <p className="text-xs font-tech text-zinc-400">
-                  {totalPercentage}% dari skor maksimum ({maxPossibleTotal.toLocaleString()})
-                </p>
-              </div>
-
-              {/* Score Progress Bar */}
-              <div className="w-full bg-[#18181b] h-3 rounded-full overflow-hidden border border-[#27272a]">
-                <div
-                  className="bg-white h-full transition-all duration-300"
-                  style={{ width: `${totalPercentage}%` }}
-                />
-              </div>
-
-              {/* Stage Breakdown */}
-              <div className="space-y-2.5 pt-2 border-t border-[#27272a] text-xs font-tech text-left">
-                <div className="flex justify-between items-center">
-                  <span className="text-zinc-400">Knight Stage ({knightTime}s)</span>
-                  <span className="text-white font-bold">{totalResult.knight.toLocaleString()} pts</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-zinc-400">Chaos Stage ({chaosTime}s)</span>
-                  <span className="text-white font-bold">{totalResult.chaos.toLocaleString()} pts</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-zinc-400">Hell Stage ({hellTime}s)</span>
-                  <span className="text-white font-bold">{totalResult.hell.toLocaleString()} pts</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        )}
-
-        {/* MODE 2: SINGLE STAGE SCORE (!ult & !adv) */}
-        {(selectedCommand === 'ult' || selectedCommand === 'adv') && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fadeIn">
-            <div className="lg:col-span-7 space-y-6">
-              
-              {/* Select Stage Difficulty */}
-              <div className="space-y-2">
-                <label className="text-xs font-tech text-zinc-400 font-bold uppercase tracking-wider block">
-                  PILIH DIFFICULTY STAGE
-                </label>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => setSingleDifficulty('knight')}
-                    className={`flex-1 py-3 rounded-xl border font-heading font-bold text-xs uppercase ${
-                      singleDifficulty === 'knight' ? 'bg-white text-black border-white' : 'bg-black text-zinc-400 border-[#27272a]'
-                    }`}
-                  >
-                    Knight
-                  </button>
-                  <button
-                    onClick={() => setSingleDifficulty('chaos')}
-                    className={`flex-1 py-3 rounded-xl border font-heading font-bold text-xs uppercase ${
-                      singleDifficulty === 'chaos' ? 'bg-white text-black border-white' : 'bg-black text-zinc-400 border-[#27272a]'
-                    }`}
-                  >
-                    Chaos
-                  </button>
-                  <button
-                    onClick={() => setSingleDifficulty('hell')}
-                    className={`flex-1 py-3 rounded-xl border font-heading font-bold text-xs uppercase ${
-                      singleDifficulty === 'hell' ? 'bg-white text-black border-white' : 'bg-black text-zinc-400 border-[#27272a]'
-                    }`}
-                  >
-                    Hell
-                  </button>
-                </div>
-              </div>
-
-              {/* Single Time Input */}
-              <div className="bg-black p-6 rounded-2xl border border-[#27272a] space-y-3">
-                <div className="flex justify-between items-center text-xs font-tech">
-                  <label className="text-zinc-300 font-bold uppercase">Kill Time (Seconds)</label>
-                  <span className="text-white font-bold">{singleTime}s</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <input
-                    type="range"
-                    min="0"
-                    max="60"
-                    value={singleTime}
-                    onChange={(e) => setSingleTime(Number(e.target.value))}
-                    className="flex-1 accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer"
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    max="60"
-                    value={singleTime}
-                    onChange={(e) => setSingleTime(Math.max(0, Math.min(60, Number(e.target.value))))}
-                    className="w-16 bg-[#09090b] border border-[#27272a] rounded-lg text-center font-bold text-sm text-white py-1.5 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-            </div>
-
-            {/* Single Stage Result Display Card */}
-            <div className="lg:col-span-5 bg-black border border-[#27272a] rounded-2xl p-6 sm:p-8 space-y-4 text-center">
-              <span className="text-xs font-tech uppercase text-zinc-400 block tracking-widest font-bold">
-                {singleDifficulty.toUpperCase()} STAGE SCORE ({singleTime}s)
-              </span>
-              <h2 className="text-4xl sm:text-5xl font-heading font-black text-white">
-                {singleScore.toLocaleString()}
-              </h2>
-              <p className="text-xs font-tech text-zinc-400">
-                Mode: {ppcType.toUpperCase()}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* MODE 3: SCORE COMPARISON TOOL (!comparetotal - Supports 3 vs 3, 6 vs 6, 9 vs 9!) */}
-        {selectedCommand === 'comparetotal' && (
-          <div className="space-y-6 animate-fadeIn">
-            
-            {/* Controls Bar: Compare Runs Count & Bosses Count (3, 6, or 9 stages!) */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#27272a] pb-4">
-              <div>
-                <h3 className="font-heading font-bold text-base text-white">KOMPARASI HASIL RUN</h3>
-                <p className="text-xs font-tech text-zinc-400">Pilih jumlah run (2 vs 3) dan jumlah boss (3, 6, atau 9 timer skor)</p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                {/* Boss Count Selector (3 vs 3, 6 vs 6, 9 vs 9) */}
-                <div className="flex items-center space-x-1.5 bg-black p-1 rounded-xl border border-[#27272a]">
-                  <button
-                    onClick={() => setBossesPerRunCount(1)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all ${
-                      bossesPerRunCount === 1 ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    1 Boss (3 Timers)
-                  </button>
-                  <button
-                    onClick={() => setBossesPerRunCount(2)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all ${
-                      bossesPerRunCount === 2 ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    2 Bosses (6 vs 6)
-                  </button>
-                  <button
-                    onClick={() => setBossesPerRunCount(3)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all ${
-                      bossesPerRunCount === 3 ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    3 Bosses (9 vs 9)
-                  </button>
-                </div>
-
-                {/* Runs Count Selector (2 vs 3) */}
-                <div className="flex items-center space-x-1.5 bg-black p-1 rounded-xl border border-[#27272a]">
-                  <button
-                    onClick={() => setCompareRunsCount(2)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all ${
-                      compareRunsCount === 2 ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    2 Runs
-                  </button>
-                  <button
-                    onClick={() => setCompareRunsCount(3)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all ${
-                      compareRunsCount === 3 ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    3 Runs
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Dynamic Runs Input Grid */}
-            <div className={`grid grid-cols-1 ${compareRunsCount === 3 ? 'lg:grid-cols-3' : 'md:grid-cols-2'} gap-6`}>
-              
-              {/* RUN A */}
-              <div className="bg-black border border-[#27272a] rounded-2xl p-5 space-y-4 shadow-sm">
-                <div className="flex justify-between items-center border-b border-[#27272a] pb-3">
-                  <h3 className="font-heading font-bold text-base text-white">RUN A</h3>
-                  <span className="font-heading font-bold text-base text-white">{runATotal.toLocaleString()} pts</span>
-                </div>
-
-                <div className="space-y-4">
-                  {Array.from({ length: bossesPerRunCount }).map((_, bIdx) => (
-                    <div key={bIdx} className="bg-[#121215] p-3.5 rounded-xl border border-[#27272a] space-y-2.5">
-                      <span className="text-[11px] font-heading font-bold text-zinc-300 uppercase block">
-                        Boss #{bIdx + 1} Timers
-                      </span>
-                      <div className="space-y-2 text-xs font-tech">
-                        <div>
-                          <label className="text-zinc-400 flex justify-between">
-                            <span>Knight Time</span>
-                            <span className="text-white font-bold">{runABosses[bIdx]?.k || 0}s</span>
-                          </label>
-                          <input
-                            type="range"
-                            min="0"
-                            max="60"
-                            value={runABosses[bIdx]?.k || 0}
-                            onChange={(e) => updateBossTimer(setRunABosses, bIdx, 'k', Number(e.target.value))}
-                            className="w-full accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer mt-1"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-zinc-400 flex justify-between">
-                            <span>Chaos Time</span>
-                            <span className="text-white font-bold">{runABosses[bIdx]?.c || 0}s</span>
-                          </label>
-                          <input
-                            type="range"
-                            min="0"
-                            max="60"
-                            value={runABosses[bIdx]?.c || 0}
-                            onChange={(e) => updateBossTimer(setRunABosses, bIdx, 'c', Number(e.target.value))}
-                            className="w-full accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer mt-1"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-zinc-400 flex justify-between">
-                            <span>Hell Time</span>
-                            <span className="text-white font-bold">{runABosses[bIdx]?.h || 0}s</span>
-                          </label>
-                          <input
-                            type="range"
-                            min="0"
-                            max="60"
-                            value={runABosses[bIdx]?.h || 0}
-                            onChange={(e) => updateBossTimer(setRunABosses, bIdx, 'h', Number(e.target.value))}
-                            className="w-full accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer mt-1"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* RUN B */}
-              <div className="bg-black border border-[#27272a] rounded-2xl p-5 space-y-4 shadow-sm">
-                <div className="flex justify-between items-center border-b border-[#27272a] pb-3">
-                  <h3 className="font-heading font-bold text-base text-white">RUN B</h3>
-                  <span className="font-heading font-bold text-base text-white">{runBTotal.toLocaleString()} pts</span>
-                </div>
-
-                <div className="space-y-4">
-                  {Array.from({ length: bossesPerRunCount }).map((_, bIdx) => (
-                    <div key={bIdx} className="bg-[#121215] p-3.5 rounded-xl border border-[#27272a] space-y-2.5">
-                      <span className="text-[11px] font-heading font-bold text-zinc-300 uppercase block">
-                        Boss #{bIdx + 1} Timers
-                      </span>
-                      <div className="space-y-2 text-xs font-tech">
-                        <div>
-                          <label className="text-zinc-400 flex justify-between">
-                            <span>Knight Time</span>
-                            <span className="text-white font-bold">{runBBosses[bIdx]?.k || 0}s</span>
-                          </label>
-                          <input
-                            type="range"
-                            min="0"
-                            max="60"
-                            value={runBBosses[bIdx]?.k || 0}
-                            onChange={(e) => updateBossTimer(setRunBBosses, bIdx, 'k', Number(e.target.value))}
-                            className="w-full accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer mt-1"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-zinc-400 flex justify-between">
-                            <span>Chaos Time</span>
-                            <span className="text-white font-bold">{runBBosses[bIdx]?.c || 0}s</span>
-                          </label>
-                          <input
-                            type="range"
-                            min="0"
-                            max="60"
-                            value={runBBosses[bIdx]?.c || 0}
-                            onChange={(e) => updateBossTimer(setRunBBosses, bIdx, 'c', Number(e.target.value))}
-                            className="w-full accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer mt-1"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-zinc-400 flex justify-between">
-                            <span>Hell Time</span>
-                            <span className="text-white font-bold">{runBBosses[bIdx]?.h || 0}s</span>
-                          </label>
-                          <input
-                            type="range"
-                            min="0"
-                            max="60"
-                            value={runBBosses[bIdx]?.h || 0}
-                            onChange={(e) => updateBossTimer(setRunBBosses, bIdx, 'h', Number(e.target.value))}
-                            className="w-full accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer mt-1"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* RUN C */}
-              {compareRunsCount === 3 && (
-                <div className="bg-black border border-[#27272a] rounded-2xl p-5 space-y-4 shadow-sm animate-fadeIn">
-                  <div className="flex justify-between items-center border-b border-[#27272a] pb-3">
-                    <h3 className="font-heading font-bold text-base text-white">RUN C</h3>
-                    <span className="font-heading font-bold text-base text-white">{runCTotal.toLocaleString()} pts</span>
-                  </div>
-
-                  <div className="space-y-4">
-                    {Array.from({ length: bossesPerRunCount }).map((_, bIdx) => (
-                      <div key={bIdx} className="bg-[#121215] p-3.5 rounded-xl border border-[#27272a] space-y-2.5">
-                        <span className="text-[11px] font-heading font-bold text-zinc-300 uppercase block">
-                          Boss #{bIdx + 1} Timers
-                        </span>
-                        <div className="space-y-2 text-xs font-tech">
-                          <div>
-                            <label className="text-zinc-400 flex justify-between">
-                              <span>Knight Time</span>
-                              <span className="text-white font-bold">{runCBosses[bIdx]?.k || 0}s</span>
-                            </label>
-                            <input
-                              type="range"
-                              min="0"
-                              max="60"
-                              value={runCBosses[bIdx]?.k || 0}
-                              onChange={(e) => updateBossTimer(setRunCBosses, bIdx, 'k', Number(e.target.value))}
-                              className="w-full accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer mt-1"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-zinc-400 flex justify-between">
-                              <span>Chaos Time</span>
-                              <span className="text-white font-bold">{runCBosses[bIdx]?.c || 0}s</span>
-                            </label>
-                            <input
-                              type="range"
-                              min="0"
-                              max="60"
-                              value={runCBosses[bIdx]?.c || 0}
-                              onChange={(e) => updateBossTimer(setRunCBosses, bIdx, 'c', Number(e.target.value))}
-                              className="w-full accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer mt-1"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-zinc-400 flex justify-between">
-                              <span>Hell Time</span>
-                              <span className="text-white font-bold">{runCBosses[bIdx]?.h || 0}s</span>
-                            </label>
-                            <input
-                              type="range"
-                              min="0"
-                              max="60"
-                              value={runCBosses[bIdx]?.h || 0}
-                              onChange={(e) => updateBossTimer(setRunCBosses, bIdx, 'h', Number(e.target.value))}
-                              className="w-full accent-white h-2 bg-[#18181b] rounded-lg cursor-pointer mt-1"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-            </div>
-
-            {/* COMPARISON OUTCOME RESULT DISPLAY CARD */}
-            <div className="bg-[#121215] border border-white rounded-2xl p-6 text-center space-y-3 shadow-xl">
-              <span className="text-xs font-tech uppercase text-zinc-400 tracking-wider block font-bold">
-                COMPARISON OUTCOME RANKING ({bossesPerRunCount * 3} VS {bossesPerRunCount * 3} STAGES)
-              </span>
-
-              {/* Winner Title */}
-              <h3 className="text-2xl sm:text-3xl font-heading font-bold text-white">
-                🏆 WINNER: <span className="text-white">{sortedRuns[0].name}</span> WITH {sortedRuns[0].total.toLocaleString()} PTS
-              </h3>
-
-              {/* Leaderboard Delta Breakdown */}
-              <div className="flex flex-wrap justify-center gap-3 pt-2">
-                {sortedRuns.map((r, rIdx) => {
-                  const leadDiff = sortedRuns[0].total - r.total;
-                  return (
-                    <div
-                      key={r.name}
-                      className={`px-4 py-2 rounded-xl text-xs font-tech font-bold border ${
-                        rIdx === 0
-                          ? 'bg-white text-black border-white'
-                          : 'bg-black text-zinc-300 border-[#27272a]'
-                      }`}
-                    >
-                      #{rIdx + 1} {r.name}: {r.total.toLocaleString()} pts {rIdx > 0 && `(-${leadDiff.toLocaleString()})`}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
-
+        <div className="bg-black p-3.5 rounded-xl border border-[#27272a] font-mono text-xs text-zinc-200 overflow-x-auto">
+          <code>{generateDiscordCommand()}</code>
+        </div>
       </div>
+
     </div>
   );
 };

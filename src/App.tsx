@@ -5,8 +5,9 @@ import { MemberList } from './components/MemberList';
 import { PlayerProfilePage } from './components/PlayerProfilePage';
 import { CharacterInspectPage } from './components/CharacterInspectPage';
 import { CompetitiveLeaderboard } from './components/CompetitiveLeaderboard';
-import { BossesPage } from './components/BossesPage';
-import { ScoreCalculatorPage } from './components/ScoreCalculatorPage';
+import { PpcPage } from './components/PpcPage';
+import { ReffsPage } from './components/ReffsPage';
+import { AdminPage } from './components/AdminPage';
 import { GuildIntroOverlay } from './components/GuildIntroOverlay';
 
 import { getGuildData } from './services/apiService';
@@ -19,9 +20,11 @@ export default function App() {
     return !seen;
   });
 
-  const [activeTab, setActiveTab] = useState<'hub' | 'members' | 'leaderboards' | 'bosses' | 'calculator'>('hub');
+  const [activeTab, setActiveTab] = useState<'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin'>('hub');
+  const [ppcSubTab, setPpcSubTab] = useState<'bosses' | 'calculator'>('bosses');
   const [selectedBranchId, setSelectedBranchId] = useState<number>(3638);
   const [activeBossSlug, setActiveBossSlug] = useState<string | undefined>(undefined);
+  const [activeRefId, setActiveRefId] = useState<string | undefined>(undefined);
 
   const [currentGuild, setCurrentGuild] = useState<GuildInfo | null>(null);
   const [members, setMembers] = useState<GuildMember[]>([]);
@@ -38,7 +41,7 @@ export default function App() {
   // Auto Scroll-To-Top on Page or Route Change
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
-  }, [activeTab, currentViewMode, activePlayerUid, activeCharacter?.id]);
+  }, [activeTab, currentViewMode, activePlayerUid, activeCharacter?.id, activeRefId]);
 
   // Clean URL Path & Legacy Hash Router Parser & Synchronizer
   const syncRouteFromLocation = () => {
@@ -81,17 +84,29 @@ export default function App() {
       }
     } else {
       setCurrentViewMode('mainTab');
-      if (parts[0] === 'members' || parts[0] === 'roster') {
+      if (parts[0] === 'admin' || parts[0] === 'dashboard') {
+        setActiveTab('admin');
+      } else if (parts[0] === 'members' || parts[0] === 'roster') {
         setActiveTab('members');
         if (parts[1] && !isNaN(Number(parts[1]))) {
           setSelectedBranchId(Number(parts[1]));
         }
+      } else if (parts[0] === 'reffs' || parts[0] === 'ref' || parts[0] === 'references') {
+        setActiveTab('reffs');
+        if (parts[1]) {
+          setActiveRefId(parts[1]);
+        } else {
+          setActiveRefId(undefined);
+        }
       } else if (parts[0] === 'rankings' || parts[0] === 'leaderboards') {
         setActiveTab('leaderboards');
-      } else if (parts[0] === 'bosses' || parts[0] === 'boss') {
-        setActiveTab('bosses');
-      } else if (parts[0] === 'calculator' || parts[0] === 'calc') {
-        setActiveTab('calculator');
+      } else if (parts[0] === 'ppc' || parts[0] === 'bosses' || parts[0] === 'calculator') {
+        setActiveTab('ppc');
+        if (parts[0] === 'calculator') {
+          setPpcSubTab('calculator');
+        } else {
+          setPpcSubTab('bosses');
+        }
       } else if (parts[0] === 'guild' || parts[0] === 'hub') {
         setActiveTab('hub');
         if (parts[1] && !isNaN(Number(parts[1]))) {
@@ -141,7 +156,7 @@ export default function App() {
   const activeBranch = GUILD_BRANCHES.find((b) => b.id === selectedBranchId) || GUILD_BRANCHES[0];
 
   const handleNavigateTab = (
-    tab: 'hub' | 'members' | 'leaderboards' | 'bosses' | 'calculator',
+    tab: 'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin',
     branchId?: number
   ) => {
     const targetBranch = branchId || selectedBranchId;
@@ -151,9 +166,10 @@ export default function App() {
 
     if (tab === 'hub') navigateToPath(`/guild/${targetBranch}`);
     else if (tab === 'members') navigateToPath(`/members/${targetBranch}`);
+    else if (tab === 'reffs') navigateToPath(`/reffs`);
     else if (tab === 'leaderboards') navigateToPath(`/rankings`);
-    else if (tab === 'bosses') navigateToPath(`/bosses`);
-    else if (tab === 'calculator') navigateToPath(`/calculator`);
+    else if (tab === 'ppc') navigateToPath(`/ppc`);
+    else if (tab === 'admin') navigateToPath(`/admin`);
   };
 
   const handleOpenPlayerProfile = (uid: number, srv?: string) => {
@@ -186,9 +202,13 @@ export default function App() {
     navigateToPath(`/members/${selectedBranchId}`);
   };
 
-  const handleOpenCalculatorWithBoss = (bossSlug?: string) => {
-    setActiveBossSlug(bossSlug);
-    handleNavigateTab('calculator');
+  const handleNavigateRefDetail = (refId?: string) => {
+    setActiveRefId(refId);
+    if (refId) {
+      navigateToPath(`/reffs/${refId}`);
+    } else {
+      navigateToPath(`/reffs`);
+    }
   };
 
   return (
@@ -215,7 +235,7 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         
-        {/* VIEW MODE 1: MAIN TABS (Hub, Members, Leaderboards, Bosses, Calculator) */}
+        {/* VIEW MODE 1: MAIN TABS (Hub, Members, Reffs, Leaderboards, PPC Tools, Admin) */}
         {currentViewMode === 'mainTab' && (
           <>
             {activeTab === 'hub' && (
@@ -224,7 +244,7 @@ export default function App() {
                 loading={loadingGuild}
                 selectedBranchId={selectedBranchId}
                 onSelectBranch={(bId: number) => handleNavigateTab('hub', bId)}
-                onViewMembers={() => handleNavigateTab('members')}
+                onViewMembers={() => handleNavigateTab('members', selectedBranchId)}
               />
             )}
 
@@ -234,7 +254,15 @@ export default function App() {
                 guildInfo={currentGuild}
                 loading={loadingGuild}
                 selectedBranchId={selectedBranchId}
+                onSelectBranch={(bId: number) => handleNavigateTab('members', bId)}
                 onSelectMember={(m: GuildMember) => handleOpenPlayerProfile(m.playerId)}
+              />
+            )}
+
+            {activeTab === 'reffs' && (
+              <ReffsPage
+                initialRefId={activeRefId}
+                onNavigateRefDetail={handleNavigateRefDetail}
               />
             )}
 
@@ -244,16 +272,15 @@ export default function App() {
               />
             )}
 
-            {activeTab === 'bosses' && (
-              <BossesPage
-                onOpenCalculator={handleOpenCalculatorWithBoss}
+            {activeTab === 'ppc' && (
+              <PpcPage
+                initialSubTab={ppcSubTab}
+                initialBossSlug={activeBossSlug}
               />
             )}
 
-            {activeTab === 'calculator' && (
-              <ScoreCalculatorPage
-                initialBossSlug={activeBossSlug}
-              />
+            {activeTab === 'admin' && (
+              <AdminPage />
             )}
           </>
         )}

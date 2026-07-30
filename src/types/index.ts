@@ -20,6 +20,9 @@ export interface GuildInfo {
   maxMemberCount?: number;
   contributionWeek?: number;
   leaderName?: string;
+  members?: GuildMember[];
+  sumContributeWeek?: number;
+  sumContribute?: number;
 }
 
 export interface GuildMember {
@@ -72,6 +75,7 @@ export interface PlayerProfileData {
     guildId?: number;
     guildName?: string;
     nameplate?: any;
+    guild?: { name: string };
   };
   characters: PlayerCharacter[];
   characterRating?: number;
@@ -84,6 +88,7 @@ export interface WeaponResonance {
   icon: string;
   hypertuned?: boolean;
   active?: boolean;
+  desc?: string;
 }
 
 export interface HarmonizationData {
@@ -125,6 +130,7 @@ export interface MemoryData {
   breakthrough: number;
   suitId?: number;
   suitName?: string;
+  position?: number;
 }
 
 export interface SuitBonus {
@@ -132,6 +138,7 @@ export interface SuitBonus {
   name: string;
   count: number;
   description: string;
+  icon?: string;
 }
 
 export interface CubSkill {
@@ -150,6 +157,7 @@ export interface CubData {
   icon: string;
   quality: number;
   level: number;
+  star?: number;
   breakthrough?: number;
   skills: CubSkill[];
 }
@@ -182,6 +190,24 @@ export interface CharacterDetailInfo {
     description: string;
     icon: string;
   };
+  equipments?: {
+    weapon?: {
+      name: string;
+      icon: string;
+      level: number;
+      quality: number;
+      resonances?: Array<{ name: string; desc?: string }>;
+      harmonize?: { name: string; icon: string };
+    };
+    suits?: Array<{ name: string; icon: string; position?: number; level?: number }>;
+  };
+  partner?: {
+    name: string;
+    icon: string;
+    level: number;
+    star: number;
+    quality?: number;
+  };
 }
 
 export interface CharacterDetailResponse {
@@ -194,6 +220,21 @@ export interface CharacterDetailResponse {
     cub?: CubData | null;
     fashion?: any;
   };
+}
+
+export interface MemberCompetitiveAchievement {
+  playerId: number;
+  name: string;
+  level: number;
+  portrait: string;
+  frame?: string;
+  server: string;
+  guildName?: string;
+  warzoneScore?: number;
+  warzoneRank?: number;
+  warzoneZone?: string;
+  ppcScore?: number;
+  ppcRank?: number;
 }
 
 export interface PPCResponse {

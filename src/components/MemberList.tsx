@@ -28,9 +28,9 @@ export const MemberList: React.FC<MemberListProps> = ({
   const getRankBadge = (rankLevel: number) => {
     switch (rankLevel) {
       case 1:
-        return { label: 'Ketua Guild', classNames: 'bg-white text-black font-bold' };
+        return { label: 'Guild Leader', classNames: 'bg-white text-black font-bold' };
       case 2:
-        return { label: 'Wakil Ketua', classNames: 'bg-zinc-200 text-black font-bold' };
+        return { label: 'Vice Leader', classNames: 'bg-zinc-200 text-black font-bold' };
       case 3:
         return { label: 'Senior Member', classNames: 'bg-zinc-800 text-zinc-200' };
       default:
@@ -66,7 +66,7 @@ export const MemberList: React.FC<MemberListProps> = ({
         <div className="flex items-center justify-between px-1">
           <span className="text-xs font-tech font-bold text-zinc-400 uppercase tracking-wider flex items-center space-x-1.5">
             <Globe className="w-3.5 h-3.5 text-white" />
-            <span>PILIH CABANG GUILD ALLIANCE</span>
+            <span>SELECT GUILD ALLIANCE DIVISION</span>
           </span>
           <span className="text-[11px] font-tech text-zinc-500 hidden sm:inline-block">
             4 Official Guild Divisions (AP &amp; NA)
@@ -114,10 +114,10 @@ export const MemberList: React.FC<MemberListProps> = ({
               <span>{activeBranch.name} Members</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white">
-              DAFTAR MEMBER &amp; JABATAN
+              GUILD MEMBERS &amp; ROLES
             </h1>
             <p className="text-xs font-tech text-zinc-400">
-              Daftar seluruh anggota {activeBranch.name} ({activeBranch.region}) diurutkan berdasarkan jabatan &amp; kontribusi
+              Active member roster for {activeBranch.name} ({activeBranch.region}) sorted by role &amp; contribution
             </p>
           </div>
 
@@ -128,7 +128,7 @@ export const MemberList: React.FC<MemberListProps> = ({
               <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Cari Nama / ID Player..."
+                placeholder="Search Name / Player ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
@@ -142,10 +142,10 @@ export const MemberList: React.FC<MemberListProps> = ({
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="w-full bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
               >
-                <option value="rank">Urutan: Jabatan (Role)</option>
-                <option value="level">Urutan: Level Player</option>
-                <option value="contribute">Urutan: Mingguan Kontrib</option>
-                <option value="name">Urutan: Nama A-Z</option>
+                <option value="rank">Sort: Role Priority</option>
+                <option value="level">Sort: Player Level</option>
+                <option value="contribute">Sort: Weekly Contribution</option>
+                <option value="name">Sort: Name A-Z</option>
               </select>
             </div>
           </div>
@@ -156,9 +156,9 @@ export const MemberList: React.FC<MemberListProps> = ({
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1 text-xs font-tech text-zinc-400">
           <span className="font-bold uppercase tracking-wider">
-            ANGGOTA TERDAFTAR ({filteredMembers.length})
+            REGISTERED MEMBERS ({filteredMembers.length})
           </span>
-          <span>Klik card untuk inspect profile</span>
+          <span>Click card to inspect profile</span>
         </div>
 
         {loading ? (
@@ -168,7 +168,7 @@ export const MemberList: React.FC<MemberListProps> = ({
           </div>
         ) : filteredMembers.length === 0 ? (
           <div className="text-center py-16 bg-[#121215] rounded-2xl border border-[#27272a] text-zinc-400 font-tech text-sm">
-            Tidak ada member yang sesuai pencarian.
+            No members match search criteria.
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3">
