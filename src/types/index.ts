@@ -34,6 +34,7 @@ export interface GuildMember {
   rankLevel: number; // 1: Leader, 2: Vice Leader, 3: Senior, 4: Member
   contributeWeek?: number;
   contributeTotal?: number;
+  lastLoginTime?: string;
 }
 
 export interface GuildDataResponse {

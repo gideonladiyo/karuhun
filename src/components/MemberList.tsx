@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GuildMember, GuildInfo } from '../types';
 import { getHuaxuImageUrl, GUILD_BRANCHES } from '../services/imageUtils';
-import { Users, Search, ArrowUpDown, Shield, ChevronRight, Award, Globe } from 'lucide-react';
+import { Users, Search, ArrowUpDown, Shield, ChevronRight, Award, Globe, Clock } from 'lucide-react';
 
 interface MemberListProps {
   members: GuildMember[];
@@ -10,6 +10,37 @@ interface MemberListProps {
   onSelectBranch?: (branchId: number) => void;
   onSelectMember: (member: GuildMember) => void;
   loading: boolean;
+}
+
+function formatLastLoginTime(lastLoginStr?: string): { text: string; badgeStyle: string } {
+  if (!lastLoginStr) {
+    return {
+      text: 'Today',
+      badgeStyle: 'bg-emerald-950/80 text-emerald-300 border-emerald-800'
+    };
+  }
+
+  const loginDate = new Date(lastLoginStr);
+  const now = new Date();
+  const diffTimeMs = now.getTime() - loginDate.getTime();
+  const diffDays = Math.floor(diffTimeMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays <= 1) {
+    return {
+      text: diffDays <= 0 ? 'Today' : '1 day ago',
+      badgeStyle: 'bg-emerald-950/80 text-emerald-300 border-emerald-800'
+    };
+  } else if (diffDays >= 2 && diffDays <= 6) {
+    return {
+      text: `${diffDays} days ago`,
+      badgeStyle: 'bg-amber-950/80 text-amber-300 border-amber-800'
+    };
+  } else {
+    return {
+      text: `${diffDays} days ago`,
+      badgeStyle: 'bg-red-950/80 text-red-300 border-red-800'
+    };
+  }
 }
 
 export const MemberList: React.FC<MemberListProps> = ({
@@ -21,7 +52,7 @@ export const MemberList: React.FC<MemberListProps> = ({
   loading
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [sortBy, setSortBy] = useState<'rank' | 'level' | 'contribute' | 'name'>('rank');
+  const [sortBy, setSortBy] = useState<'rank' | 'level' | 'contribute' | 'name' | 'activity'>('rank');
 
   const activeBranch = GUILD_BRANCHES.find((b) => b.id === selectedBranchId) || GUILD_BRANCHES[0];
 
@@ -55,6 +86,11 @@ export const MemberList: React.FC<MemberListProps> = ({
       if (sortBy === 'level') return b.level - a.level;
       if (sortBy === 'contribute') return (b.contributeWeek || 0) - (a.contributeWeek || 0);
       if (sortBy === 'name') return a.name.localeCompare(b.name);
+      if (sortBy === 'activity') {
+        const timeA = a.lastLoginTime ? new Date(a.lastLoginTime).getTime() : 0;
+        const timeB = b.lastLoginTime ? new Date(b.lastLoginTime).getTime() : 0;
+        return timeB - timeA;
+      }
       return 0;
     });
 
@@ -145,6 +181,7 @@ export const MemberList: React.FC<MemberListProps> = ({
                 <option value="rank">Sort: Role Priority</option>
                 <option value="level">Sort: Player Level</option>
                 <option value="contribute">Sort: Weekly Contribution</option>
+                <option value="activity">Sort: Recent Activity</option>
                 <option value="name">Sort: Name A-Z</option>
               </select>
             </div>
@@ -174,6 +211,7 @@ export const MemberList: React.FC<MemberListProps> = ({
           <div className="grid grid-cols-1 gap-3">
             {filteredMembers.map((member) => {
               const rankBadge = getRankBadge(member.rankLevel || 4);
+              const loginInfo = formatLastLoginTime(member.lastLoginTime);
 
               return (
                 <div
@@ -201,7 +239,7 @@ export const MemberList: React.FC<MemberListProps> = ({
 
                     {/* Member Info */}
                     <div className="space-y-1">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <h3 className="font-heading font-bold text-base sm:text-lg text-white group-hover:text-zinc-200 transition-colors truncate max-w-[200px] sm:max-w-xs">
                           {member.name}
                         </h3>
@@ -210,10 +248,15 @@ export const MemberList: React.FC<MemberListProps> = ({
                         </span>
                       </div>
 
-                      <div className="flex items-center space-x-3 text-xs font-tech text-zinc-400">
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-tech text-zinc-400">
                         <span>ID: <code className="text-zinc-300 font-bold">{member.playerId}</code></span>
                         <span>•</span>
                         <span>LVL <strong className="text-white">{member.level}</strong></span>
+                        <span>•</span>
+                        <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-tech font-bold border ${loginInfo.badgeStyle}`}>
+                          <Clock className="w-3 h-3" />
+                          <span>{loginInfo.text}</span>
+                        </span>
                       </div>
                     </div>
                   </div>
