@@ -128,7 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
 
               <a
-                href="https://discord.gg/karuhun"
+                href="https://discord.gg/Cz9bzjcdV"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center space-x-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs transition-colors shadow-sm"
