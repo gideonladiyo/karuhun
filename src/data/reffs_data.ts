@@ -217,7 +217,7 @@ export async function saveStoredReference(item: ReferenceItem): Promise<Referenc
   // Live Supabase Sync
   if (isSupabaseConfigured() && supabase) {
     try {
-      await supabase
+      const { error } = await supabase
         .from('video_references')
         .upsert({
           id: item.id.includes('-') && item.id.length > 20 ? item.id : undefined,
@@ -229,6 +229,10 @@ export async function saveStoredReference(item: ReferenceItem): Promise<Referenc
           author_name: item.author || 'Karuhun Corps',
           is_published: item.isPublished !== false
         });
+
+      if (error) {
+        console.error('[Supabase Error] Upsert reference failed:', error);
+      }
     } catch (err) {
       console.warn('Failed to sync save to Supabase', err);
     }
@@ -253,10 +257,14 @@ export async function deleteStoredReference(id: string): Promise<ReferenceItem[]
   // Live Supabase Sync
   if (isSupabaseConfigured() && supabase) {
     try {
-      await supabase
+      const { error } = await supabase
         .from('video_references')
         .delete()
         .eq('id', id);
+
+      if (error) {
+        console.error('[Supabase Error] Delete reference failed:', error);
+      }
     } catch (err) {
       console.warn('Failed to sync delete to Supabase', err);
     }
@@ -266,14 +274,34 @@ export async function deleteStoredReference(id: string): Promise<ReferenceItem[]
 }
 
 /**
- * Toggle publication status (Published / Draft) (Syncs to Supabase live DB + LocalStorage)
+ * Toggle publication status (Published / Draft) in Supabase live DB + LocalStorage
  */
-export async function toggleStoredReferencePublish(id: string): Promise<ReferenceItem[]> {
-  const current = getStoredReferences();
-  let targetNewStatus = false;
+export async function toggleStoredReferencePublish(id: string, explicitStatus?: boolean): Promise<ReferenceItem[]> {
+  const current = await fetchLiveReferences();
+  const targetItem = current.find((r) => r.id === id);
+  const targetNewStatus = explicitStatus !== undefined ? explicitStatus : targetItem ? !targetItem.isPublished : false;
+
+  // Live Supabase Sync
+  if (isSupabaseConfigured() && supabase) {
+    try {
+      const { error } = await supabase
+        .from('video_references')
+        .update({ is_published: targetNewStatus })
+        .eq('id', id);
+
+      if (error) {
+        console.error('[Supabase Error] Toggle is_published failed:', error);
+      } else {
+        console.log(`[Supabase Success] Updated is_published for ${id} to ${targetNewStatus}`);
+      }
+    } catch (err) {
+      console.warn('Failed to sync toggle publish to Supabase', err);
+    }
+  }
+
+  // Update local list
   const updatedList = current.map((r) => {
     if (r.id === id) {
-      targetNewStatus = !r.isPublished;
       return { ...r, isPublished: targetNewStatus };
     }
     return r;
@@ -281,21 +309,7 @@ export async function toggleStoredReferencePublish(id: string): Promise<Referenc
 
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
-  } catch (err) {
-    console.error('Failed to toggle publish status in localStorage', err);
-  }
-
-  // Live Supabase Sync
-  if (isSupabaseConfigured() && supabase) {
-    try {
-      await supabase
-        .from('video_references')
-        .update({ is_published: targetNewStatus })
-        .eq('id', id);
-    } catch (err) {
-      console.warn('Failed to sync toggle publish to Supabase', err);
-    }
-  }
+  } catch (err) {}
 
   return updatedList;
 }

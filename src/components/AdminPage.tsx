@@ -128,8 +128,9 @@ export const AdminPage: React.FC = () => {
     }
   };
 
-  const handleTogglePublish = async (refId: string) => {
-    await toggleStoredReferencePublish(refId);
+  const handleTogglePublish = async (refItem: ReferenceItem) => {
+    const newStatus = !(refItem.isPublished !== false);
+    await toggleStoredReferencePublish(refItem.id, newStatus);
     await loadData();
   };
 
@@ -349,8 +350,9 @@ export const AdminPage: React.FC = () => {
                     </td>
                     <td className="py-3 px-3 font-tech font-bold">
                       <button
-                        onClick={() => handleTogglePublish(refItem.id)}
-                        className="cursor-pointer"
+                        onClick={() => handleTogglePublish(refItem)}
+                        className="cursor-pointer hover:opacity-80 transition-opacity"
+                        title="Click to Toggle Published / Draft Status"
                       >
                         {refItem.isPublished !== false ? (
                           <span className="bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] px-2 py-0.5 rounded-full uppercase">
