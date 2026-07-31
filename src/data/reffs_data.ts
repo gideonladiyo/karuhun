@@ -232,18 +232,63 @@ export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
 }
 
 /**
- * Save / Update a reference item (Syncs to Supabase live DB + LocalStorage)
+ * Helper to resolve or create a subcategory in Supabase
+ */
+async function getOrCreateSubcategoryId(category: string, subcategory: string): Promise<string | null> {
+  if (!isSupabaseConfigured() || !supabase) return null;
+  try {
+    const { data: existing } = await supabase
+      .from('subcategories')
+      .select('id')
+      .eq('category_id', category)
+      .eq('name', subcategory)
+      .maybeSingle();
+
+    if (existing && existing.id) {
+      return existing.id;
+    }
+
+    const { data: created, error } = await supabase
+      .from('subcategories')
+      .insert({
+        category_id: category,
+        name: subcategory
+      })
+      .select('id')
+      .single();
+
+    if (!error && created && created.id) {
+      return created.id;
+    }
+  } catch (err) {
+    console.warn('Subcategory lookup/creation failed in Supabase:', err);
+  }
+  return null;
+}
+
+/**
+ * Save / Update a reference item (Syncs directly to Supabase DB + LocalStorage fallback)
  */
 export async function saveStoredReference(item: ReferenceItem): Promise<ReferenceItem[]> {
+  const isValidUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.id);
+  const targetId = isValidUuid
+    ? item.id
+    : (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : item.id);
+  
+  const updatedItem: ReferenceItem = {
+    ...item,
+    id: targetId
+  };
+
   const current = getStoredReferences();
-  const existingIdx = current.findIndex((r) => r.id === item.id);
+  const existingIdx = current.findIndex((r) => r.id === updatedItem.id || r.id === item.id);
   
   let updatedList: ReferenceItem[];
   if (existingIdx >= 0) {
     updatedList = [...current];
-    updatedList[existingIdx] = { ...item };
+    updatedList[existingIdx] = { ...updatedItem };
   } else {
-    updatedList = [item, ...current];
+    updatedList = [updatedItem, ...current];
   }
 
   try {
@@ -252,34 +297,54 @@ export async function saveStoredReference(item: ReferenceItem): Promise<Referenc
     console.error('Failed to save reference to localStorage', err);
   }
 
-  // Live Supabase Sync
+  // Direct Supabase DB Save
   if (isSupabaseConfigured() && supabase) {
     try {
+      const subcategoryId = await getOrCreateSubcategoryId(updatedItem.category, updatedItem.subcategory);
+
       const payload: any = {
-        title: item.title,
-        youtube_url: item.youtubeUrl,
-        youtube_video_id: item.videoId,
-        thumbnail_url: item.thumbnailUrl,
-        description: item.description,
-        author_name: item.author || 'Karuhun Corps',
-        is_published: item.isPublished !== false
+        title: updatedItem.title,
+        youtube_url: updatedItem.youtubeUrl,
+        youtube_video_id: updatedItem.videoId,
+        thumbnail_url: updatedItem.thumbnailUrl,
+        description: updatedItem.description,
+        author_name: updatedItem.author || 'Karuhun Corps',
+        is_published: updatedItem.isPublished !== false
       };
 
-      if (item.id && !item.id.startsWith('ref-')) {
-        payload.id = item.id;
+      if (isValidUuid) {
+        payload.id = updatedItem.id;
       }
 
-      const { error } = await supabase
+      if (subcategoryId) {
+        payload.subcategory_id = subcategoryId;
+      }
+
+      const { data: savedRow, error } = await supabase
         .from('video_references')
-        .upsert(payload);
+        .upsert(payload)
+        .select('id')
+        .single();
 
       if (error) {
-        console.error('[Supabase Error] Upsert reference failed:', error);
+        console.error('[Supabase Error] Direct video_references insert/update failed:', error);
       } else {
-        console.log(`[Supabase Success] Upserted reference "${item.title}"`);
+        const savedRefId = savedRow?.id || updatedItem.id;
+        console.log(`[Supabase Success] DIRECTLY SAVED to Supabase DB! ID: ${savedRefId}`);
+
+        // Sync Tips to reference_tips table
+        if (updatedItem.tips && updatedItem.tips.length > 0) {
+          await supabase.from('reference_tips').delete().eq('reference_id', savedRefId);
+          const tipsPayload = updatedItem.tips.map((t, idx) => ({
+            reference_id: savedRefId,
+            step_number: idx + 1,
+            tip_content: t
+          }));
+          await supabase.from('reference_tips').insert(tipsPayload);
+        }
       }
     } catch (err) {
-      console.warn('Failed to sync save to Supabase', err);
+      console.error('[Supabase Exception] Failed to save directly to Supabase:', err);
     }
   }
 
@@ -287,7 +352,7 @@ export async function saveStoredReference(item: ReferenceItem): Promise<Referenc
 }
 
 /**
- * Delete a reference item by ID (Syncs to Supabase live DB + LocalStorage)
+ * Delete a reference item by ID (Syncs directly to Supabase DB + LocalStorage fallback)
  */
 export async function deleteStoredReference(id: string): Promise<ReferenceItem[]> {
   addDeletedId(id);
@@ -310,6 +375,8 @@ export async function deleteStoredReference(id: string): Promise<ReferenceItem[]
 
       if (error) {
         console.error('[Supabase Error] Delete reference failed:', error);
+      } else {
+        console.log(`[Supabase Success] DIRECTLY DELETED from Supabase DB! ID: ${id}`);
       }
     } catch (err) {
       console.warn('Failed to sync delete to Supabase', err);
