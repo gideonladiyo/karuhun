@@ -108,29 +108,55 @@ export const INITIAL_PROTOTYPE_REFERENCES: ReferenceItem[] = [
 ];
 
 const STORAGE_KEY = 'karuhun_reffs_db_v1';
+const STORAGE_DELETED_KEY = 'karuhun_reffs_deleted_ids_v1';
+
+export function getDeletedIds(): string[] {
+  try {
+    const saved = localStorage.getItem(STORAGE_DELETED_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch (err) {}
+  return [];
+}
+
+export function addDeletedId(id: string) {
+  try {
+    const current = getDeletedIds();
+    if (!current.includes(id)) {
+      const updated = [...current, id];
+      localStorage.setItem(STORAGE_DELETED_KEY, JSON.stringify(updated));
+    }
+  } catch (err) {}
+}
 
 /**
  * Fetch references list from LocalStorage fallback
  */
 export function getStoredReferences(): ReferenceItem[] {
+  const deletedIds = getDeletedIds();
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
+    if (saved !== null) {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+      if (Array.isArray(parsed)) {
+        return parsed.filter((r: ReferenceItem) => !deletedIds.includes(r.id));
       }
     }
   } catch (err) {
     console.warn('Failed to load references from localStorage', err);
   }
-  return INITIAL_PROTOTYPE_REFERENCES;
+  return INITIAL_PROTOTYPE_REFERENCES.filter((r) => !deletedIds.includes(r.id));
 }
 
 /**
  * Async fetch from Supabase if configured, falling back to LocalStorage
  */
 export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
+  const localItems = getStoredReferences();
+  const deletedIds = getDeletedIds();
+
   if (isSupabaseConfigured() && supabase) {
     try {
       const { data, error } = await supabase
@@ -157,7 +183,7 @@ export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
         .order('created_at', { ascending: false });
 
       if (!error && data) {
-        const mapped: ReferenceItem[] = data.map((item: any) => {
+        const supabaseMapped: ReferenceItem[] = data.map((item: any) => {
           const sortedTips = (item.reference_tips || [])
             .sort((a: any, b: any) => a.step_number - b.step_number)
             .map((t: any) => t.tip_content);
@@ -178,19 +204,31 @@ export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
           };
         });
 
-        // Sync to LocalStorage for offline cache
+        // Filter out deleted items from Supabase mapped results
+        const filteredSupabase = supabaseMapped.filter((item) => !deletedIds.includes(item.id));
+
+        const combinedMap = new Map<string, ReferenceItem>();
+        
+        // Put local items first
+        localItems.forEach((item) => combinedMap.set(item.id, item));
+        
+        // Overlay/merge Supabase items
+        filteredSupabase.forEach((item) => combinedMap.set(item.id, item));
+
+        const mergedList = Array.from(combinedMap.values()).filter((item) => !deletedIds.includes(item.id));
+
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(mapped));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedList));
         } catch (e) {}
 
-        return mapped;
+        return mergedList;
       }
     } catch (err) {
       console.warn('Supabase live fetch error, falling back to local cache', err);
     }
   }
 
-  return getStoredReferences();
+  return localItems.filter((item) => !deletedIds.includes(item.id));
 }
 
 /**
@@ -217,21 +255,28 @@ export async function saveStoredReference(item: ReferenceItem): Promise<Referenc
   // Live Supabase Sync
   if (isSupabaseConfigured() && supabase) {
     try {
+      const payload: any = {
+        title: item.title,
+        youtube_url: item.youtubeUrl,
+        youtube_video_id: item.videoId,
+        thumbnail_url: item.thumbnailUrl,
+        description: item.description,
+        author_name: item.author || 'Karuhun Corps',
+        is_published: item.isPublished !== false
+      };
+
+      if (item.id && !item.id.startsWith('ref-')) {
+        payload.id = item.id;
+      }
+
       const { error } = await supabase
         .from('video_references')
-        .upsert({
-          id: item.id.includes('-') && item.id.length > 20 ? item.id : undefined,
-          title: item.title,
-          youtube_url: item.youtubeUrl,
-          youtube_video_id: item.videoId,
-          thumbnail_url: item.thumbnailUrl,
-          description: item.description,
-          author_name: item.author || 'Karuhun Corps',
-          is_published: item.isPublished !== false
-        });
+        .upsert(payload);
 
       if (error) {
         console.error('[Supabase Error] Upsert reference failed:', error);
+      } else {
+        console.log(`[Supabase Success] Upserted reference "${item.title}"`);
       }
     } catch (err) {
       console.warn('Failed to sync save to Supabase', err);
@@ -245,6 +290,7 @@ export async function saveStoredReference(item: ReferenceItem): Promise<Referenc
  * Delete a reference item by ID (Syncs to Supabase live DB + LocalStorage)
  */
 export async function deleteStoredReference(id: string): Promise<ReferenceItem[]> {
+  addDeletedId(id);
   const current = getStoredReferences();
   const updatedList = current.filter((r) => r.id !== id);
 
@@ -277,9 +323,9 @@ export async function deleteStoredReference(id: string): Promise<ReferenceItem[]
  * Toggle publication status (Published / Draft) in Supabase live DB + LocalStorage
  */
 export async function toggleStoredReferencePublish(id: string, explicitStatus?: boolean): Promise<ReferenceItem[]> {
-  const current = await fetchLiveReferences();
+  const current = getStoredReferences();
   const targetItem = current.find((r) => r.id === id);
-  const targetNewStatus = explicitStatus !== undefined ? explicitStatus : targetItem ? !targetItem.isPublished : false;
+  const targetNewStatus = explicitStatus !== undefined ? explicitStatus : targetItem ? (targetItem.isPublished === false ? true : false) : false;
 
   // Live Supabase Sync
   if (isSupabaseConfigured() && supabase) {
@@ -309,7 +355,10 @@ export async function toggleStoredReferencePublish(id: string, explicitStatus?: 
 
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
-  } catch (err) {}
+  } catch (err) {
+    console.error('Failed to update localStorage after toggle publish', err);
+  }
 
   return updatedList;
 }
+

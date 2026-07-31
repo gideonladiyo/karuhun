@@ -1,7 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { ReferenceItem, fetchLiveReferences, saveStoredReference, deleteStoredReference, toggleStoredReferencePublish, extractYoutubeVideoId } from '../data/reffs_data';
+import {
+  ReferenceItem,
+  CATEGORIES_CONFIG,
+  fetchLiveReferences,
+  saveStoredReference,
+  deleteStoredReference,
+  toggleStoredReferencePublish,
+  extractYoutubeVideoId
+} from '../data/reffs_data';
+import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
 import { MarkdownRenderer } from './MarkdownRenderer';
-import { Lock, Plus, Edit, Trash2, Eye, CheckCircle, Clock, Video, Shield, Key, Search, ExternalLink, RefreshCw, Check } from 'lucide-react';
+import {
+  Lock,
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  Shield,
+  Key,
+  Search,
+  RefreshCw,
+  Mail,
+  LogIn,
+  ArrowLeft,
+  Save,
+  CheckCircle,
+  Clock,
+  Sparkles,
+  Lightbulb
+} from 'lucide-react';
 
 const ADMIN_PASSCODE = import.meta.env.VITE_ADMIN_PASSCODE || 'karuhun2026';
 
@@ -10,9 +37,17 @@ export const AdminPage: React.FC = () => {
     return sessionStorage.getItem('karuhun_admin_authenticated') === 'true';
   });
 
+  // Admin View Mode: 'roster' (table list) | 'editor' (full-page form)
+  const [viewMode, setViewMode] = useState<'roster' | 'editor'>('roster');
+
+  // Login Mode State
+  const [loginTab, setLoginTab] = useState<'passcode' | 'supabase'>('passcode');
   const [inputPasscode, setInputPasscode] = useState<string>('');
+  const [adminEmail, setAdminEmail] = useState<string>('');
+  const [adminPassword, setAdminPassword] = useState<string>('');
   const [showPasscode, setShowPasscode] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string>('');
+  const [authLoading, setAuthLoading] = useState<boolean>(false);
 
   const [references, setReferences] = useState<ReferenceItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,14 +55,16 @@ export const AdminPage: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  // Form Modal state
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // Form & Preview state
   const [editingRef, setEditingRef] = useState<ReferenceItem | null>(null);
   const [previewModalRef, setPreviewModalRef] = useState<ReferenceItem | null>(null);
 
   // Form Field State
   const [formCategory, setCategory] = useState<'guild_challenge' | 'warzone' | 'ppc'>('guild_challenge');
   const [formSubcategory, setSubcategory] = useState<string>('Zone Boss');
+  const [isCustomSubcategory, setIsCustomSubcategory] = useState<boolean>(false);
+  const [customSubcategory, setCustomSubcategory] = useState<string>('');
+
   const [formTitle, setTitle] = useState<string>('');
   const [formYoutubeUrl, setYoutubeUrl] = useState<string>('');
   const [formDescription, setDescription] = useState<string>('');
@@ -46,12 +83,23 @@ export const AdminPage: React.FC = () => {
   };
 
   useEffect(() => {
+    if (isSupabaseConfigured() && supabase) {
+      supabase.auth.getSession().then(({ data }) => {
+        if (data.session) {
+          sessionStorage.setItem('karuhun_admin_authenticated', 'true');
+          setIsAuthenticated(true);
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     if (isAuthenticated) {
       loadData();
     }
   }, [isAuthenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handlePasscodeLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (inputPasscode.trim() === ADMIN_PASSCODE.trim()) {
       sessionStorage.setItem('karuhun_admin_authenticated', 'true');
@@ -62,16 +110,56 @@ export const AdminPage: React.FC = () => {
     }
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('karuhun_admin_authenticated');
-    setIsAuthenticated(false);
-    setInputPasscode('');
+  const handleSupabaseLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!supabase) return;
+    setAuthLoading(true);
+    setAuthError('');
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: adminEmail,
+      password: adminPassword
+    });
+    setAuthLoading(false);
+    if (error) {
+      setAuthError(error.message);
+    } else if (data.session) {
+      sessionStorage.setItem('karuhun_admin_authenticated', 'true');
+      setIsAuthenticated(true);
+    }
   };
 
-  const openCreateModal = () => {
+  const handleLogout = async () => {
+    sessionStorage.removeItem('karuhun_admin_authenticated');
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
+    setIsAuthenticated(false);
+    setInputPasscode('');
+    setAdminEmail('');
+    setAdminPassword('');
+    setViewMode('roster');
+  };
+
+  // Subcategory handler when Category changes
+  const handleCategoryChange = (newCategory: 'guild_challenge' | 'warzone' | 'ppc') => {
+    setCategory(newCategory);
+    const subs = CATEGORIES_CONFIG[newCategory]?.subcategories || [];
+    if (subs.length > 0) {
+      setSubcategory(subs[0]);
+      setIsCustomSubcategory(false);
+      setCustomSubcategory('');
+    } else {
+      setSubcategory('__custom__');
+      setIsCustomSubcategory(true);
+    }
+  };
+
+  const openCreateForm = () => {
     setEditingRef(null);
     setCategory('guild_challenge');
-    setSubcategory('Zone Boss');
+    setSubcategory(CATEGORIES_CONFIG.guild_challenge.subcategories[0]);
+    setIsCustomSubcategory(false);
+    setCustomSubcategory('');
     setTitle('');
     setYoutubeUrl('');
     setDescription('### Rotation & Strategy Guide\nWrite strategy details using **Markdown** formatting...');
@@ -79,13 +167,25 @@ export const AdminPage: React.FC = () => {
     setIsPublished(true);
     setTips(['', '', '']);
     setDescTab('edit');
-    setIsModalOpen(true);
+    setViewMode('editor');
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   };
 
-  const openEditModal = (refItem: ReferenceItem) => {
+  const openEditForm = (refItem: ReferenceItem) => {
     setEditingRef(refItem);
     setCategory(refItem.category);
-    setSubcategory(refItem.subcategory);
+
+    const subs = CATEGORIES_CONFIG[refItem.category]?.subcategories || [];
+    if (subs.includes(refItem.subcategory)) {
+      setSubcategory(refItem.subcategory);
+      setIsCustomSubcategory(false);
+      setCustomSubcategory('');
+    } else {
+      setSubcategory('__custom__');
+      setIsCustomSubcategory(true);
+      setCustomSubcategory(refItem.subcategory);
+    }
+
     setTitle(refItem.title);
     setYoutubeUrl(refItem.youtubeUrl);
     setDescription(refItem.description);
@@ -93,18 +193,20 @@ export const AdminPage: React.FC = () => {
     setIsPublished(refItem.isPublished !== false);
     setTips(refItem.tips && refItem.tips.length > 0 ? [...refItem.tips] : ['', '', '']);
     setDescTab('edit');
-    setIsModalOpen(true);
+    setViewMode('editor');
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const ytId = extractYoutubeVideoId(formYoutubeUrl) || 'cVxAQcUtZn0';
     const thumbUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+    const finalSubcategory = isCustomSubcategory ? customSubcategory.trim() : formSubcategory;
 
     const newRef: ReferenceItem = {
       id: editingRef ? editingRef.id : `ref-${Date.now()}`,
       category: formCategory,
-      subcategory: formSubcategory,
+      subcategory: finalSubcategory || 'General',
       title: formTitle,
       youtubeUrl: formYoutubeUrl,
       videoId: ytId,
@@ -116,14 +218,17 @@ export const AdminPage: React.FC = () => {
       tips: formTips.filter((t) => t.trim().length > 0)
     };
 
-    await saveStoredReference(newRef);
-    setIsModalOpen(false);
+    const updatedList = await saveStoredReference(newRef);
+    setReferences(updatedList);
+    setViewMode('roster');
     await loadData();
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   };
 
   const handleDelete = async (refId: string) => {
     if (window.confirm('Are you sure you want to delete this reference video?')) {
-      await deleteStoredReference(refId);
+      const updatedList = await deleteStoredReference(refId);
+      setReferences(updatedList);
       await loadData();
     }
   };
@@ -134,10 +239,10 @@ export const AdminPage: React.FC = () => {
     await loadData();
   };
 
-  // If not authenticated, render Login Screen
+  // Render Login Screen if not authenticated
   if (!isAuthenticated) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-[#09090b] justify-center px-4 animate-fadeIn">
+      <div className="min-h-[70vh] flex items-center justify-center px-4 animate-fadeIn">
         <div className="minimal-card p-6 sm:p-8 max-w-md w-full space-y-6 border border-[#27272a]">
           
           <div className="text-center space-y-2">
@@ -150,50 +255,127 @@ export const AdminPage: React.FC = () => {
             </p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
-                ENTER ADMIN PASSCODE
-              </label>
-              <div className="relative">
-                <Key className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type={showPasscode ? 'text' : 'password'}
-                  placeholder="Enter passcode..."
-                  value={inputPasscode}
-                  onChange={(e) => setInputPasscode(e.target.value)}
-                  className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-16 py-2.5 focus:outline-none focus:border-white font-sans"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPasscode(!showPasscode)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-tech text-zinc-400 hover:text-white"
-                >
-                  {showPasscode ? 'Hide' : 'Show'}
-                </button>
-              </div>
+          {/* Login Mode Selector Tabs */}
+          {isSupabaseConfigured() && (
+            <div className="flex items-center bg-black p-1 rounded-xl border border-[#27272a]">
+              <button
+                type="button"
+                onClick={() => { setLoginTab('passcode'); setAuthError(''); }}
+                className={`flex-1 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
+                  loginTab === 'passcode' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                PASSCODE LOGIN
+              </button>
+              <button
+                type="button"
+                onClick={() => { setLoginTab('supabase'); setAuthError(''); }}
+                className={`flex-1 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
+                  loginTab === 'supabase' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                SUPABASE AUTH (RLS)
+              </button>
             </div>
+          )}
 
-            {authError && (
-              <div className="bg-red-950/80 border border-red-800 text-red-200 text-xs p-3 rounded-xl font-tech">
-                {authError}
+          {loginTab === 'passcode' ? (
+            <form onSubmit={handlePasscodeLogin} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                  ENTER ADMIN PASSCODE
+                </label>
+                <div className="relative">
+                  <Key className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showPasscode ? 'text' : 'password'}
+                    placeholder="Enter passcode..."
+                    value={inputPasscode}
+                    onChange={(e) => setInputPasscode(e.target.value)}
+                    className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-16 py-2.5 focus:outline-none focus:border-white font-sans"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPasscode(!showPasscode)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-tech text-zinc-400 hover:text-white"
+                  >
+                    {showPasscode ? 'Hide' : 'Show'}
+                  </button>
+                </div>
               </div>
-            )}
 
-            <button
-              type="submit"
-              className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-md"
-            >
-              ENTER ADMIN DASHBOARD
-            </button>
-          </form>
+              {authError && (
+                <div className="bg-red-950/80 border border-red-800 text-red-200 text-xs p-3 rounded-xl font-tech">
+                  {authError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-md"
+              >
+                ENTER ADMIN DASHBOARD
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleSupabaseLogin} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                  ADMIN EMAIL
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    placeholder="admin@karuhun.com"
+                    value={adminEmail}
+                    onChange={(e) => setAdminEmail(e.target.value)}
+                    required
+                    className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                  PASSWORD
+                </label>
+                <div className="relative">
+                  <Key className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    required
+                    className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
+                  />
+                </div>
+              </div>
+
+              {authError && (
+                <div className="bg-red-950/80 border border-red-800 text-red-200 text-xs p-3 rounded-xl font-tech">
+                  {authError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={authLoading}
+                className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center space-x-2"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>{authLoading ? 'AUTHENTICATING...' : 'LOGIN WITH SUPABASE AUTH'}</span>
+              </button>
+            </form>
+          )}
 
         </div>
       </div>
     );
   }
 
-  // Filtered List
+  // Filtered List for Table View
   const filteredReferences = references.filter((r) => {
     const matchesSearch = r.title.toLowerCase().includes(searchTerm.toLowerCase()) || r.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === 'all' || r.category === categoryFilter;
@@ -201,6 +383,239 @@ export const AdminPage: React.FC = () => {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
+  // FULL-PAGE EDITOR VIEW (When creating or editing a reference)
+  if (viewMode === 'editor') {
+    return (
+      <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
+        
+        {/* Navigation & Header Banner */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <button
+            onClick={() => setViewMode('roster')}
+            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#121215] hover:bg-[#18181b] border border-[#27272a] hover:border-white text-white font-heading font-bold text-xs transition-all shadow-sm uppercase tracking-wider self-start"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>BACK TO REFERENCE ROSTER</span>
+          </button>
+
+          <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
+            ADMIN CMS: <strong className="text-white">{editingRef ? 'EDIT MODE' : 'CREATE MODE'}</strong>
+          </span>
+        </div>
+
+        {/* Dedicated Full-Page Form Card */}
+        <div className="minimal-card p-6 sm:p-8 space-y-6 border border-[#27272a]">
+          
+          <div className="border-b border-[#27272a] pb-4 space-y-1">
+            <h1 className="font-heading font-bold text-2xl text-white uppercase tracking-tight">
+              {editingRef ? 'EDIT REFERENCE VIDEO' : 'ADD NEW REFERENCE VIDEO'}
+            </h1>
+            <p className="text-xs font-tech text-zinc-400">
+              Configure category, strategy details, video link, and key tips for Karuhun REFFS library.
+            </p>
+          </div>
+
+          <form onSubmit={handleSave} className="space-y-6">
+            
+            {/* Category & Subcategory Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                  1. Main Category
+                </label>
+                <select
+                  value={formCategory}
+                  onChange={(e) => handleCategoryChange(e.target.value as any)}
+                  className="w-full bg-[#09090b] text-sm font-tech text-white border border-[#27272a] rounded-xl px-4 py-3 focus:outline-none focus:border-white cursor-pointer"
+                >
+                  <option value="guild_challenge">Guild Challenge</option>
+                  <option value="warzone">Warzone</option>
+                  <option value="ppc">PPC (Phantom Pain Cage)</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                  2. Subcategory Name (Filtered by Main Category)
+                </label>
+                <select
+                  value={isCustomSubcategory ? '__custom__' : formSubcategory}
+                  onChange={(e) => {
+                    if (e.target.value === '__custom__') {
+                      setIsCustomSubcategory(true);
+                    } else {
+                      setIsCustomSubcategory(false);
+                      setSubcategory(e.target.value);
+                    }
+                  }}
+                  className="w-full bg-[#09090b] text-sm font-tech text-white border border-[#27272a] rounded-xl px-4 py-3 focus:outline-none focus:border-white cursor-pointer"
+                >
+                  {CATEGORIES_CONFIG[formCategory]?.subcategories.map((sub) => (
+                    <option key={sub} value={sub}>
+                      {sub}
+                    </option>
+                  ))}
+                  <option value="__custom__">+ Custom Subcategory...</option>
+                </select>
+
+                {isCustomSubcategory && (
+                  <input
+                    type="text"
+                    placeholder="Enter custom subcategory name..."
+                    value={customSubcategory}
+                    onChange={(e) => setCustomSubcategory(e.target.value)}
+                    required
+                    className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3 focus:outline-none focus:border-white font-sans mt-2"
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Reference Title */}
+            <div className="space-y-2">
+              <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                3. Reference Title
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Warzone Nihil 12M+ Score Run"
+                value={formTitle}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3 focus:outline-none focus:border-white font-sans"
+              />
+            </div>
+
+            {/* YouTube Video Link */}
+            <div className="space-y-2">
+              <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                4. YouTube Video Link
+              </label>
+              <input
+                type="text"
+                placeholder="https://youtu.be/cVxAQcUtZn0 or https://www.youtube.com/watch?v=..."
+                value={formYoutubeUrl}
+                onChange={(e) => setYoutubeUrl(e.target.value)}
+                required
+                className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3 focus:outline-none focus:border-white font-mono"
+              />
+            </div>
+
+            {/* Markdown Strategy Description with Tabs */}
+            <div className="space-y-2 pt-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block flex items-center space-x-2">
+                  <Sparkles className="w-4 h-4 text-white" />
+                  <span>5. Markdown Strategy Description</span>
+                </label>
+
+                <div className="flex items-center bg-black p-1 rounded-xl border border-[#27272a] self-start sm:self-auto">
+                  <button
+                    type="button"
+                    onClick={() => setDescTab('edit')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all ${
+                      descTab === 'edit' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    Edit Markdown
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDescTab('preview')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all ${
+                      descTab === 'preview' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    Live Preview
+                  </button>
+                </div>
+              </div>
+
+              {descTab === 'edit' ? (
+                <textarea
+                  rows={10}
+                  value={formDescription}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Write strategy details using Markdown formatting..."
+                  className="w-full bg-[#09090b] text-xs text-white border border-[#27272a] rounded-xl p-4 focus:outline-none focus:border-white font-mono leading-relaxed"
+                />
+              ) : (
+                <div className="bg-[#09090b] border border-[#27272a] rounded-xl p-6 min-h-[220px]">
+                  <MarkdownRenderer content={formDescription} />
+                </div>
+              )}
+            </div>
+
+            {/* Strategy Tips Builder */}
+            <div className="space-y-3 pt-2">
+              <label className="text-xs font-tech text-zinc-300 font-bold uppercase block flex items-center space-x-2">
+                <Lightbulb className="w-4 h-4 text-white" />
+                <span>6. Key Strategy Tips (Optional)</span>
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {formTips.map((tip, idx) => (
+                  <div key={idx} className="space-y-1">
+                    <span className="text-[10px] font-tech text-zinc-400 uppercase font-bold">
+                      Tip #{idx + 1}
+                    </span>
+                    <input
+                      type="text"
+                      placeholder={`Enter tip #${idx + 1}...`}
+                      value={tip}
+                      onChange={(e) => {
+                        const next = [...formTips];
+                        next[idx] = e.target.value;
+                        setTips(next);
+                      }}
+                      className="w-full bg-[#09090b] text-xs text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none focus:border-white font-sans"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Publication Status Checkbox */}
+            <div className="flex items-center space-x-3 pt-4 border-t border-[#27272a]">
+              <input
+                type="checkbox"
+                id="published-check"
+                checked={formIsPublished}
+                onChange={(e) => setIsPublished(e.target.checked)}
+                className="w-5 h-5 accent-white cursor-pointer rounded"
+              />
+              <label htmlFor="published-check" className="text-xs font-tech text-zinc-200 cursor-pointer font-bold select-none">
+                Publish Video Reference <span className="text-zinc-400 font-normal">(Checked = Visible on public REFFS page | Unchecked = Saved as Draft)</span>
+              </label>
+            </div>
+
+            {/* Full-Page Bottom Action Controls */}
+            <div className="flex items-center justify-end space-x-4 pt-6 border-t border-[#27272a]">
+              <button
+                type="button"
+                onClick={() => setViewMode('roster')}
+                className="px-6 py-3 rounded-xl bg-[#18181b] hover:bg-[#27272a] text-zinc-300 text-xs font-heading font-bold uppercase transition-all border border-[#27272a]"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="inline-flex items-center space-x-2 px-8 py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase shadow-lg transition-all cursor-pointer"
+              >
+                <Save className="w-4 h-4" />
+                <span>SAVE REFERENCE VIDEO</span>
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    );
+  }
+
+  // MAIN ADMIN ROSTER LIST VIEW
   return (
     <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
       
@@ -222,7 +637,7 @@ export const AdminPage: React.FC = () => {
 
           <div className="flex items-center space-x-3">
             <button
-              onClick={openCreateModal}
+              onClick={openCreateForm}
               className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-md"
             >
               <Plus className="w-4 h-4" />
@@ -369,7 +784,7 @@ export const AdminPage: React.FC = () => {
                           <Eye className="w-3.5 h-3.5" />
                         </button>
                         <button
-                          onClick={() => openEditModal(refItem)}
+                          onClick={() => openEditForm(refItem)}
                           className="p-1.5 rounded-lg bg-white hover:bg-zinc-200 text-black font-bold"
                           title="Edit Reference"
                         >
@@ -392,204 +807,40 @@ export const AdminPage: React.FC = () => {
         )}
       </div>
 
-      {/* FORM MODAL (CREATE / EDIT) */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="minimal-card p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-5 border border-[#27272a]">
-            
-            <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
-              <h3 className="font-heading font-bold text-lg text-white">
-                {editingRef ? 'EDIT REFERENCE VIDEO' : 'ADD NEW REFERENCE VIDEO'}
-              </h3>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-xs font-tech text-zinc-400 hover:text-white"
-              >
-                ✕ Close
-              </button>
-            </div>
-
-            <form onSubmit={handleSave} className="space-y-4">
-              
-              {/* Category & Subcategory Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">Category</label>
-                  <select
-                    value={formCategory}
-                    onChange={(e) => setCategory(e.target.value as any)}
-                    className="w-full bg-[#09090b] text-xs font-tech text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none"
-                  >
-                    <option value="guild_challenge">Guild Challenge</option>
-                    <option value="warzone">Warzone</option>
-                    <option value="ppc">PPC</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">Subcategory Name</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Zone Boss / Nihil / Ultimate"
-                    value={formSubcategory}
-                    onChange={(e) => setSubcategory(e.target.value)}
-                    required
-                    className="w-full bg-[#09090b] text-xs text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none font-sans"
-                  />
-                </div>
-              </div>
-
-              {/* Title & Youtube Link */}
-              <div className="space-y-1">
-                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">Reference Title</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Warzone Nihil 12M+ Score Run"
-                  value={formTitle}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                  className="w-full bg-[#09090b] text-xs text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none font-sans"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">YouTube Video Link</label>
-                <input
-                  type="text"
-                  placeholder="https://youtu.be/cVxAQcUtZn0 or https://www.youtube.com/watch?v=..."
-                  value={formYoutubeUrl}
-                  onChange={(e) => setYoutubeUrl(e.target.value)}
-                  required
-                  className="w-full bg-[#09090b] text-xs text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none font-mono"
-                />
-              </div>
-
-              {/* Markdown Description with Tabs */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
-                    Markdown Strategy Description
-                  </label>
-                  <div className="flex items-center bg-black p-0.5 rounded-lg border border-[#27272a]">
-                    <button
-                      type="button"
-                      onClick={() => setDescTab('edit')}
-                      className={`px-3 py-1 rounded text-[10px] font-heading font-bold ${
-                        descTab === 'edit' ? 'bg-white text-black' : 'text-zinc-400'
-                      }`}
-                    >
-                      Edit Markdown
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDescTab('preview')}
-                      className={`px-3 py-1 rounded text-[10px] font-heading font-bold ${
-                        descTab === 'preview' ? 'bg-white text-black' : 'text-zinc-400'
-                      }`}
-                    >
-                      Live Preview
-                    </button>
-                  </div>
-                </div>
-
-                {descTab === 'edit' ? (
-                  <textarea
-                    rows={6}
-                    value={formDescription}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="w-full bg-[#09090b] text-xs text-white border border-[#27272a] rounded-xl p-3 focus:outline-none font-mono leading-relaxed"
-                  />
-                ) : (
-                  <div className="bg-[#09090b] border border-[#27272a] rounded-xl p-4 min-h-[140px]">
-                    <MarkdownRenderer content={formDescription} />
-                  </div>
-                )}
-              </div>
-
-              {/* Strategy Tips Builder */}
-              <div className="space-y-2">
-                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">Key Strategy Tips</label>
-                {formTips.map((tip, idx) => (
-                  <input
-                    key={idx}
-                    type="text"
-                    placeholder={`Tip #${idx + 1}...`}
-                    value={tip}
-                    onChange={(e) => {
-                      const next = [...formTips];
-                      next[idx] = e.target.value;
-                      setTips(next);
-                    }}
-                    className="w-full bg-[#09090b] text-xs text-white border border-[#27272a] rounded-xl px-3 py-2 focus:outline-none font-sans"
-                  />
-                ))}
-              </div>
-
-              {/* Publish Checkbox */}
-              <div className="flex items-center space-x-2 pt-2">
-                <input
-                  type="checkbox"
-                  id="published-check"
-                  checked={formIsPublished}
-                  onChange={(e) => setIsPublished(e.target.checked)}
-                  className="w-4 h-4 accent-white cursor-pointer"
-                />
-                <label htmlFor="published-check" className="text-xs font-tech text-zinc-200 cursor-pointer">
-                  Publish Video Reference (Visible on public REFFS page)
-                </label>
-              </div>
-
-              {/* Submit Buttons */}
-              <div className="flex items-center justify-end space-x-3 pt-4 border-t border-[#27272a]">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-[#18181b] text-zinc-300 text-xs font-heading font-bold uppercase"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase shadow-md"
-                >
-                  Save Reference
-                </button>
-              </div>
-
-            </form>
-
-          </div>
-        </div>
-      )}
-
       {/* LIVE PREVIEW MODAL */}
       {previewModalRef && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fadeIn">
-          <div className="minimal-card p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto space-y-4 border border-[#27272a]">
-            <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
-              <span className="text-xs font-tech font-bold text-zinc-400 uppercase">LIVE PREVIEW THEATER</span>
+        <div className="fixed inset-0 z-[100] flex justify-center items-start pt-20 sm:pt-24 pb-6 px-3 sm:px-6 bg-black/85 backdrop-blur-md animate-fadeIn overflow-hidden">
+          <div className="relative flex flex-col w-full max-w-3xl max-h-[calc(100vh-110px)] sm:max-h-[calc(100vh-130px)] bg-[#09090b] border border-[#27272a] rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
+            
+            {/* Fixed Header */}
+            <div className="flex-shrink-0 flex items-center justify-between p-4 sm:p-5 border-b border-[#27272a] bg-[#121215]">
+              <span className="text-xs font-tech font-bold text-zinc-400 uppercase tracking-wider">LIVE PREVIEW THEATER</span>
               <button
                 onClick={() => setPreviewModalRef(null)}
-                className="text-xs font-tech text-zinc-400 hover:text-white"
+                className="px-3 py-1.5 rounded-xl bg-[#18181b] hover:bg-[#27272a] border border-[#27272a] text-xs font-tech text-zinc-300 hover:text-white transition-colors"
               >
                 ✕ Close Preview
               </button>
             </div>
 
-            <div className="aspect-video w-full rounded-2xl bg-black overflow-hidden border border-[#27272a]">
-              <iframe
-                src={`https://www.youtube.com/embed/${previewModalRef.videoId}?autoplay=1`}
-                title={previewModalRef.title}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+            {/* Scrollable Body */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+              <div className="aspect-video w-full rounded-2xl bg-black overflow-hidden border border-[#27272a]">
+                <iframe
+                  src={`https://www.youtube.com/embed/${previewModalRef.videoId}?autoplay=1`}
+                  title={previewModalRef.title}
+                  className="w-full h-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+
+              <h3 className="font-heading font-bold text-lg text-white">{previewModalRef.title}</h3>
+              <div className="bg-[#09090b] p-4 rounded-xl border border-[#27272a]">
+                <MarkdownRenderer content={previewModalRef.description} />
+              </div>
             </div>
 
-            <h3 className="font-heading font-bold text-lg text-white">{previewModalRef.title}</h3>
-            <div className="bg-[#09090b] p-4 rounded-xl border border-[#27272a]">
-              <MarkdownRenderer content={previewModalRef.description} />
-            </div>
           </div>
         </div>
       )}
