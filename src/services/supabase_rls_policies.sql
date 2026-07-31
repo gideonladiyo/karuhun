@@ -37,28 +37,46 @@ ALTER TABLE public.video_references ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.subcategories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reference_tips ENABLE ROW LEVEL SECURITY;
 
--- 5. Create RLS Policies for video_references
--- Public Read: Anonymous/Public users can view published references (is_published = true)
+-- 5. Drop old policies to avoid duplicates
 DROP POLICY IF EXISTS "Public view published references" ON public.video_references;
-CREATE POLICY "Public view published references" ON public.video_references
-    FOR SELECT
-    USING (is_published = true OR auth.role() = 'authenticated');
-
--- Admin Write Policies: Authenticated users (logged in admins) can INSERT, UPDATE, DELETE
 DROP POLICY IF EXISTS "Admins full management" ON public.video_references;
-CREATE POLICY "Admins full management" ON public.video_references
-    FOR ALL
-    USING (auth.role() = 'authenticated');
+DROP POLICY IF EXISTS "Admins full insert video_references" ON public.video_references;
+DROP POLICY IF EXISTS "Admins full select video_references" ON public.video_references;
+DROP POLICY IF EXISTS "Admins full update video_references" ON public.video_references;
+DROP POLICY IF EXISTS "Admins full delete video_references" ON public.video_references;
 
--- Policies for subcategories & tips
+-- 6. Create Explicit RLS Policies for video_references
+-- Public Read: Anyone can view published references
+CREATE POLICY "Public view published references" ON public.video_references
+    FOR SELECT USING (is_published = true);
+
+-- Authenticated Users (Logged In Admins) full CRUD
+CREATE POLICY "Admins full insert video_references" ON public.video_references
+    FOR INSERT TO authenticated WITH CHECK (true);
+
+CREATE POLICY "Admins full select video_references" ON public.video_references
+    FOR SELECT TO authenticated USING (true);
+
+CREATE POLICY "Admins full update video_references" ON public.video_references
+    FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+
+CREATE POLICY "Admins full delete video_references" ON public.video_references
+    FOR DELETE TO authenticated USING (true);
+
+-- 7. Policies for subcategories table
 DROP POLICY IF EXISTS "Public view subcategories" ON public.subcategories;
-CREATE POLICY "Public view subcategories" ON public.subcategories FOR SELECT USING (true);
-
 DROP POLICY IF EXISTS "Admins manage subcategories" ON public.subcategories;
-CREATE POLICY "Admins manage subcategories" ON public.subcategories FOR ALL USING (auth.role() = 'authenticated');
+DROP POLICY IF EXISTS "Admins insert subcategories" ON public.subcategories;
 
+CREATE POLICY "Public view subcategories" ON public.subcategories FOR SELECT USING (true);
+CREATE POLICY "Admins insert subcategories" ON public.subcategories FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Admins manage subcategories" ON public.subcategories FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- 8. Policies for reference_tips table
 DROP POLICY IF EXISTS "Public view reference tips" ON public.reference_tips;
-CREATE POLICY "Public view reference tips" ON public.reference_tips FOR SELECT USING (true);
-
 DROP POLICY IF EXISTS "Admins manage reference tips" ON public.reference_tips;
-CREATE POLICY "Admins manage reference tips" ON public.reference_tips FOR ALL USING (auth.role() = 'authenticated');
+DROP POLICY IF EXISTS "Admins insert reference_tips" ON public.reference_tips;
+
+CREATE POLICY "Public view reference tips" ON public.reference_tips FOR SELECT USING (true);
+CREATE POLICY "Admins insert reference_tips" ON public.reference_tips FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Admins manage reference tips" ON public.reference_tips FOR ALL TO authenticated USING (true) WITH CHECK (true);

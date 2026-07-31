@@ -40,12 +40,9 @@ export const AdminPage: React.FC = () => {
   // Admin View Mode: 'roster' (table list) | 'editor' (full-page form)
   const [viewMode, setViewMode] = useState<'roster' | 'editor'>('roster');
 
-  // Login Mode State
-  const [loginTab, setLoginTab] = useState<'passcode' | 'supabase'>('passcode');
-  const [inputPasscode, setInputPasscode] = useState<string>('');
+  // Supabase Auth Login State
   const [adminEmail, setAdminEmail] = useState<string>('');
   const [adminPassword, setAdminPassword] = useState<string>('');
-  const [showPasscode, setShowPasscode] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string>('');
   const [authLoading, setAuthLoading] = useState<boolean>(false);
 
@@ -58,6 +55,8 @@ export const AdminPage: React.FC = () => {
   // Form & Preview state
   const [editingRef, setEditingRef] = useState<ReferenceItem | null>(null);
   const [previewModalRef, setPreviewModalRef] = useState<ReferenceItem | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
   // Form Field State
   const [formCategory, setCategory] = useState<'guild_challenge' | 'warzone' | 'ppc'>('guild_challenge');
@@ -75,6 +74,8 @@ export const AdminPage: React.FC = () => {
   // Description tab state: 'edit' | 'preview'
   const [descTab, setDescTab] = useState<'edit' | 'preview'>('edit');
 
+  const [supabaseUserEmail, setSupabaseUserEmail] = useState<string | null>(null);
+
   const loadData = async () => {
     setLoading(true);
     const data = await fetchLiveReferences();
@@ -88,8 +89,23 @@ export const AdminPage: React.FC = () => {
         if (data.session) {
           sessionStorage.setItem('karuhun_admin_authenticated', 'true');
           setIsAuthenticated(true);
+          setSupabaseUserEmail(data.session.user?.email || 'Authenticated Admin');
         }
       });
+
+      const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (session) {
+          sessionStorage.setItem('karuhun_admin_authenticated', 'true');
+          setIsAuthenticated(true);
+          setSupabaseUserEmail(session.user?.email || 'Authenticated Admin');
+        } else {
+          setSupabaseUserEmail(null);
+        }
+      });
+
+      return () => {
+        authListener.subscription.unsubscribe();
+      };
     }
   }, []);
 
@@ -99,20 +115,12 @@ export const AdminPage: React.FC = () => {
     }
   }, [isAuthenticated]);
 
-  const handlePasscodeLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (inputPasscode.trim() === ADMIN_PASSCODE.trim()) {
-      sessionStorage.setItem('karuhun_admin_authenticated', 'true');
-      setIsAuthenticated(true);
-      setAuthError('');
-    } else {
-      setAuthError('Invalid Admin Passcode! Access Denied.');
-    }
-  };
-
   const handleSupabaseLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!supabase) return;
+    if (!supabase) {
+      setAuthError('Supabase environment variables are missing! Check .env file.');
+      return;
+    }
     setAuthLoading(true);
     setAuthError('');
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -125,6 +133,7 @@ export const AdminPage: React.FC = () => {
     } else if (data.session) {
       sessionStorage.setItem('karuhun_admin_authenticated', 'true');
       setIsAuthenticated(true);
+      setSupabaseUserEmail(data.session.user?.email || 'Authenticated Admin');
     }
   };
 
@@ -134,7 +143,6 @@ export const AdminPage: React.FC = () => {
       await supabase.auth.signOut();
     }
     setIsAuthenticated(false);
-    setInputPasscode('');
     setAdminEmail('');
     setAdminPassword('');
     setViewMode('roster');
@@ -156,6 +164,8 @@ export const AdminPage: React.FC = () => {
 
   const openCreateForm = () => {
     setEditingRef(null);
+    setSaveError(null);
+    setSaveSuccess(null);
     setCategory('guild_challenge');
     setSubcategory(CATEGORIES_CONFIG.guild_challenge.subcategories[0]);
     setIsCustomSubcategory(false);
@@ -163,7 +173,7 @@ export const AdminPage: React.FC = () => {
     setTitle('');
     setYoutubeUrl('');
     setDescription('### Rotation & Strategy Guide\nWrite strategy details using **Markdown** formatting...');
-    setAuthor('Karuhun Corps');
+    setAuthor('');
     setIsPublished(true);
     setTips(['', '', '']);
     setDescTab('edit');
@@ -173,6 +183,8 @@ export const AdminPage: React.FC = () => {
 
   const openEditForm = (refItem: ReferenceItem) => {
     setEditingRef(refItem);
+    setSaveError(null);
+    setSaveSuccess(null);
     setCategory(refItem.category);
 
     const subs = CATEGORIES_CONFIG[refItem.category]?.subcategories || [];
@@ -199,6 +211,9 @@ export const AdminPage: React.FC = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSaveError(null);
+    setSaveSuccess(null);
+
     const ytId = extractYoutubeVideoId(formYoutubeUrl) || 'cVxAQcUtZn0';
     const thumbUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
     const finalSubcategory = isCustomSubcategory ? customSubcategory.trim() : formSubcategory;
@@ -212,17 +227,25 @@ export const AdminPage: React.FC = () => {
       videoId: ytId,
       thumbnailUrl: thumbUrl,
       description: formDescription,
-      author: formAuthor,
+      author: formAuthor.trim() || 'Karuhun Corps',
       isPublished: formIsPublished,
       dateAdded: editingRef?.dateAdded || new Date().toISOString().split('T')[0],
       tips: formTips.filter((t) => t.trim().length > 0)
     };
 
-    const updatedList = await saveStoredReference(newRef);
-    setReferences(updatedList);
-    setViewMode('roster');
-    await loadData();
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+    const res = await saveStoredReference(newRef);
+    setReferences(res.list);
+
+    if (!res.success && res.error) {
+      setSaveError(res.error);
+    } else {
+      setSaveSuccess('SUCCESS: Reference video directly saved to Supabase DB!');
+      setTimeout(async () => {
+        setViewMode('roster');
+        await loadData();
+        window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      }, 1500);
+    }
   };
 
   const handleDelete = async (refId: string) => {
@@ -243,132 +266,67 @@ export const AdminPage: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center px-4 animate-fadeIn">
-        <div className="minimal-card p-6 sm:p-8 max-w-md w-full space-y-6 border border-[#27272a]">
-          
+        <div className="minimal-card p-8 sm:p-10 w-full max-w-md space-y-6 border border-[#27272a]">
           <div className="text-center space-y-2">
             <div className="w-12 h-12 rounded-2xl bg-black border border-[#27272a] p-2 flex items-center justify-center mx-auto shadow-md">
-              <Lock className="w-6 h-6 text-white" />
+              <Shield className="w-6 h-6 text-white" />
             </div>
-            <h1 className="font-heading font-bold text-2xl text-white">ADMIN PANEL LOGIN</h1>
+            <h1 className="font-heading font-bold text-2xl text-white uppercase tracking-tight">ADMIN SUPABASE LOGIN</h1>
             <p className="text-xs font-tech text-zinc-400">
-              REFFS Content Management System for Karuhun Guild
+              Authenticate via Supabase Auth for RLS Direct DB Access
             </p>
           </div>
 
-          {/* Login Mode Selector Tabs */}
-          {isSupabaseConfigured() && (
-            <div className="flex items-center bg-black p-1 rounded-xl border border-[#27272a]">
-              <button
-                type="button"
-                onClick={() => { setLoginTab('passcode'); setAuthError(''); }}
-                className={`flex-1 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
-                  loginTab === 'passcode' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                PASSCODE LOGIN
-              </button>
-              <button
-                type="button"
-                onClick={() => { setLoginTab('supabase'); setAuthError(''); }}
-                className={`flex-1 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
-                  loginTab === 'supabase' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                SUPABASE AUTH (RLS)
-              </button>
+          <form onSubmit={handleSupabaseLogin} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                ADMIN EMAIL
+              </label>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="email"
+                  placeholder="admin@karuhun.com"
+                  value={adminEmail}
+                  onChange={(e) => setAdminEmail(e.target.value)}
+                  required
+                  className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
+                />
+              </div>
             </div>
-          )}
 
-          {loginTab === 'passcode' ? (
-            <form onSubmit={handlePasscodeLogin} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
-                  ENTER ADMIN PASSCODE
-                </label>
-                <div className="relative">
-                  <Key className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type={showPasscode ? 'text' : 'password'}
-                    placeholder="Enter passcode..."
-                    value={inputPasscode}
-                    onChange={(e) => setInputPasscode(e.target.value)}
-                    className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-16 py-2.5 focus:outline-none focus:border-white font-sans"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPasscode(!showPasscode)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-tech text-zinc-400 hover:text-white"
-                  >
-                    {showPasscode ? 'Hide' : 'Show'}
-                  </button>
-                </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                PASSWORD
+              </label>
+              <div className="relative">
+                <Key className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="password"
+                  placeholder="••••••••••••"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  required
+                  className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
+                />
               </div>
+            </div>
 
-              {authError && (
-                <div className="bg-red-950/80 border border-red-800 text-red-200 text-xs p-3 rounded-xl font-tech">
-                  {authError}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-md"
-              >
-                ENTER ADMIN DASHBOARD
-              </button>
-            </form>
-          ) : (
-            <form onSubmit={handleSupabaseLogin} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
-                  ADMIN EMAIL
-                </label>
-                <div className="relative">
-                  <Mail className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="email"
-                    placeholder="admin@karuhun.com"
-                    value={adminEmail}
-                    onChange={(e) => setAdminEmail(e.target.value)}
-                    required
-                    className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
-                  />
-                </div>
+            {authError && (
+              <div className="bg-red-950/80 border border-red-800 text-red-200 text-xs p-3 rounded-xl font-tech">
+                {authError}
               </div>
+            )}
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
-                  PASSWORD
-                </label>
-                <div className="relative">
-                  <Key className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    value={adminPassword}
-                    onChange={(e) => setAdminPassword(e.target.value)}
-                    required
-                    className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
-                  />
-                </div>
-              </div>
-
-              {authError && (
-                <div className="bg-red-950/80 border border-red-800 text-red-200 text-xs p-3 rounded-xl font-tech">
-                  {authError}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={authLoading}
-                className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center space-x-2"
-              >
-                <LogIn className="w-4 h-4" />
-                <span>{authLoading ? 'AUTHENTICATING...' : 'LOGIN WITH SUPABASE AUTH'}</span>
-              </button>
-            </form>
-          )}
+            <button
+              type="submit"
+              disabled={authLoading}
+              className="w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center space-x-2"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>{authLoading ? 'AUTHENTICATING...' : 'LOGIN WITH SUPABASE AUTH'}</span>
+            </button>
+          </form>
 
         </div>
       </div>
@@ -416,6 +374,20 @@ export const AdminPage: React.FC = () => {
           </div>
 
           <form onSubmit={handleSave} className="space-y-6">
+            
+            {saveError && (
+              <div className="p-4 bg-red-950/90 border border-red-800 text-red-200 rounded-xl text-xs font-mono space-y-1">
+                <div className="font-bold text-red-400 font-tech uppercase">⚠️ Supabase Save Diagnostic Error:</div>
+                <div className="break-all">{saveError}</div>
+              </div>
+            )}
+
+            {saveSuccess && (
+              <div className="p-4 bg-emerald-950/90 border border-emerald-800 text-emerald-200 rounded-xl text-xs font-tech font-bold uppercase flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                <span>{saveSuccess}</span>
+              </div>
+            )}
             
             {/* Category & Subcategory Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -486,19 +458,34 @@ export const AdminPage: React.FC = () => {
               />
             </div>
 
-            {/* YouTube Video Link */}
-            <div className="space-y-2">
-              <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
-                4. YouTube Video Link
-              </label>
-              <input
-                type="text"
-                placeholder="https://youtu.be/cVxAQcUtZn0 or https://www.youtube.com/watch?v=..."
-                value={formYoutubeUrl}
-                onChange={(e) => setYoutubeUrl(e.target.value)}
-                required
-                className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3 focus:outline-none focus:border-white font-mono"
-              />
+            {/* YouTube Video Link & Author Credit Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                  4. YouTube Video Link
+                </label>
+                <input
+                  type="text"
+                  placeholder="https://youtu.be/cVxAQcUtZn0 or https://www.youtube.com/watch?v=..."
+                  value={formYoutubeUrl}
+                  onChange={(e) => setYoutubeUrl(e.target.value)}
+                  required
+                  className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3 focus:outline-none focus:border-white font-mono"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                  5. Author / Credit Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Karuhun Corps, Player Name, etc."
+                  value={formAuthor}
+                  onChange={(e) => setAuthor(e.target.value)}
+                  className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3 focus:outline-none focus:border-white font-sans"
+                />
+              </div>
             </div>
 
             {/* Markdown Strategy Description with Tabs */}
@@ -626,6 +613,11 @@ export const AdminPage: React.FC = () => {
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a] text-zinc-300 text-xs font-tech font-bold uppercase tracking-wider">
               <Shield className="w-3.5 h-3.5 text-white" />
               <span>Admin Management Panel</span>
+              {supabaseUserEmail && (
+                <span className="bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-mono normal-case">
+                  {supabaseUserEmail}
+                </span>
+              )}
             </div>
             <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white">
               REFFS VIDEO <span className="text-zinc-500 font-normal">MANAGER &amp; CMS</span>

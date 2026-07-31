@@ -266,14 +266,20 @@ async function getOrCreateSubcategoryId(category: string, subcategory: string): 
   return null;
 }
 
+export interface SaveResult {
+  success: boolean;
+  error?: string;
+  list: ReferenceItem[];
+}
+
 /**
  * Save / Update a reference item (Syncs directly to Supabase DB + LocalStorage fallback)
  */
-export async function saveStoredReference(item: ReferenceItem): Promise<ReferenceItem[]> {
+export async function saveStoredReference(item: ReferenceItem): Promise<SaveResult> {
   const isValidUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.id);
   const targetId = isValidUuid
     ? item.id
-    : (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : item.id);
+    : (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `00000000-0000-4000-a000-${Date.now().toString().padStart(12, '0')}`);
   
   const updatedItem: ReferenceItem = {
     ...item,
@@ -297,12 +303,15 @@ export async function saveStoredReference(item: ReferenceItem): Promise<Referenc
     console.error('Failed to save reference to localStorage', err);
   }
 
+  let supabaseErrorMessage: string | undefined = undefined;
+
   // Direct Supabase DB Save
   if (isSupabaseConfigured() && supabase) {
     try {
       const subcategoryId = await getOrCreateSubcategoryId(updatedItem.category, updatedItem.subcategory);
 
       const payload: any = {
+        id: updatedItem.id,
         title: updatedItem.title,
         youtube_url: updatedItem.youtubeUrl,
         youtube_video_id: updatedItem.videoId,
@@ -312,43 +321,46 @@ export async function saveStoredReference(item: ReferenceItem): Promise<Referenc
         is_published: updatedItem.isPublished !== false
       };
 
-      if (isValidUuid) {
-        payload.id = updatedItem.id;
-      }
-
       if (subcategoryId) {
         payload.subcategory_id = subcategoryId;
       }
 
-      const { data: savedRow, error } = await supabase
+      console.log('[Supabase Debug] Sending payload to video_references table:', payload);
+
+      const { error } = await supabase
         .from('video_references')
-        .upsert(payload)
-        .select('id')
-        .single();
+        .upsert(payload);
 
       if (error) {
-        console.error('[Supabase Error] Direct video_references insert/update failed:', error);
+        console.error('[Supabase Error] Direct video_references upsert failed:', error);
+        supabaseErrorMessage = `Supabase Error [Code: ${error.code || 'UNKNOWN'}]: ${error.message}${error.details ? ` | Details: ${error.details}` : ''}${error.hint ? ` | Hint: ${error.hint}` : ''}`;
       } else {
-        const savedRefId = savedRow?.id || updatedItem.id;
-        console.log(`[Supabase Success] DIRECTLY SAVED to Supabase DB! ID: ${savedRefId}`);
+        console.log(`[Supabase Success] DIRECTLY SAVED to Supabase DB! ID: ${updatedItem.id}`);
 
         // Sync Tips to reference_tips table
         if (updatedItem.tips && updatedItem.tips.length > 0) {
-          await supabase.from('reference_tips').delete().eq('reference_id', savedRefId);
+          await supabase.from('reference_tips').delete().eq('reference_id', updatedItem.id);
           const tipsPayload = updatedItem.tips.map((t, idx) => ({
-            reference_id: savedRefId,
+            reference_id: updatedItem.id,
             step_number: idx + 1,
             tip_content: t
           }));
           await supabase.from('reference_tips').insert(tipsPayload);
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[Supabase Exception] Failed to save directly to Supabase:', err);
+      supabaseErrorMessage = `Supabase Exception: ${err?.message || String(err)}`;
     }
+  } else {
+    supabaseErrorMessage = 'Supabase client is not configured or VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY environment variables are missing!';
   }
 
-  return updatedList;
+  return {
+    success: !supabaseErrorMessage,
+    error: supabaseErrorMessage,
+    list: updatedList
+  };
 }
 
 /**
