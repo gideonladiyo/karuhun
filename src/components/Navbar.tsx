@@ -34,7 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <a 
               href="/guild/3638"
               onClick={(e) => { e.preventDefault(); onNavigate('hub'); }}
-              className="flex items-center space-x-3 group cursor-pointer"
+              className="flex items-center space-x-3 group cursor-pointer min-w-0"
             >
               <div className="relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-black border border-[#27272a] p-1 group-hover:border-white transition-colors shadow-sm flex-shrink-0">
                 <img 
@@ -44,12 +44,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center space-x-2">
-                  <span className="font-heading font-bold text-lg sm:text-xl tracking-tight text-white group-hover:text-zinc-300 transition-colors">
+                  <span className="font-heading font-bold text-base sm:text-xl tracking-tight text-white group-hover:text-zinc-300 transition-colors whitespace-nowrap">
                     KARUHUN <span className="text-zinc-500 font-normal">夜</span>
                   </span>
-                  <span className="hidden sm:inline-block bg-[#18181b] text-zinc-300 border border-[#27272a] text-[10px] font-tech font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
+                  <span className="hidden sm:inline-block bg-[#18181b] text-zinc-300 border border-[#27272a] text-[10px] font-tech font-bold px-2 py-0.5 rounded-md uppercase tracking-wider flex-shrink-0">
                     PGR CORPS
                   </span>
                 </div>
@@ -84,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}
               >
                 <Video className="w-3.5 h-3.5" />
-                <span>REFFS</span>
+                <span>REFERENCES</span>
               </a>
 
               <a
@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </nav>
 
             {/* Right Actions & Mobile Hamburger */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
               {onReplayIntro && (
                 <button
                   onClick={onReplayIntro}
@@ -131,7 +131,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 href="https://discord.gg/Cz9bzjcdV"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs transition-colors shadow-sm"
+                className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs transition-colors shadow-sm whitespace-nowrap"
               >
                 <span>JOIN DISCORD</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -141,6 +141,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="md:hidden p-2 rounded-xl bg-[#121215] border border-[#27272a] text-zinc-300 hover:text-white"
+                aria-label="Toggle navigation menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
@@ -169,7 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <Video className="w-4 h-4" />
-              <span>REFFS</span>
+              <span>REFERENCES</span>
             </button>
 
             <button
@@ -191,50 +192,60 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Skull className="w-4 h-4" />
               <span>PPC TOOLS</span>
             </button>
+
+            <a
+              href="https://discord.gg/Cz9bzjcdV"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center space-x-2 p-3 mt-2 rounded-xl bg-white text-black font-heading font-bold text-xs shadow-sm hover:bg-zinc-200 transition-colors"
+            >
+              <span>JOIN DISCORD</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
           </div>
         )}
       </header>
 
       {/* Floating Bottom Navigation Bar for Mobile Phones (App-Like Dock) */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#09090b]/95 border-t border-[#27272a] backdrop-blur-lg px-2 py-1.5 flex items-center justify-around shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#09090b]/95 border-t border-[#27272a] backdrop-blur-lg px-4 py-2.5 flex items-center justify-around shadow-2xl">
         <button
           onClick={() => onNavigate('hub')}
-          className={`flex flex-col items-center space-y-0.5 px-3 py-1 rounded-xl transition-all ${
-            activeTab === 'hub' ? 'text-white font-bold scale-105' : 'text-zinc-400'
+          title="Guild Hub"
+          className={`p-2.5 rounded-xl transition-all flex items-center justify-center ${
+            activeTab === 'hub' ? 'text-white bg-[#18181b] border border-[#27272a] scale-105 shadow-sm' : 'text-zinc-400 hover:text-white'
           }`}
         >
-          <Shield className="w-4 h-4" />
-          <span className="text-[10px] font-heading uppercase">HUB</span>
+          <Shield className="w-5 h-5" />
         </button>
 
         <button
           onClick={() => onNavigate('reffs')}
-          className={`flex flex-col items-center space-y-0.5 px-3 py-1 rounded-xl transition-all ${
-            activeTab === 'reffs' ? 'text-white font-bold scale-105' : 'text-zinc-400'
+          title="References"
+          className={`p-2.5 rounded-xl transition-all flex items-center justify-center ${
+            activeTab === 'reffs' ? 'text-white bg-[#18181b] border border-[#27272a] scale-105 shadow-sm' : 'text-zinc-400 hover:text-white'
           }`}
         >
-          <Video className="w-4 h-4" />
-          <span className="text-[10px] font-heading uppercase">REFFS</span>
+          <Video className="w-5 h-5" />
         </button>
 
         <button
           onClick={() => onNavigate('leaderboards')}
-          className={`flex flex-col items-center space-y-0.5 px-3 py-1 rounded-xl transition-all ${
-            activeTab === 'leaderboards' ? 'text-white font-bold scale-105' : 'text-zinc-400'
+          title="Rankings"
+          className={`p-2.5 rounded-xl transition-all flex items-center justify-center ${
+            activeTab === 'leaderboards' ? 'text-white bg-[#18181b] border border-[#27272a] scale-105 shadow-sm' : 'text-zinc-400 hover:text-white'
           }`}
         >
-          <Trophy className="w-4 h-4" />
-          <span className="text-[10px] font-heading uppercase">RANKINGS</span>
+          <Trophy className="w-5 h-5" />
         </button>
 
         <button
           onClick={() => onNavigate('ppc')}
-          className={`flex flex-col items-center space-y-0.5 px-3 py-1 rounded-xl transition-all ${
-            activeTab === 'ppc' ? 'text-white font-bold scale-105' : 'text-zinc-400'
+          title="PPC Tools"
+          className={`p-2.5 rounded-xl transition-all flex items-center justify-center ${
+            activeTab === 'ppc' ? 'text-white bg-[#18181b] border border-[#27272a] scale-105 shadow-sm' : 'text-zinc-400 hover:text-white'
           }`}
         >
-          <Skull className="w-4 h-4" />
-          <span className="text-[10px] font-heading uppercase">PPC</span>
+          <Skull className="w-5 h-5" />
         </button>
       </div>
     </>

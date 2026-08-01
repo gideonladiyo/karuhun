@@ -32,7 +32,7 @@ interface CompetitiveLeaderboardProps {
 export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ onSelectPlayer }) => {
   const [selectedServer, setSelectedServer] = useState<'all' | 'na' | 'ap'>('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'rank' | 'warzone' | 'ppc' | 'name'>('rank');
+  const [sortBy, setSortBy] = useState<'rank' | 'warzone' | 'ppc'>('rank');
   const [loading, setLoading] = useState<boolean>(true);
   const [memberRankings, setMemberRankings] = useState<MemberCompetitiveAchievement[]>([]);
 
@@ -188,9 +188,6 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
         const bP = b.ppc ? (b.ppc.levelId * 1000 - b.ppc.rank) : 0;
         return bP - aP;
       }
-      if (sortBy === 'name') {
-        return a.name.localeCompare(b.name);
-      }
       return getAchievementScore(b) - getAchievementScore(a);
     });
 
@@ -244,7 +241,6 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
               <option value="rank">Sort: Highest Achievement</option>
               <option value="warzone">Sort: Warzone Rank</option>
               <option value="ppc">Sort: PPC Rank</option>
-              <option value="name">Sort: Member Name A-Z</option>
             </select>
           </div>
         </div>
@@ -337,8 +333,8 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-black/50 border border-[#27272a] rounded-xl px-4 py-2.5 text-xs font-tech text-zinc-500 min-w-[200px] text-center">
-                      No Active Warzone Rank
+                    <div className="bg-black/50 border border-[#27272a] rounded-xl px-4 py-2.5 text-xs font-tech text-zinc-500 min-w-[200px] text-center font-heading font-bold uppercase">
+                      Warzone Unranked
                     </div>
                   )}
 
@@ -357,8 +353,8 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-black/50 border border-[#27272a] rounded-xl px-4 py-2.5 text-xs font-tech text-zinc-500 min-w-[200px] text-center">
-                      No Active PPC Rank
+                    <div className="bg-black/50 border border-[#27272a] rounded-xl px-4 py-2.5 text-xs font-tech text-zinc-500 min-w-[200px] text-center font-heading font-bold uppercase">
+                      PPC Unranked
                     </div>
                   )}
 
