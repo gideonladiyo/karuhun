@@ -80,7 +80,7 @@ export const GuildIntroOverlay: React.FC<GuildIntroOverlayProps> = ({ onEnter })
         {/* Guild Branding */}
         <div className="space-y-2">
           <span className="inline-block px-3.5 py-1 rounded-full bg-white text-black font-tech font-black text-xs uppercase tracking-widest shadow-md">
-            PGR INTERNATIONAL CORPS
+            PGR INTERNATIONAL GUILD
           </span>
           <h1 className="text-4xl sm:text-5xl font-heading font-black text-white tracking-wider">
             KARUHUN <span className="text-zinc-500">夜</span>

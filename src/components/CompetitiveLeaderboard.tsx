@@ -206,7 +206,7 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
               GUILD MEMBER <span className="text-zinc-500 font-normal">COMPETITIVE LEADERBOARD</span>
             </h1>
             <p className="text-xs font-tech text-zinc-400">
-              Standing rank of Karuhun Alliance members on Warzone &amp; Phantom Pain Cage (PPC)
+              Standing rank of Karuhun members on Warzone &amp; Phantom Pain Cage (PPC)
             </p>
           </div>
 

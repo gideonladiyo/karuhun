@@ -43,7 +43,7 @@ export const GuildHub: React.FC<GuildHubProps> = ({
         <div className="flex items-center justify-between px-1">
           <span className="text-xs font-tech font-bold text-zinc-400 uppercase tracking-wider flex items-center space-x-1.5">
             <Globe className="w-3.5 h-3.5 text-white" />
-            <span>KARUHUN ALLIANCE DIVISIONS</span>
+            <span>KARUHUN DIVISIONS</span>
           </span>
           <span className="text-[11px] font-tech text-zinc-500 hidden sm:inline-block">
             Asia-Pacific (AP) &amp; North America (NA)
@@ -123,7 +123,7 @@ export const GuildHub: React.FC<GuildHubProps> = ({
                   onClick={onViewMembers}
                   className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs transition-all shadow-md uppercase tracking-wider"
                 >
-                  <span>VIEW MEMBERS ROSTER</span>
+                  <span>VIEW MEMBERS</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>

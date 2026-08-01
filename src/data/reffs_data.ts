@@ -65,7 +65,7 @@ export const INITIAL_PROTOTYPE_REFERENCES: ReferenceItem[] = [
       'Trigger ultimate abilities during boss vulnerability / stun windows.',
       'Ensure dodge matrix is activated right before area sweeps.'
     ],
-    author: 'Karuhun Corps',
+    author: 'Karuhun',
     dateAdded: '2026-07-29',
     isPublished: true
   },
@@ -83,7 +83,7 @@ export const INITIAL_PROTOTYPE_REFERENCES: ReferenceItem[] = [
       'Maintain 3-ping orb rhythm to minimize swap animation delay.',
       'Deploy CUB pet skills when multiple enemy waves spawn.'
     ],
-    author: 'Karuhun Corps',
+    author: 'Karuhun',
     dateAdded: '2026-07-29',
     isPublished: true
   },
@@ -101,7 +101,7 @@ export const INITIAL_PROTOTYPE_REFERENCES: ReferenceItem[] = [
       'Execute instant burst DMG before boss enters invulnerability phase.',
       'Watch opener delay timer for precise kill sync.'
     ],
-    author: 'Karuhun Corps',
+    author: 'Karuhun',
     dateAdded: '2026-07-29',
     isPublished: true
   }

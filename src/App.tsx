@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
+import { Footer } from './components/Footer';
 import { GuildHub } from './components/GuildHub';
 import { MemberList } from './components/MemberList';
 import { PlayerProfilePage } from './components/PlayerProfilePage';
@@ -8,6 +9,7 @@ import { CompetitiveLeaderboard } from './components/CompetitiveLeaderboard';
 import { PpcPage } from './components/PpcPage';
 import { ReffsPage } from './components/ReffsPage';
 import { AdminPage } from './components/AdminPage';
+import { ContactPage } from './components/ContactPage';
 import { GuildIntroOverlay } from './components/GuildIntroOverlay';
 
 import { getGuildData } from './services/apiService';
@@ -20,7 +22,7 @@ export default function App() {
     return !seen;
   });
 
-  const [activeTab, setActiveTab] = useState<'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin'>('hub');
+  const [activeTab, setActiveTab] = useState<'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact'>('hub');
   const [ppcSubTab, setPpcSubTab] = useState<'bosses' | 'calculator'>('bosses');
   const [selectedBranchId, setSelectedBranchId] = useState<number>(3638);
   const [activeBossSlug, setActiveBossSlug] = useState<string | undefined>(undefined);
@@ -86,6 +88,8 @@ export default function App() {
       setCurrentViewMode('mainTab');
       if (parts[0] === 'admin' || parts[0] === 'dashboard') {
         setActiveTab('admin');
+      } else if (parts[0] === 'contact' || parts[0] === 'support' || parts[0] === 'help') {
+        setActiveTab('contact');
       } else if (parts[0] === 'members' || parts[0] === 'roster') {
         setActiveTab('members');
         if (parts[1] && !isNaN(Number(parts[1]))) {
@@ -156,7 +160,7 @@ export default function App() {
   const activeBranch = GUILD_BRANCHES.find((b) => b.id === selectedBranchId) || GUILD_BRANCHES[0];
 
   const handleNavigateTab = (
-    tab: 'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin',
+    tab: 'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact',
     branchId?: number
   ) => {
     const targetBranch = branchId || selectedBranchId;
@@ -170,6 +174,7 @@ export default function App() {
     else if (tab === 'leaderboards') navigateToPath(`/rankings`);
     else if (tab === 'ppc') navigateToPath(`/ppc`);
     else if (tab === 'admin') navigateToPath(`/admin`);
+    else if (tab === 'contact') navigateToPath(`/contact`);
   };
 
   const handleOpenPlayerProfile = (uid: number, srv?: string) => {
@@ -235,7 +240,7 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         
-        {/* VIEW MODE 1: MAIN TABS (Hub, Members, Reffs, Leaderboards, PPC Tools, Admin) */}
+        {/* VIEW MODE 1: MAIN TABS (Hub, Members, Reffs, Leaderboards, PPC Tools, Admin, Contact) */}
         {currentViewMode === 'mainTab' && (
           <>
             {activeTab === 'hub' && (
@@ -283,6 +288,10 @@ export default function App() {
             {activeTab === 'admin' && (
               <AdminPage />
             )}
+
+            {activeTab === 'contact' && (
+              <ContactPage />
+            )}
           </>
         )}
 
@@ -308,34 +317,8 @@ export default function App() {
 
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[#27272a] bg-[#09090b] py-8 text-center text-xs font-tech text-zinc-400 space-y-3">
-        <p className="font-heading font-bold text-zinc-200 tracking-wider">
-          KARUHUN (夜) GUILD NETWORK • PUNISHING: GRAY RAVEN ALLIANCE
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-3 text-xs pt-1">
-          <a
-            href="https://discord.gg/Cz9bzjcdV"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a] hover:border-white text-zinc-300 hover:text-white transition-all"
-          >
-            <span>JOIN DISCORD (Cz9bzjcdV)</span>
-          </a>
-          <span className="text-zinc-600">•</span>
-          <a
-            href="https://huaxu.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a] hover:border-white text-zinc-300 hover:text-white transition-all"
-          >
-            <span>Data &amp; Assets Powered by Huaxu App</span>
-          </a>
-        </div>
-        <p className="text-[11px] text-zinc-500 pt-1 font-mono">
-          © 2026 KARUHUN CORPS • International PGR Guild Portal
-        </p>
-      </footer>
+      {/* Main Footer Component */}
+      <Footer />
     </div>
   );
 }

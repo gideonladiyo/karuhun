@@ -127,7 +127,7 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
               </h1>
 
               <p className="text-xs font-tech text-zinc-400">
-                Author: <strong className="text-white">{activeDetailItem.author || 'Karuhun Corps'}</strong> • Published: <span className="text-zinc-300">{activeDetailItem.dateAdded || 'Latest'}</span>
+                Author: <strong className="text-white">{activeDetailItem.author || 'Karuhun'}</strong> • Published: <span className="text-zinc-300">{activeDetailItem.dateAdded || 'Latest'}</span>
               </p>
             </div>
 
@@ -201,7 +201,7 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
               GAMEPLAY <span className="text-zinc-500 font-normal">ROTATION REFERENCES</span>
             </h1>
             <p className="text-xs font-tech text-zinc-400">
-              Verified high score rotations and strategy guides curated by Karuhun Corps
+              Verified high score rotations and strategy guides curated by Dalaos
             </p>
           </div>
 

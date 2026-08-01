@@ -85,7 +85,7 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
           className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#121215] hover:bg-[#18181b] border border-[#27272a] hover:border-white text-white font-heading font-bold text-xs transition-all shadow-sm"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>BACK TO ROSTER</span>
+          <span>BACK TO MEMBERS</span>
         </button>
 
         <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">

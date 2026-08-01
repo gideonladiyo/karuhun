@@ -153,7 +153,7 @@ export const MemberList: React.FC<MemberListProps> = ({
               GUILD MEMBERS &amp; ROLES
             </h1>
             <p className="text-xs font-tech text-zinc-400">
-              Active member roster for {activeBranch.name} ({activeBranch.region}) sorted by role &amp; contribution
+              Active members list for {activeBranch.name} ({activeBranch.region}) sorted by role &amp; contribution
             </p>
           </div>
 
@@ -201,7 +201,7 @@ export const MemberList: React.FC<MemberListProps> = ({
         {loading ? (
           <div className="text-center py-20 bg-[#121215] rounded-2xl border border-[#27272a]">
             <div className="inline-block animate-spin w-8 h-8 border-4 border-white border-t-transparent rounded-full mb-3" />
-            <p className="text-xs font-tech text-zinc-400">Loading Members Roster...</p>
+            <p className="text-xs font-tech text-zinc-400">Loading Members List...</p>
           </div>
         ) : filteredMembers.length === 0 ? (
           <div className="text-center py-16 bg-[#121215] rounded-2xl border border-[#27272a] text-zinc-400 font-tech text-sm">

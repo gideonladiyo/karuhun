@@ -67,7 +67,7 @@ export const AdminPage: React.FC = () => {
   const [formTitle, setTitle] = useState<string>('');
   const [formYoutubeUrl, setYoutubeUrl] = useState<string>('');
   const [formDescription, setDescription] = useState<string>('');
-  const [formAuthor, setAuthor] = useState<string>('Karuhun Corps');
+  const [formAuthor, setAuthor] = useState<string>('Karuhun');
   const [formIsPublished, setIsPublished] = useState<boolean>(true);
   const [formTips, setTips] = useState<string[]>(['', '', '']);
 
