@@ -109,7 +109,7 @@ export const MemberList: React.FC<MemberListProps> = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {GUILD_BRANCHES.map((b) => {
             const isActive = b.id === selectedBranchId;
             return (
@@ -118,23 +118,33 @@ export const MemberList: React.FC<MemberListProps> = ({
                 onClick={() => {
                   if (onSelectBranch) onSelectBranch(b.id);
                 }}
-                className={`p-3 rounded-xl border text-left transition-all ${
+                className={`p-3.5 sm:p-4 rounded-xl border text-left transition-all flex flex-col justify-between space-y-2 group ${
                   isActive
-                    ? 'bg-white text-black border-white shadow-md'
-                    : 'bg-[#09090b] text-zinc-400 border-[#27272a] hover:text-white hover:border-zinc-500'
+                    ? 'bg-white text-black border-white shadow-md ring-1 ring-white/50'
+                    : 'bg-[#09090b] text-zinc-400 border-[#27272a] hover:text-white hover:border-zinc-500 hover:bg-[#121215]'
                 }`}
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-tech font-bold uppercase opacity-75">{b.region}</span>
-                  <span className={`text-[9px] font-tech font-bold px-1.5 py-0.2 rounded uppercase ${
+                <div className="flex items-center justify-between gap-1 w-full">
+                  <span className={`text-[10px] font-tech font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                    isActive
+                      ? 'bg-black/10 text-black font-extrabold'
+                      : 'bg-[#18181b] text-zinc-400 border border-[#27272a]'
+                  }`}>
+                    {b.shortRegion}
+                  </span>
+                  <span className={`text-[9px] font-tech font-bold px-1.5 py-0.5 rounded uppercase tracking-wide truncate ${
                     isActive ? 'bg-black text-white' : 'bg-[#18181b] text-zinc-300 border border-[#27272a]'
                   }`}>
                     {b.tag}
                   </span>
                 </div>
-                <span className="font-heading font-bold text-xs sm:text-sm block mt-1 truncate">
-                  {b.name}
-                </span>
+                <div>
+                  <span className={`font-heading font-extrabold text-base sm:text-lg md:text-xl block truncate tracking-tight ${
+                    isActive ? 'text-black' : 'text-white group-hover:text-amber-400 transition-colors'
+                  }`}>
+                    {b.name}
+                  </span>
+                </div>
               </button>
             );
           })}

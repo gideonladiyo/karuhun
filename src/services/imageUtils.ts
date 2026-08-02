@@ -4,13 +4,14 @@ export interface GuildBranchConfig {
   name: string;
   tag: string;
   region: string;
+  shortRegion: string;
 }
 
 export const GUILD_BRANCHES: GuildBranchConfig[] = [
-  { id: 3638, server: 'ap', name: 'KARUHUN 夜', tag: 'Competitive', region: 'Asia-Pacific (AP)' },
-  { id: 1164, server: 'ap', name: 'IZANAMI 夜', tag: 'Sub-Competitive', region: 'Asia-Pacific (AP)' },
-  { id: 7641, server: 'ap', name: 'ASTRELUME 夜', tag: 'Casual', region: 'Asia-Pacific (AP)' },
-  { id: 2013, server: 'na', name: 'KARUHUN 夜’', tag: 'Casual', region: 'North America (NA)' },
+  { id: 3638, server: 'ap', name: 'KARUHUN 夜', tag: 'Competitive', region: 'Asia-Pacific (AP)', shortRegion: 'AP' },
+  { id: 1164, server: 'ap', name: 'IZANAMI 夜', tag: 'Sub-Competitive', region: 'Asia-Pacific (AP)', shortRegion: 'AP' },
+  { id: 7641, server: 'ap', name: 'ASTRELUME 夜', tag: 'Casual', region: 'Asia-Pacific (AP)', shortRegion: 'AP' },
+  { id: 2013, server: 'na', name: 'KARUHUN 夜’', tag: 'Casual', region: 'North America (NA)', shortRegion: 'NA' },
 ];
 
 const HUAXU_ASSETS_BASE = import.meta.env.VITE_HUAXU_ASSETS_URL || 'https://assets.huaxu.app/glb';
