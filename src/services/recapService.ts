@@ -1,7 +1,7 @@
 import { getGuildData } from '@/services/apiService';
 import { GUILD_BRANCHES } from '@/services/imageUtils';
 import { supabase, isSupabaseConfigured } from '@/services/supabase/client';
-import fallbackComparisonData from '@/data/generated/guild_members_comparison.json';
+import fallbackComparisonData from '@/data/fallbacks/guild_members_comparison.json';
 
 export interface GuildMemberSnapshot {
   guildId: number;

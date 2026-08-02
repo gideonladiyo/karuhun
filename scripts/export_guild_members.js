@@ -56,11 +56,24 @@ async function main() {
     members: allMembers
   };
 
-  const outputPath = path.join(__dirname, '../src/data/generated/guild_members_comparison.json');
+  const outputDir = path.join(__dirname, '../src/data/generated');
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
 
-  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+  const fallbackDir = path.join(__dirname, '../src/data/fallbacks');
+  if (!fs.existsSync(fallbackDir)) {
+    fs.mkdirSync(fallbackDir, { recursive: true });
+  }
+
+  const outputPath = path.join(outputDir, 'guild_members_comparison.json');
+  const fallbackPath = path.join(fallbackDir, 'guild_members_comparison.json');
+
   fs.writeFileSync(outputPath, JSON.stringify(exportData, null, 2), 'utf-8');
-  console.log(`Saved comparison JSON to: ${outputPath}`);
+  fs.writeFileSync(fallbackPath, JSON.stringify(exportData, null, 2), 'utf-8');
+
+  console.log(`Saved comparison JSON to ${outputPath} and ${fallbackPath}`);
+  console.log(`Total member count: ${exportData.totalMembers}`);
 
   console.log('\n--- SUMMARY ---');
   console.log(`Total Guilds Processed: ${GUILDS.length}`);
