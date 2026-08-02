@@ -207,21 +207,12 @@ export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
         // Filter out deleted items from Supabase mapped results
         const filteredSupabase = supabaseMapped.filter((item) => !deletedIds.includes(item.id));
 
-        const combinedMap = new Map<string, ReferenceItem>();
-        
-        // Put local items first
-        localItems.forEach((item) => combinedMap.set(item.id, item));
-        
-        // Overlay/merge Supabase items
-        filteredSupabase.forEach((item) => combinedMap.set(item.id, item));
-
-        const mergedList = Array.from(combinedMap.values()).filter((item) => !deletedIds.includes(item.id));
-
+        // Update local cache with live Supabase data
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedList));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredSupabase));
         } catch (e) {}
 
-        return mergedList;
+        return filteredSupabase;
       }
     } catch (err) {
       console.warn('Supabase live fetch error, falling back to local cache', err);
