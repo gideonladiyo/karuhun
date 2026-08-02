@@ -1,5 +1,8 @@
 import React from 'react';
 import {
+  MAIN_DISCORD_LINK,
+  OFFICIAL_YOUTUBE_LINK,
+  OFFICIAL_TIKTOK_LINK,
   CONTRIBUTORS_LIST,
   ContributorItem
 } from '../data/contact_data';
@@ -8,7 +11,8 @@ import karuhunAdminPp from '../assets/contributor/karuhun_admin_pp.png';
 import {
   Mail,
   Heart,
-  Globe
+  Globe,
+  ExternalLink
 } from 'lucide-react';
 
 const HUAXU_PP = 'https://huaxu.app/_nuxt/normalv2.small.BNupcPRj.webp';
@@ -25,6 +29,12 @@ const TikTokIcon: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5
   </svg>
 );
 
+const YoutubeIcon: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5" }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+  </svg>
+);
+
 export const ContactPage: React.FC = () => {
   const getAvatarUrl = (key: ContributorItem['avatarKey']) => {
     if (key === 'larkshin') return larkshinPp;
@@ -36,7 +46,7 @@ export const ContactPage: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
       
       {/* Header Banner */}
-      <div className="minimal-card p-6 sm:p-10 text-center space-y-3">
+      <div className="minimal-card p-6 sm:p-10 text-center space-y-4">
         <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-[#18181b] border border-[#27272a] text-zinc-300 text-xs font-tech font-bold uppercase tracking-wider">
           <Mail className="w-3.5 h-3.5 text-white" />
           <span>CONTACT &amp; COMMUNITY</span>
@@ -47,14 +57,51 @@ export const ContactPage: React.FC = () => {
         </h1>
 
         <p className="text-xs sm:text-sm font-tech text-zinc-400 max-w-xl mx-auto leading-relaxed">
-          Learn about the developers, project contributors, and asset partners supporting Karuhun Guild Portal.
+          Official social channels, community platforms, and project contributors supporting Karuhun Guild Portal.
         </p>
+
+        {/* Official Karuhun Social & Contact Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <a
+            href={OFFICIAL_YOUTUBE_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#09090b] hover:bg-white text-zinc-300 hover:text-black border border-[#27272a] text-xs font-tech font-bold transition-all shadow-sm group"
+          >
+            <YoutubeIcon className="w-4 h-4 text-red-500 group-hover:text-red-600 transition-colors" />
+            <span>@karuhun_union67</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100" />
+          </a>
+
+          <a
+            href={OFFICIAL_TIKTOK_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#09090b] hover:bg-white text-zinc-300 hover:text-black border border-[#27272a] text-xs font-tech font-bold transition-all shadow-sm group"
+          >
+            <TikTokIcon className="w-4 h-4 text-rose-400 group-hover:text-black transition-colors" />
+            <span>@karuhunguild.official</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100" />
+          </a>
+
+          <a
+            href={MAIN_DISCORD_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#09090b] hover:bg-white text-zinc-300 hover:text-black border border-[#27272a] text-xs font-tech font-bold transition-all shadow-sm group"
+          >
+            <DiscordIcon className="w-4 h-4 text-indigo-400 group-hover:text-indigo-600 transition-colors" />
+            <span>Discord Server</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100" />
+          </a>
+        </div>
       </div>
 
       {/* Contributors Section (Huaxu Style Layout) */}
       <div className="minimal-card p-6 sm:p-8 space-y-6">
         <div className="space-y-1.5">
           <h2 className="text-xl sm:text-2xl font-heading font-bold text-white flex items-center space-x-2.5">
+            <Heart className="w-5 h-5 text-white" />
             <span>Contributors</span>
           </h2>
           <p className="text-xs sm:text-sm font-tech text-zinc-400 leading-relaxed">

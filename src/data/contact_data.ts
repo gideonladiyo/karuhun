@@ -9,6 +9,8 @@ export interface ContributorItem {
 }
 
 export const MAIN_DISCORD_LINK = 'https://discord.gg/Cz9bzjcdV';
+export const OFFICIAL_YOUTUBE_LINK = 'https://www.youtube.com/@karuhun_union67';
+export const OFFICIAL_TIKTOK_LINK = 'https://www.tiktok.com/@karuhunguild.official';
 
 export const CONTRIBUTORS_LIST: ContributorItem[] = [
   {
