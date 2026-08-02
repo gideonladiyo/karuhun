@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { GuildMember, GuildInfo } from '../types';
-import { getHuaxuImageUrl, GUILD_BRANCHES } from '../services/imageUtils';
+import { GuildMember, GuildInfo } from '@/types';
+import { getHuaxuImageUrl, GUILD_BRANCHES } from '@/services/imageUtils';
 import { Users, Search, ArrowUpDown, Shield, ChevronRight, Award, Globe, Clock } from 'lucide-react';
 
 interface MemberListProps {

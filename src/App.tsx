@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar } from './components/Navbar';
-import { Footer } from './components/Footer';
-import { GuildHub } from './components/GuildHub';
-import { MemberList } from './components/MemberList';
-import { PlayerProfilePage } from './components/PlayerProfilePage';
-import { CharacterInspectPage } from './components/CharacterInspectPage';
-import { CompetitiveLeaderboard } from './components/CompetitiveLeaderboard';
-import { PpcPage } from './components/PpcPage';
-import { ReffsPage } from './components/ReffsPage';
-import { AdminPage } from './components/AdminPage';
-import { ContactPage } from './components/ContactPage';
-import { GuildIntroOverlay } from './components/GuildIntroOverlay';
+import { Navbar } from '@/components/common/Navbar';
+import { Footer } from '@/components/common/Footer';
+import { GuildHub } from '@/pages/GuildHubPage';
+import { MemberList } from '@/pages/MemberListPage';
+import { PlayerProfilePage } from '@/pages/PlayerProfilePage';
+import { CharacterInspectPage } from '@/pages/CharacterInspectPage';
+import { CompetitiveLeaderboard } from '@/pages/CompetitiveLeaderboardPage';
+import { PpcPage } from '@/pages/ppc/PpcPage';
+import { ReffsPage } from '@/pages/ReffsPage';
+import { AdminPage } from '@/pages/AdminPage';
+import { ContactPage } from '@/pages/ContactPage';
+import { GuildIntroOverlay } from '@/pages/GuildIntroOverlay';
 
-import { getGuildData } from './services/apiService';
-import { GUILD_BRANCHES } from './services/imageUtils';
-import { GuildInfo, GuildMember, PlayerCharacter } from './types';
+import { getGuildData } from '@/services/apiService';
+import { GUILD_BRANCHES } from '@/services/imageUtils';
+import { GuildInfo, GuildMember, PlayerCharacter } from '@/types';
 
 export default function App() {
   const [showIntro, setShowIntro] = useState<boolean>(() => {

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import karuhunLogo from '../Logo__4_-removebg-preview.png';
-import karuhunIntroVideo from '../intro karuhun v2 (no music).mp4';
+const karuhunLogo = '/logo.png';
+const karuhunIntroVideo = '/videos/guild-intro.mp4';
 import { ArrowRight, Volume2, VolumeX, SkipForward } from 'lucide-react';
 
 interface GuildIntroOverlayProps {

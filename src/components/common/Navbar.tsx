@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Shield, Video, Trophy, ExternalLink, Globe, PlayCircle, Skull, Lock, Menu, X, Users, Mail } from 'lucide-react';
-import { GUILD_BRANCHES } from '../services/imageUtils';
-import karuhunLogo from '../Logo__4_-removebg-preview.png';
+import { GUILD_BRANCHES } from '@/services/imageUtils';
+const karuhunLogo = '/logo.png';
 
 interface NavbarProps {
   activeTab: 'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact';

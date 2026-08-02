@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { PPC_BOSSES, PPCBossInfo } from '../data/ppc_scores';
+import React, { useState, useEffect } from 'react';
+import { getLiveOrStoredPpcBossesInfo, PPCBossInfo } from '@/data/static/ppcScores';
 import { Skull, Search, Flame, Zap, ShieldAlert, Clock, Sparkles, Filter, ChevronRight } from 'lucide-react';
 
 interface BossesPageProps {
@@ -9,8 +9,15 @@ interface BossesPageProps {
 export const BossesPage: React.FC<BossesPageProps> = ({ onOpenCalculator }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'ultimate' | 'advanced'>('all');
+  const [bossesData, setBossesData] = useState<{ updatedAt?: string; bosses: PPCBossInfo[] }>(() =>
+    getLiveOrStoredPpcBossesInfo()
+  );
 
-  const filteredBosses = PPC_BOSSES.filter((boss: PPCBossInfo) => {
+  useEffect(() => {
+    setBossesData(getLiveOrStoredPpcBossesInfo());
+  }, []);
+
+  const filteredBosses = bossesData.bosses.filter((boss: PPCBossInfo) => {
     const matchesSearch =
       boss.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       boss.weakness.toLowerCase().includes(searchTerm.toLowerCase());
@@ -87,7 +94,7 @@ export const BossesPage: React.FC<BossesPageProps> = ({ onOpenCalculator }) => {
           </div>
 
           <div className="text-xs font-tech text-zinc-400">
-            Showing <strong className="text-white">{filteredBosses.length}</strong> of {PPC_BOSSES.length} Total Bosses
+            Showing <strong className="text-white">{filteredBosses.length}</strong> of {bossesData.bosses.length} Total Bosses
           </div>
 
         </div>

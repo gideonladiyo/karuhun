@@ -4,8 +4,8 @@ import {
   fetchLiveReferences,
   CATEGORIES_CONFIG,
   ReferenceItem
-} from '../data/reffs_data';
-import { MarkdownRenderer } from './MarkdownRenderer';
+} from '@/data/static/reffsData';
+import { MarkdownRenderer } from '@/components/common/MarkdownRenderer';
 import { Video, Search, Play, ArrowLeft, ExternalLink, Lightbulb, Shield, Swords, Skull, CheckCircle2, Sparkles } from 'lucide-react';
 
 interface ReffsPageProps {

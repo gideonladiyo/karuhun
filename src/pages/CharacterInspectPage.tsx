@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { PlayerCharacter, CharacterDetailResponse, CharacterDetailInfo } from '../types';
-import { getCharacterDetail } from '../services/apiService';
-import { getHuaxuImageUrl, getConstructRankLabel } from '../services/imageUtils';
+import { PlayerCharacter, CharacterDetailResponse, CharacterDetailInfo } from '@/types';
+import { getCharacterDetail } from '@/services/apiService';
+import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
 import { ArrowLeft, Shield, Sword, Award, Sparkles, CheckCircle2, ChevronRight, AlertCircle, Info, Zap } from 'lucide-react';
 
 interface CharacterInspectPageProps {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { GuildInfo, GuildMember } from '../types';
-import { GUILD_BRANCHES, getHuaxuImageUrl } from '../services/imageUtils';
+import { GuildInfo, GuildMember } from '@/types';
+import { GUILD_BRANCHES, getHuaxuImageUrl } from '@/services/imageUtils';
 import { Shield, Users, Trophy, ChevronRight, Globe, Award, Sparkles, CheckCircle } from 'lucide-react';
-import karuhunLogo from '../Logo__4_-removebg-preview.png';
+const karuhunLogo = '/logo.png';
 
 interface GuildHubProps {
   currentGuild: GuildInfo | null;

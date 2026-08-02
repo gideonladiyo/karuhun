@@ -614,3 +614,120 @@ export const PPC_BOSSES: PPCBossInfo[] = FULL_PPC_BOSSES.map((b: PpcBossDetail) 
   imageUrl: b.img_url
 }));
 
+export const GOOGLE_SPREADSHEET_PPC_URL =
+  'https://docs.google.com/spreadsheets/d/1z_L4MEGv5q89OFkuN2RNI1gjajddD3_NG169_f0RNrA/gviz/tq?tqx=out:csv&gid=1378072876';
+
+const STORAGE_KEY_PPC_BOSSES = 'karuhun_ppc_bosses_custom_v1';
+
+export function parseCSVLine(text: string): string[] {
+  const result: string[] = [];
+  let cell = '';
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (c === '"') {
+      if (inQuotes && text[i + 1] === '"') {
+        cell += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (c === ',' && !inQuotes) {
+      result.push(cell.trim());
+      cell = '';
+    } else {
+      cell += c;
+    }
+  }
+  result.push(cell.trim());
+  return result;
+}
+
+export async function fetchAndSavePpcBossesFromSpreadsheet(): Promise<{
+  success: boolean;
+  count: number;
+  updatedAt: string;
+  error?: string;
+}> {
+  try {
+    const res = await fetch(GOOGLE_SPREADSHEET_PPC_URL);
+    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+    const text = await res.text();
+    const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
+    if (lines.length < 2) throw new Error('File CSV kosong atau tidak valid.');
+
+    const bosses: PpcBossDetail[] = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = parseCSVLine(lines[i]);
+      if (cols.length >= 14 && cols[0]) {
+        bosses.push({
+          boss: cols[0],
+          slug: cols[1] || cols[0].toLowerCase().replace(/\s+/g, '-'),
+          super_armor: cols[2] || '',
+          edr: cols[3] || '',
+          deff: cols[4] || '',
+          e_res: cols[5] || '',
+          test: cols[6] || '',
+          elite: cols[7] || '',
+          knight: cols[8] || '',
+          chaos: cols[9] || '',
+          hell: cols[10] || '',
+          start_time: cols[11] ? (cols[11].endsWith('s') ? cols[11] : `${cols[11]}s`) : '',
+          weakness: cols[12] || '',
+          img_url: cols[13] || ''
+        });
+      }
+    }
+
+    if (bosses.length === 0) throw new Error('Tidak ada data boss yang berhasil di-parse dari Google Sheet.');
+
+    const payload = {
+      updatedAt: new Date().toISOString(),
+      count: bosses.length,
+      bosses
+    };
+
+    localStorage.setItem(STORAGE_KEY_PPC_BOSSES, JSON.stringify(payload));
+    return { success: true, count: bosses.length, updatedAt: payload.updatedAt };
+  } catch (err: any) {
+    console.error('[PPCBosses] Refresh spreadsheet failed:', err);
+    return { success: false, count: 0, updatedAt: '', error: err.message || 'Gagal mengambil data dari Google Spreadsheet' };
+  }
+}
+
+export function resetPpcBossesToDefault(): void {
+  localStorage.removeItem(STORAGE_KEY_PPC_BOSSES);
+}
+
+export function getLiveOrStoredPpcBossesDetails(): { updatedAt?: string; bosses: PpcBossDetail[] } {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_PPC_BOSSES);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.bosses) && parsed.bosses.length > 0) {
+        return { updatedAt: parsed.updatedAt, bosses: parsed.bosses };
+      }
+    }
+  } catch (e) {
+    console.warn('[PPCBosses] Failed loading custom stored bosses:', e);
+  }
+  return { bosses: FULL_PPC_BOSSES };
+}
+
+export function getLiveOrStoredPpcBossesInfo(): { updatedAt?: string; bosses: PPCBossInfo[] } {
+  const { updatedAt, bosses } = getLiveOrStoredPpcBossesDetails();
+  const infoList: PPCBossInfo[] = bosses.map((b: PpcBossDetail) => ({
+    name: b.boss,
+    slug: b.slug,
+    difficulty: 'Ultimate',
+    hpKnight: parseInt(b.knight.replace(/\D/g, '')) || 0,
+    hpChaos: parseInt(b.chaos.replace(/\D/g, '')) || 0,
+    hpHell: parseInt(b.hell.replace(/\D/g, '')) || 0,
+    startTimeSec: parseFloat(b.start_time) || 0,
+    weakness: b.weakness || 'No elemental weakness spec.',
+    imageUrl: b.img_url
+  }));
+  return { updatedAt, bosses: infoList };
+}
+
+

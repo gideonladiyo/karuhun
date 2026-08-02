@@ -1,6 +1,6 @@
 import React from 'react';
 import { Shield, BookOpen, Award, ExternalLink } from 'lucide-react';
-import { GUILD_BRANCHES } from '../services/imageUtils';
+import { GUILD_BRANCHES } from '@/services/imageUtils';
 
 export const GuildRulesModal: React.FC = () => {
   return (

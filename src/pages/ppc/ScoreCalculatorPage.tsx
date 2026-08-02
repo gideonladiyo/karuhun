@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ADVANCED_PPC_SCORES, ULTIMATE_PPC_SCORES, PPC_BOSSES, PPCBossInfo } from '../data/ppc_scores';
+import { ADVANCED_PPC_SCORES, ULTIMATE_PPC_SCORES, PPC_BOSSES, PPCBossInfo } from '@/data/static/ppcScores';
 import { Calculator, Copy, Check, Clock, Trophy, Flame, Sparkles, Sliders, ArrowRight } from 'lucide-react';
 
 interface ScoreCalculatorPageProps {

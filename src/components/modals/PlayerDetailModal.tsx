@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { GuildMember, PlayerProfileData, PlayerCharacter } from '../types';
-import { getPlayerProfile } from '../services/apiService';
-import { getHuaxuImageUrl, getConstructRankLabel } from '../services/imageUtils';
+import { GuildMember, PlayerProfileData, PlayerCharacter } from '@/types';
+import { getPlayerProfile } from '@/services/apiService';
+import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
 import { X, Heart, Shield, Award, Sparkles, ChevronRight } from 'lucide-react';
 
 interface PlayerDetailModalProps {

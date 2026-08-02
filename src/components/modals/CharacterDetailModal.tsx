@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { PlayerCharacter, CharacterDetailResponse } from '../types';
-import { getCharacterDetail } from '../services/apiService';
-import { getHuaxuImageUrl, getConstructRankLabel } from '../services/imageUtils';
+import { PlayerCharacter, CharacterDetailResponse } from '@/types';
+import { getCharacterDetail } from '@/services/apiService';
+import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
 import { X, Zap, Info, Shirt, Crosshair, Cpu, Layers, Disc } from 'lucide-react';
 
 interface CharacterDetailModalProps {

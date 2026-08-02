@@ -4,13 +4,13 @@ import {
   CharacterDetailResponse,
   PPCResponse,
   WarzoneResponse
-} from '../types';
+} from '@/types';
 
-import guildFallback from '../data/guild_fallback.json';
-import profileFallback from '../data/profile_fallback.json';
-import characterFallback from '../data/character_fallback.json';
-import ppcFallback from '../data/ppc_fallback.json';
-import warzoneFallback from '../data/warzone_fallback.json';
+import guildFallback from '@/data/fallbacks/guild_fallback.json';
+import profileFallback from '@/data/fallbacks/profile_fallback.json';
+import characterFallback from '@/data/fallbacks/character_fallback.json';
+import ppcFallback from '@/data/fallbacks/ppc_fallback.json';
+import warzoneFallback from '@/data/fallbacks/warzone_fallback.json';
 
 const HUAXU_BASE_URL = import.meta.env.VITE_HUAXU_API_URL || 'https://api.huaxu.app';
 const HUAXU_API_KEY = import.meta.env.VITE_HUAXU_API_KEY || 'hxu-sWhLLMiqNnbAJRmYRMmnAknPmkWpderauqUxAsCvV7ppohcbugoqeKVdkPCJ';

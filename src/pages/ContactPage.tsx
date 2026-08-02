@@ -5,7 +5,7 @@ import {
   OFFICIAL_TIKTOK_LINK,
   CONTRIBUTORS_LIST,
   ContributorItem
-} from '../data/contact_data';
+} from '@/data/static/contactData';
 import larkshinPp from '../assets/contributor/larkshin_pp.webp';
 import karuhunAdminPp from '../assets/contributor/karuhun_admin_pp.png';
 import {

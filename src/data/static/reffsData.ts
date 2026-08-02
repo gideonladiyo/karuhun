@@ -1,5 +1,5 @@
 // Competitive Gameplay References Database & CRUD Services with Supabase Integration
-import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
+import { supabase, isSupabaseConfigured } from '@/services/supabase/client';
 
 export interface ReferenceItem {
   id: string;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { PlayerProfileData, PlayerCharacter } from '../types';
-import { getPlayerProfile } from '../services/apiService';
-import { getHuaxuImageUrl, getConstructRankLabel } from '../services/imageUtils';
+import { PlayerProfileData, PlayerCharacter } from '@/types';
+import { getPlayerProfile } from '@/services/apiService';
+import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
 import { ArrowLeft, User, Shield, Trophy, ChevronRight, Award, Sparkles, AlertCircle } from 'lucide-react';
 
 interface PlayerProfilePageProps {

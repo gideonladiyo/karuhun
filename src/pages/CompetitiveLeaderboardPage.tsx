@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getWarzoneLeaderboard, getPPCLeaderboard } from '../services/apiService';
-import { getHuaxuImageUrl, GUILD_BRANCHES } from '../services/imageUtils';
+import { getWarzoneLeaderboard, getPPCLeaderboard } from '@/services/apiService';
+import { getHuaxuImageUrl, GUILD_BRANCHES } from '@/services/imageUtils';
 import { Trophy, Swords, Skull, Globe, Search, ArrowUpDown, ChevronRight, Award, Shield } from 'lucide-react';
 
 interface MemberCompetitiveAchievement {
