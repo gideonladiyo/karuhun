@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getLiveOrStoredPpcBossesInfo, PPCBossInfo } from '@/data/static/ppcScores';
+import { getLiveOrStoredPpcBossesInfo, getLiveOrStoredPpcBossesInfoAsync, PPCBossInfo } from '@/data/static/ppcScores';
 import { Skull, Search, Flame, Zap, ShieldAlert, Clock, Sparkles, Filter, ChevronRight } from 'lucide-react';
 
 interface BossesPageProps {
@@ -14,7 +14,11 @@ export const BossesPage: React.FC<BossesPageProps> = ({ onOpenCalculator }) => {
   );
 
   useEffect(() => {
-    setBossesData(getLiveOrStoredPpcBossesInfo());
+    getLiveOrStoredPpcBossesInfoAsync().then((res) => {
+      if (res && res.bosses && res.bosses.length > 0) {
+        setBossesData(res);
+      }
+    });
   }, []);
 
   const filteredBosses = bossesData.bosses.filter((boss: PPCBossInfo) => {

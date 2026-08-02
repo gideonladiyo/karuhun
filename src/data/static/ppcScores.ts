@@ -1,4 +1,5 @@
 // PPC Score Tables & Boss Database extracted from Google Sheets
+import { supabase, isSupabaseConfigured } from '@/services/supabase/client';
 
 export interface ScoreRow {
   time: number; // 0 to 60 seconds
@@ -688,6 +689,22 @@ export async function fetchAndSavePpcBossesFromSpreadsheet(): Promise<{
     };
 
     localStorage.setItem(STORAGE_KEY_PPC_BOSSES, JSON.stringify(payload));
+
+    if (isSupabaseConfigured() && supabase) {
+      try {
+        await supabase.from('guild_recap_snapshots').upsert({
+          id: 'latest_ppc_bosses',
+          fetched_at: payload.updatedAt,
+          total_members: payload.count,
+          is_auto: false,
+          data: payload,
+          updated_at: new Date().toISOString()
+        });
+      } catch (e) {
+        console.warn('[PPCBosses] Supabase cloud sync notice:', e);
+      }
+    }
+
     return { success: true, count: bosses.length, updatedAt: payload.updatedAt };
   } catch (err: any) {
     console.error('[PPCBosses] Refresh spreadsheet failed:', err);
@@ -714,8 +731,45 @@ export function getLiveOrStoredPpcBossesDetails(): { updatedAt?: string; bosses:
   return { bosses: FULL_PPC_BOSSES };
 }
 
+export async function getLiveOrStoredPpcBossesDetailsAsync(): Promise<{ updatedAt?: string; bosses: PpcBossDetail[] }> {
+  if (isSupabaseConfigured() && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('guild_recap_snapshots')
+        .select('data')
+        .eq('id', 'latest_ppc_bosses')
+        .single();
+      if (!error && data && data.data && Array.isArray(data.data.bosses)) {
+        try {
+          localStorage.setItem(STORAGE_KEY_PPC_BOSSES, JSON.stringify(data.data));
+        } catch (e) {}
+        return { updatedAt: data.data.updatedAt, bosses: data.data.bosses };
+      }
+    } catch (e) {
+      console.warn('[PPCBosses] Supabase read exception:', e);
+    }
+  }
+  return getLiveOrStoredPpcBossesDetails();
+}
+
 export function getLiveOrStoredPpcBossesInfo(): { updatedAt?: string; bosses: PPCBossInfo[] } {
   const { updatedAt, bosses } = getLiveOrStoredPpcBossesDetails();
+  const infoList: PPCBossInfo[] = bosses.map((b: PpcBossDetail) => ({
+    name: b.boss,
+    slug: b.slug,
+    difficulty: 'Ultimate',
+    hpKnight: parseInt(b.knight.replace(/\D/g, '')) || 0,
+    hpChaos: parseInt(b.chaos.replace(/\D/g, '')) || 0,
+    hpHell: parseInt(b.hell.replace(/\D/g, '')) || 0,
+    startTimeSec: parseFloat(b.start_time) || 0,
+    weakness: b.weakness || 'No elemental weakness spec.',
+    imageUrl: b.img_url
+  }));
+  return { updatedAt, bosses: infoList };
+}
+
+export async function getLiveOrStoredPpcBossesInfoAsync(): Promise<{ updatedAt?: string; bosses: PPCBossInfo[] }> {
+  const { updatedAt, bosses } = await getLiveOrStoredPpcBossesDetailsAsync();
   const infoList: PPCBossInfo[] = bosses.map((b: PpcBossDetail) => ({
     name: b.boss,
     slug: b.slug,
