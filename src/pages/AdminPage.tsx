@@ -172,19 +172,22 @@ export const AdminPage: React.FC = () => {
     });
   }, []);
 
-  // 11:58 WIB Background Auto-Snapshot Listener (Runs every 15s)
+  // 11:58 WIB Background Clock Update (Auto-fetch disabled to preserve local static JSON baseline)
   useEffect(() => {
-    const timer = setInterval(async () => {
+    const timer = setInterval(() => {
       const wib = getWibDateInfo();
       setCurrentWibTime(wib.timeString);
 
-      // Check if current time is 11:58 WIB and trigger auto snapshot
-      const autoRes = await checkAndTriggerAutoSnapshot();
-      if (autoRes.triggered && autoRes.dataset) {
-        setBaselineData(autoRes.dataset);
-        setAutoSnapshotNotice(`⚡ Auto Snapshot 11:58 WIB Berhasil Diambil Otomatis! (${autoRes.dataset.totalMembers} Member)`);
-        setTimeout(() => setAutoSnapshotNotice(null), 10000);
-      }
+      // Auto-fetch disabled so static local JSON baseline (guild_members_comparison.json) is strictly preserved
+      /*
+      checkAndTriggerAutoSnapshot().then((autoRes) => {
+        if (autoRes.triggered && autoRes.dataset) {
+          setBaselineData(autoRes.dataset);
+          setAutoSnapshotNotice(`⚡ Auto Snapshot 11:58 WIB Berhasil Diambil Otomatis! (${autoRes.dataset.totalMembers} Member)`);
+          setTimeout(() => setAutoSnapshotNotice(null), 10000);
+        }
+      });
+      */
     }, 15000);
 
     return () => clearInterval(timer);
@@ -727,7 +730,7 @@ export const AdminPage: React.FC = () => {
               <div className="space-y-1">
                 <h3 className="text-lg font-heading font-bold text-white">NO RESULT</h3>
                 <p className="text-xs font-tech text-zinc-400 max-w-md mx-auto">
-                  Klik tombol <strong>"TRIGGER KOMPARASI MINGGUAN"</strong> untuk mengambil data weekly terbaru dari 4 guild dan membandingkannya dengan Baseline Data (Data Lama).
+                  Klik tombol <strong>"COMPARE DATA"</strong> untuk mengambil data weekly terbaru dari 4 guild dan membandingkannya dengan Data Lama.
                 </p>
               </div>
               <button

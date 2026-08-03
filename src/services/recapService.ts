@@ -128,9 +128,14 @@ export async function saveBaselineSnapshot(dataset: BaselineDataset): Promise<vo
 }
 
 /**
- * Load baseline snapshot from LocalStorage, Supabase, or fallback JSON
+ * Load baseline snapshot from static fallback JSON (or LocalStorage)
  */
 export function loadBaselineSnapshot(): BaselineDataset {
+  // Always prioritize the static local JSON file (src/data/fallbacks/guild_members_comparison.json)
+  if (fallbackComparisonData && Array.isArray(fallbackComparisonData.members) && fallbackComparisonData.members.length > 0) {
+    return fallbackComparisonData as BaselineDataset;
+  }
+
   try {
     const raw = localStorage.getItem(STORAGE_KEY_BASELINE);
     if (raw) {
@@ -143,11 +148,6 @@ export function loadBaselineSnapshot(): BaselineDataset {
     console.warn('[RecapService] LocalStorage read failed, using fallback json:', err);
   }
 
-  // Fallback to static JSON file if present
-  if (fallbackComparisonData && Array.isArray(fallbackComparisonData.members)) {
-    return fallbackComparisonData as BaselineDataset;
-  }
-
   return {
     fetchedAt: new Date().toISOString(),
     totalMembers: 0,
@@ -156,9 +156,11 @@ export function loadBaselineSnapshot(): BaselineDataset {
 }
 
 /**
- * Async version of loading baseline snapshot that checks Supabase first if available
+ * Async version of loading baseline snapshot
  */
 export async function loadBaselineSnapshotAsync(): Promise<BaselineDataset> {
+  // Supabase auto-fetch disabled to ensure the local static JSON file fallback is always used
+  /*
   if (isSupabaseConfigured() && supabase) {
     try {
       const { data } = await supabase
@@ -168,7 +170,6 @@ export async function loadBaselineSnapshotAsync(): Promise<BaselineDataset> {
         .maybeSingle();
 
       if (data && data.data && Array.isArray(data.data.members) && data.data.members.length > 0) {
-        // Cache to local storage as well
         localStorage.setItem(STORAGE_KEY_BASELINE, JSON.stringify(data.data));
         return data.data as BaselineDataset;
       }
@@ -176,6 +177,7 @@ export async function loadBaselineSnapshotAsync(): Promise<BaselineDataset> {
       console.warn('[RecapService] Supabase baseline fetch optional notice:', e);
     }
   }
+  */
 
   return loadBaselineSnapshot();
 }
