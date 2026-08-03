@@ -49,6 +49,7 @@ export interface RecapComparisonResult {
   guildSummary: Array<{
     guildId: number;
     guildName: string;
+    server: string;
     total: number;
     contributed: number;
     uncontributed: number;
@@ -200,12 +201,13 @@ export function compareGuildMembersData(
 
   const currentMemberIds = new Set<number>();
 
-  const guildSummaryMap = new Map<number, { guildId: number; guildName: string; total: number; contributed: number; uncontributed: number; newMembers: number; leftMembers: number }>();
+  const guildSummaryMap = new Map<number, { guildId: number; guildName: string; server: string; total: number; contributed: number; uncontributed: number; newMembers: number; leftMembers: number }>();
 
   GUILD_BRANCHES.forEach((b) => {
     guildSummaryMap.set(b.id, {
       guildId: b.id,
       guildName: b.name,
+      server: (b.server || 'ap').toUpperCase(),
       total: 0,
       contributed: 0,
       uncontributed: 0,
@@ -261,6 +263,7 @@ export function compareGuildMembersData(
     const gSummary = guildSummaryMap.get(currentMember.guildId) || {
       guildId: currentMember.guildId,
       guildName: currentMember.guildName,
+      server: (currentMember.server || 'ap').toUpperCase(),
       total: 0,
       contributed: 0,
       uncontributed: 0,

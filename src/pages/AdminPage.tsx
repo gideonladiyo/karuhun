@@ -408,7 +408,7 @@ export const AdminPage: React.FC = () => {
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `guild_members_baseline_${new Date().toISOString().split('T')[0]}.json`);
+    downloadAnchor.setAttribute('download', `guild_members_gc_data_${new Date().toISOString().split('T')[0]}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
@@ -630,78 +630,31 @@ export const AdminPage: React.FC = () => {
       {/* ========================================================================= */}
       {adminTab === 'recap' && (
         <div className="space-y-6 animate-fadeIn">
-          
-          {/* Automatic 11:58 WIB Scheduler Status Banner */}
-          <div className="bg-[#121215] border border-amber-900/50 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-tech">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-xl bg-amber-950 border border-amber-800 flex items-center justify-center text-amber-400">
-                <Zap className="w-4 h-4 animate-pulse" />
-              </div>
-              <div>
-                <span className="text-amber-300 font-bold uppercase block">AUTO-SNAPSHOT SCHEDULER (11:58 WIB) ACTIVE</span>
-                <span className="text-zinc-400">
-                  Waktu WIB Saat Ini: <strong className="text-white font-mono">{currentWibTime}</strong> | Status Listener: <span className="text-emerald-400 font-bold">Mendengarkan Waktu 11:58 WIB</span>
-                </span>
-              </div>
-            </div>
-
-            <div className="self-start sm:self-auto">
-              {baselineData.isAutoSnapshot ? (
-                <span className="bg-emerald-950 text-emerald-300 border border-emerald-800 px-3 py-1 rounded-full font-bold">
-                  ✓ Snapshot Otomatis Hari Ini Aktif
-                </span>
-              ) : (
-                <span className="bg-zinc-800 text-zinc-300 px-3 py-1 rounded-full">
-                  Otomatis Aktif Jam 11:58 WIB
-                </span>
-              )}
-            </div>
-          </div>
-
-          {autoSnapshotNotice && (
-            <div className="p-3 bg-amber-950/90 border border-amber-700 text-amber-200 text-xs font-tech font-bold uppercase rounded-xl flex items-center space-x-2 animate-bounce">
-              <Zap className="w-4 h-4 text-amber-400" />
-              <span>{autoSnapshotNotice}</span>
-            </div>
-          )}
 
           {/* Controls Banner */}
           <div className="minimal-card p-6 space-y-6 border border-[#27272a]">
             
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-[#27272a] pb-6">
               <div className="space-y-1">
-                <div className="flex items-center space-x-2 text-amber-400 font-tech text-xs font-bold uppercase">
+                <div className="flex items-center space-x-2 text-amber-400 font-tech text-xl font-bold uppercase">
                   <AlertTriangle className="w-4 h-4" />
-                  <span>SISTEM KOMPARASI REKAP KONTRIBUSI MINGGUAN</span>
+                  <span>MEMBER GUILD CHALLANGE DETECTION</span>
                 </div>
-                <h2 className="text-xl font-heading font-bold text-white">
-                  SNAPSHOT BASELINE (11:58 WIB) &amp; LIVE COMPARISON
-                </h2>
                 <p className="text-xs font-tech text-zinc-400">
-                  Baseline Data Terakhir: <span className="text-zinc-200">{baselineData.fetchedAt ? new Date(baselineData.fetchedAt).toLocaleString('id-ID') : 'Belum Ada Snapshot'}</span> ({baselineData.totalMembers || baselineData.members?.length || 0} Member) {baselineData.isAutoSnapshot && <strong className="text-amber-400">(Auto-Captured 11:58 WIB)</strong>}
+                  last Updated Data <span className="text-zinc-200">{baselineData.fetchedAt ? new Date(baselineData.fetchedAt).toLocaleString('id-ID') : 'Belum Ada Snapshot'}</span> ({baselineData.totalMembers || baselineData.members?.length || 0} Member) {baselineData.isAutoSnapshot && <strong className="text-amber-400">(Auto-Captured 11:58 WIB)</strong>}
                 </p>
               </div>
 
               {/* Primary Action Buttons */}
               <div className="flex flex-wrap items-center gap-3">
                 <button
-                  onClick={handleTakeSnapshot}
-                  disabled={loadingRecap}
-                  className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-heading font-bold text-xs uppercase shadow-md transition-all cursor-pointer"
-                  title="Ambil snapshot data live guild saat ini (disimpan sebagai Data Lama di 11:58 WIB)"
-                >
-                  <Clock className="w-4 h-4" />
-                  <span>AMBIL SNAPSHOT MANUAL (11.58 WIB)</span>
-                </button>
-
-                <button
                   onClick={handleTriggerComparison}
                   disabled={loadingRecap}
                   className="flex items-center space-x-2 px-6 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase shadow-md transition-all cursor-pointer"
-                  title="Ambil data weekly baru dan bandingkan dengan Data Lama"
+                  title="Get new data and compare with latest data"
                 >
                   <RefreshCw className={`w-4 h-4 ${loadingRecap ? 'animate-spin' : ''}`} />
-                  <span>{loadingRecap ? 'MEMPROSES KOMPARASI...' : 'TRIGGER KOMPARASI MINGGUAN'}</span>
+                  <span>{loadingRecap ? 'COMPARING...' : 'COMPARE DATA'}</span>
                 </button>
               </div>
             </div>
@@ -709,7 +662,7 @@ export const AdminPage: React.FC = () => {
             {/* Extra Tools: Import/Export JSON */}
             <div className="flex flex-wrap items-center justify-between gap-4 pt-2 text-xs font-tech text-zinc-400">
               <div className="flex items-center space-x-3">
-                <span>Penyimpanan Baseline: </span>
+                <span>Total data: </span>
                 <span className="bg-[#18181b] border border-[#27272a] text-zinc-200 px-2.5 py-1 rounded-lg font-mono">
                   {baselineData.members.length > 0 ? `${baselineData.members.length} Member Loaded` : 'Using Fallback JSON'}
                 </span>
@@ -717,19 +670,11 @@ export const AdminPage: React.FC = () => {
 
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => setJsonInputModalOpen(true)}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#18181b] hover:bg-[#27272a] text-zinc-300 border border-[#27272a] transition-all cursor-pointer"
-                >
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>IMPORT JSON BASELINE</span>
-                </button>
-
-                <button
                   onClick={handleExportBaselineJson}
                   className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#18181b] hover:bg-[#27272a] text-zinc-300 border border-[#27272a] transition-all cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  <span>EXPORT BASELINE JSON</span>
+                  <span>EXPORT DATA BY JSON</span>
                 </button>
 
                 {comparisonResult && (
@@ -738,7 +683,7 @@ export const AdminPage: React.FC = () => {
                     className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 font-bold transition-all cursor-pointer"
                   >
                     <Copy className="w-3.5 h-3.5" />
-                    <span>COPY LAPORAN DISCORD</span>
+                    <span>COPY DISCORD REPORT</span>
                   </button>
                 )}
               </div>
@@ -759,15 +704,17 @@ export const AdminPage: React.FC = () => {
                 <div key={g.guildId} className="minimal-card p-4 space-y-2 border border-[#27272a]">
                   <div className="flex items-center justify-between">
                     <span className="font-heading font-bold text-sm text-white">{g.guildName}</span>
-                    <span className="text-[10px] font-mono text-zinc-400">ID: {g.guildId}</span>
+                    <span className="text-xs font-mono font-bold text-black uppercase bg-white px-2 py-0.5 rounded-md border border-amber-800/50">
+                      SERVER: {(g.server || (g.guildId === 2013 ? 'NA' : 'AP')).toUpperCase()}
+                    </span>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs font-tech pt-2 border-t border-[#27272a]">
                     <div className="bg-red-950/50 border border-red-900/60 p-2 rounded-lg">
-                      <span className="text-red-400 text-[10px] block">Belum Kontribusi</span>
+                      <span className="text-red-400 text-[10px] block"> 0 CONTRIBUTION</span>
                       <strong className="text-red-200 text-base font-bold">{g.uncontributed}</strong>
                     </div>
                     <div className="bg-emerald-950/50 border border-emerald-900/60 p-2 rounded-lg">
-                      <span className="text-emerald-400 text-[10px] block">Sudah Kontribusi</span>
+                      <span className="text-emerald-400 text-[10px] block">HAVE CONTRIBUTED</span>
                       <strong className="text-emerald-200 text-base font-bold">{g.contributed}</strong>
                     </div>
                   </div>
@@ -783,7 +730,7 @@ export const AdminPage: React.FC = () => {
                 <RefreshCw className="w-6 h-6" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-lg font-heading font-bold text-white">BELUM ADA HASIL KOMPARASI</h3>
+                <h3 className="text-lg font-heading font-bold text-white">NO RESULT</h3>
                 <p className="text-xs font-tech text-zinc-400 max-w-md mx-auto">
                   Klik tombol <strong>"TRIGGER KOMPARASI MINGGUAN"</strong> untuk mengambil data weekly terbaru dari 4 guild dan membandingkannya dengan Baseline Data (Data Lama).
                 </p>
@@ -811,7 +758,7 @@ export const AdminPage: React.FC = () => {
                     }`}
                   >
                     <AlertTriangle className="w-3.5 h-3.5" />
-                    <span>BELUM KONTRIBUSI ({comparisonResult.uncontributedCount})</span>
+                    <span>0 CONTRIBUTION ({comparisonResult.uncontributedCount})</span>
                   </button>
 
                   <button
@@ -821,7 +768,7 @@ export const AdminPage: React.FC = () => {
                     }`}
                   >
                     <CheckCircle className="w-3.5 h-3.5" />
-                    <span>SUDAH KONTRIBUSI ({comparisonResult.contributedCount})</span>
+                    <span>HAVE CONTRIBUTED ({comparisonResult.contributedCount})</span>
                   </button>
 
                   <button
@@ -830,7 +777,7 @@ export const AdminPage: React.FC = () => {
                       recapStatusTab === 'all' ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
                     }`}
                   >
-                    SEMUA MEMBER ({comparisonResult.totalMembers})
+                    ALL MEMBER ({comparisonResult.totalMembers})
                   </button>
                 </div>
 
@@ -842,24 +789,23 @@ export const AdminPage: React.FC = () => {
                     className="bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
                   >
                     <option value={0}>Semua Guild</option>
-                    <option value={3638}>Karuhun 夜 (3638)</option>
-                    <option value={1164}>Izanami 夜 (1164)</option>
-                    <option value={7641}>Astrelume 夜 (7641)</option>
-                    <option value={2013}>Karuhun 夜’ (2013)</option>
+                    <option value={3638}>Karuhun 夜 (AP)</option>
+                    <option value={1164}>Izanami 夜 (AP)</option>
+                    <option value={7641}>Astrelume 夜 (AP)</option>
+                    <option value={2013}>Karuhun 夜’ (NA)</option>
                   </select>
 
                   <div className="relative min-w-[200px]">
                     <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
-                      placeholder="Cari Nama / UID Member..."
+                      placeholder="Search Name / UID"
                       value={recapSearchTerm}
                       onChange={(e) => setRecapSearchTerm(e.target.value)}
                       className="w-full bg-[#09090b] text-xs text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
                     />
                   </div>
                 </div>
-
               </div>
 
               {/* Comparison Data Table */}
@@ -868,11 +814,11 @@ export const AdminPage: React.FC = () => {
                   <thead>
                     <tr className="border-b border-[#27272a] text-zinc-400 font-tech uppercase">
                       <th className="pb-3 px-3 font-bold">Guild</th>
-                      <th className="pb-3 px-3 font-bold">Nama Member</th>
+                      <th className="pb-3 px-3 font-bold">Member Name</th>
                       <th className="pb-3 px-3 font-bold">Player ID</th>
-                      <th className="pb-3 px-3 font-bold text-right">Data Lama (Baseline)</th>
-                      <th className="pb-3 px-3 font-bold text-right">Data Baru (Current)</th>
-                      <th className="pb-3 px-3 font-bold text-right">Selisih (Komparasi)</th>
+                      <th className="pb-3 px-3 font-bold text-right">Last Week Contribution</th>
+                      <th className="pb-3 px-3 font-bold text-right">Current Week Contribution</th>
+                      <th className="pb-3 px-3 font-bold text-right">Differences</th>
                       <th className="pb-3 px-3 font-bold text-center">Status</th>
                     </tr>
                   </thead>
@@ -914,15 +860,15 @@ export const AdminPage: React.FC = () => {
                           <td className="py-3 px-3 text-center">
                             {item.statusReason === 'MEMBER_BARU' ? (
                               <span className="bg-purple-950 text-purple-300 border border-purple-800 text-[10px] px-2.5 py-1 rounded-full font-tech font-bold uppercase inline-block" title="Member baru bergabung (Belum Kontribusi)">
-                                Member Baru
+                                NEW MEMBER
                               </span>
                             ) : !item.hasContributed ? (
                               <span className="bg-red-950 text-red-300 border border-red-800 text-[10px] px-2.5 py-1 rounded-full font-tech font-bold uppercase inline-block">
-                                Belum Kontribusi
+                                0 CONTRIBUTION
                               </span>
                             ) : (
                               <span className="bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] px-2.5 py-1 rounded-full font-tech font-bold uppercase inline-block">
-                                Sudah Kontribusi
+                                HAVE CONTRIBUTED
                               </span>
                             )}
                           </td>
