@@ -561,17 +561,12 @@ export const AdminPage: React.FC = () => {
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a] text-zinc-300 text-xs font-tech font-bold uppercase tracking-wider">
               <Shield className="w-3.5 h-3.5 text-white" />
               <span>Admin Management Dashboard</span>
-              {supabaseUserEmail && (
-                <span className="bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-mono normal-case">
-                  {supabaseUserEmail}
-                </span>
-              )}
             </div>
             <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white">
-              KARUHUN ALLIANCE <span className="text-zinc-500 font-normal">ADMIN PANEL</span>
+              KARUHUN <span className="text-zinc-500 font-normal">ADMIN PANEL</span>
             </h1>
             <p className="text-xs font-tech text-zinc-400">
-              Kelola Rekapitulasi Kontribusi Mingguan 4 Guild &amp; Video References CMS
+              Kelola Rekapitulasi Kontribusi Mingguan 4 Guild &amp; Video References
             </p>
           </div>
 
@@ -620,7 +615,7 @@ export const AdminPage: React.FC = () => {
             }`}
           >
             <FileText className="w-4 h-4" />
-            <span>REFERENCES VIDEO CMS</span>
+            <span>REFERENCES VIDEO</span>
           </button>
         </div>
       </div>
@@ -710,11 +705,11 @@ export const AdminPage: React.FC = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs font-tech pt-2 border-t border-[#27272a]">
                     <div className="bg-red-950/50 border border-red-900/60 p-2 rounded-lg">
-                      <span className="text-red-400 text-[10px] block"> 0 CONTRIBUTION</span>
+                      <span className="text-red-400 text-[10px] block"> NO CONTRIBUTION</span>
                       <strong className="text-red-200 text-base font-bold">{g.uncontributed}</strong>
                     </div>
                     <div className="bg-emerald-950/50 border border-emerald-900/60 p-2 rounded-lg">
-                      <span className="text-emerald-400 text-[10px] block">HAVE CONTRIBUTED</span>
+                      <span className="text-emerald-400 text-[10px] block">CONTRIBUTED</span>
                       <strong className="text-emerald-200 text-base font-bold">{g.contributed}</strong>
                     </div>
                   </div>
@@ -758,7 +753,7 @@ export const AdminPage: React.FC = () => {
                     }`}
                   >
                     <AlertTriangle className="w-3.5 h-3.5" />
-                    <span>0 CONTRIBUTION ({comparisonResult.uncontributedCount})</span>
+                    <span>NO CONTRIBUTION ({comparisonResult.uncontributedCount})</span>
                   </button>
 
                   <button
@@ -768,7 +763,7 @@ export const AdminPage: React.FC = () => {
                     }`}
                   >
                     <CheckCircle className="w-3.5 h-3.5" />
-                    <span>HAVE CONTRIBUTED ({comparisonResult.contributedCount})</span>
+                    <span>CONTRIBUTED ({comparisonResult.contributedCount})</span>
                   </button>
 
                   <button
@@ -864,11 +859,11 @@ export const AdminPage: React.FC = () => {
                               </span>
                             ) : !item.hasContributed ? (
                               <span className="bg-red-950 text-red-300 border border-red-800 text-[10px] px-2.5 py-1 rounded-full font-tech font-bold uppercase inline-block">
-                                0 CONTRIBUTION
+                                no CONTRIBUTION
                               </span>
                             ) : (
                               <span className="bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] px-2.5 py-1 rounded-full font-tech font-bold uppercase inline-block">
-                                HAVE CONTRIBUTED
+                                CONTRIBUTED
                               </span>
                             )}
                           </td>
