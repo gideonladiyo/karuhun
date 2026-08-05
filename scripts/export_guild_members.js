@@ -15,8 +15,9 @@ const GUILDS = [
   { id: 2013, server: 'na', name: 'Karuhun 夜’' }
 ];
 
-async function fetchGuildMembers(guild) {
-  const url = `${HUAXU_BASE_URL}/servers/${guild.server}/guilds/${guild.id}`;
+async function fetchGuildMembers(guild, isLive = true) {
+  const endpoint = isLive ? 'live/guilds' : 'guilds';
+  const url = `${HUAXU_BASE_URL}/servers/${guild.server}/${endpoint}/${guild.id}`;
   try {
     const res = await fetch(url, {
       headers: { 'x-api-key': HUAXU_API_KEY }

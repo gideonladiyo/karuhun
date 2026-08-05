@@ -38,3 +38,6 @@ dist-ssr
 
 # Generated Data
 src/data/generated/
+
+# Executables
+*.exe

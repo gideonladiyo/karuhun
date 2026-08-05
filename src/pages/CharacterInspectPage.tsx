@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PlayerCharacter, CharacterDetailResponse, CharacterDetailInfo } from '@/types';
 import { getCharacterDetail } from '@/services/apiService';
 import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
-import { ArrowLeft, Shield, Sword, Award, Sparkles, CheckCircle2, ChevronRight, AlertCircle, Info, Zap } from 'lucide-react';
+import { ArrowLeft, Shield, Sword, Award, Sparkles, CheckCircle2, ChevronRight, AlertCircle, Info, Zap, Disc } from 'lucide-react';
 
 interface CharacterInspectPageProps {
   character: PlayerCharacter;
@@ -40,7 +40,6 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
     id: character.id,
     characterName: character.characterName || 'Construct',
     frameName: character.frameName || 'Frame',
-    frameCode: character.frameCode || 'BPN',
     frameType: character.frameType || 'Omniframe',
     level: character.level || 80,
     quality: character.quality || 6,
@@ -62,6 +61,9 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
   );
 
   const weapon = detailData?.weapon;
+  const harmonization = weapon?.harmonization || weapon?.harmonize;
+  const harmonizationLevel = weapon?.harmonizationLevel || 1;
+  const harmonizationSkill = weapon?.harmonizationSkill || weapon?.harmonizeSkill || harmonization?.harmonizationSkill;
   const cub = detailData?.cub;
   const rawMemories = detailData?.memories || [];
   const suits = detailData?.suits || [];
@@ -156,12 +158,6 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                 <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white tracking-tight">
                   {charInfo.characterName}
                 </h1>
-                <span className={`text-xs font-heading font-bold px-3 py-0.5 rounded-full uppercase ${rankBadge.classNames}`}>
-                  {charInfo.gradeName || rankBadge.label}
-                </span>
-                <span className="bg-[#18181b] text-zinc-300 border border-[#27272a] text-xs font-tech font-bold px-2.5 py-0.5 rounded-md uppercase">
-                  {charInfo.frameCode || 'BPN'}
-                </span>
               </div>
 
               <p className="text-sm font-heading text-zinc-300">
@@ -213,7 +209,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
             { id: 'overview', label: 'OVERVIEW' },
             { id: 'weapon', label: 'SIGNATURE WEAPON' },
             { id: 'equipments', label: 'MEMORIES (6 SLOTS)' },
-            { id: 'partner', label: 'CUB COMPANION' }
+            { id: 'partner', label: 'CUB SKILLS' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -417,8 +413,108 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                       </div>
                     </div>
                   )}
-                </div>
-              ) : (
+
+                    {/* WEAPON HARMONIZATION 2-COLUMN SECTION */}
+                    <div className="bg-[#09090b] p-5 sm:p-6 rounded-2xl border border-[#27272a] space-y-4 pt-4">
+                      <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
+                        <div className="flex items-center space-x-2">
+                          <Disc className="w-4 h-4 text-white" />
+                          <h4 className="font-heading font-bold text-xs font-tech text-white uppercase tracking-wider">
+                            WEAPON HARMONIZATION
+                          </h4>
+                        </div>
+                        <span className="bg-white text-black text-[10px] font-tech font-bold px-2.5 py-0.5 rounded uppercase">
+                          Harmonization LVL {harmonizationLevel}
+                        </span>
+                      </div>
+
+                      {/* 2 Columns: Left = Harmony Memory (Large Image), Right = Harmony Skills */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* LEFT COLUMN: HARMONY MEMORY */}
+                        <div className="bg-black/60 p-4 rounded-xl border border-[#27272a] space-y-3 flex flex-col justify-between">
+                          <div className="flex items-center space-x-1.5 border-b border-[#27272a]/80 pb-2">
+                            <Disc className="w-3.5 h-3.5 text-zinc-400" />
+                            <span className="text-[11px] font-heading font-bold text-zinc-300 uppercase tracking-wider">
+                              HARMONY MEMORY
+                            </span>
+                          </div>
+
+                          {harmonization ? (
+                            <div className="flex items-center space-x-4">
+                              {/* Large Memory Image */}
+                              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#18181b] p-1 flex-shrink-0 border-2 border-white shadow-xl overflow-hidden">
+                                <img
+                                  src={getHuaxuImageUrl(harmonization.iconBig || harmonization.icon)}
+                                  alt={harmonization.name || 'Harmonization Memory'}
+                                  className="w-full h-full object-cover rounded-xl hover:scale-105 transition-transform"
+                                />
+                              </div>
+                              <div className="flex-1 min-w-0 space-y-1">
+                                <h5 className="font-heading font-bold text-lg text-white truncate">
+                                  {harmonization.name}
+                                </h5>
+                                <div className="flex items-center space-x-2">
+                                  <span className="bg-[#18181b] text-zinc-200 border border-[#27272a] text-[10px] font-tech font-bold px-2 py-0.5 rounded">
+                                    {harmonization.quality || 6}★ Memory
+                                  </span>
+                                </div>
+                                <p className="text-xs font-tech text-zinc-400 pt-0.5">
+                                  Suit Set #{harmonization.suit || 1641}
+                                </p>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="text-center py-6 text-xs font-tech text-zinc-500">
+                              No Harmonization Memory Attached
+                            </div>
+                          )}
+                        </div>
+
+                        {/* RIGHT COLUMN: HARMONY SKILLS */}
+                        <div className="bg-black/60 p-4 rounded-xl border border-[#27272a] space-y-3 flex flex-col justify-between">
+                          <div className="flex items-center space-x-1.5 border-b border-[#27272a]/80 pb-2">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                            <span className="text-[11px] font-heading font-bold text-zinc-300 uppercase tracking-wider">
+                              HARMONY SKILLS
+                            </span>
+                          </div>
+
+                          {harmonizationSkill ? (
+                            <div className="flex items-center space-x-4">
+                              {/* Skill Icon */}
+                              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#18181b] border border-[#27272a] p-1.5 flex-shrink-0 flex items-center justify-center overflow-hidden shadow-lg">
+                                {harmonizationSkill.icon ? (
+                                  <img
+                                    src={getHuaxuImageUrl(harmonizationSkill.icon)}
+                                    alt={harmonizationSkill.name}
+                                    className="w-full h-full object-contain filter contrast-125"
+                                    onError={(e) => {
+                                      (e.target as HTMLElement).style.display = 'none';
+                                    }}
+                                  />
+                                ) : (
+                                  <Sparkles className="w-8 h-8 text-amber-400" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0 space-y-1">
+                                <h6 className="font-heading font-bold text-base text-white leading-tight">
+                                  {harmonizationSkill.name}
+                                </h6>
+                                <span className="inline-block bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-tech font-bold px-2 py-0.5 rounded uppercase">
+                                  Active Harmony Skill
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="text-center py-6 text-xs font-tech text-zinc-500">
+                              Harmonization LVL 1 (Memory Only)
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
                 <div className="text-center py-12 text-zinc-400 font-tech text-sm">
                   No weapon equipped on this construct.
                 </div>
@@ -561,7 +657,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                   {/* CUB Active & Passive Skills Vertical List with Asset Icons */}
                   <div className="space-y-3">
                     <h4 className="font-heading font-bold text-xs font-tech text-zinc-400 uppercase tracking-wider">
-                      CUB COMPANION SKILLS
+                      CUB SKILLS
                     </h4>
                     <div className="space-y-2.5">
                       {(cub.skills && cub.skills.length > 0 ? cub.skills : [

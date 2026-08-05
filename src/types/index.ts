@@ -92,6 +92,12 @@ export interface WeaponResonance {
   desc?: string;
 }
 
+export interface HarmonizationSkill {
+  name: string;
+  icon: string;
+  description?: string;
+}
+
 export interface HarmonizationData {
   id: number;
   slug?: string;
@@ -100,6 +106,7 @@ export interface HarmonizationData {
   icon: string;
   iconBig?: string;
   suit?: number;
+  harmonizationSkill?: HarmonizationSkill;
 }
 
 export interface WeaponData {
@@ -119,6 +126,8 @@ export interface WeaponData {
   harmonization?: HarmonizationData;
   harmonize?: HarmonizationData;
   harmonizationLevel?: number;
+  harmonizationSkill?: HarmonizationSkill;
+  harmonizeSkill?: HarmonizationSkill;
 }
 
 export interface MemoryData {

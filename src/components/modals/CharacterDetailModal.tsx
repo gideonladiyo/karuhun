@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PlayerCharacter, CharacterDetailResponse } from '@/types';
 import { getCharacterDetail } from '@/services/apiService';
 import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
-import { X, Zap, Info, Shirt, Crosshair, Cpu, Layers, Disc } from 'lucide-react';
+import { X, Zap, Info, Shirt, Crosshair, Cpu, Layers, Disc, Sparkles } from 'lucide-react';
 
 interface CharacterDetailModalProps {
   character: PlayerCharacter | null;
@@ -76,6 +76,7 @@ export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
   // Parse weapon harmonization (from API `weapon.harmonization` or `weapon.harmonize`)
   const harmonization = weapon?.harmonization || weapon?.harmonize;
   const harmonizationLevel = weapon?.harmonizationLevel || 1;
+  const harmonizationSkill = weapon?.harmonizationSkill || weapon?.harmonizeSkill || harmonization?.harmonizationSkill;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg animate-fadeIn">
@@ -323,48 +324,104 @@ export const CharacterDetailModal: React.FC<CharacterDetailModalProps> = ({
                       )}
                     </div>
 
-                    {/* WEAPON HARMONIZATION MEMORY SLOT */}
-                    <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-5 space-y-3">
-                      <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
+                    {/* WEAPON HARMONIZATION 2-COLUMN SECTION */}
+                    <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-5 space-y-4">
+                      <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
                         <div className="flex items-center space-x-2">
                           <Disc className="w-4 h-4 text-white" />
                           <h5 className="text-xs font-heading font-bold text-white uppercase tracking-wider">
                             WEAPON HARMONIZATION
                           </h5>
                         </div>
-                        <span className="bg-white text-black text-[10px] font-tech font-bold px-2 py-0.5 rounded uppercase">
+                        <span className="bg-white text-black text-[10px] font-tech font-bold px-2.5 py-0.5 rounded uppercase">
                           Harmonization LVL {harmonizationLevel}
                         </span>
                       </div>
 
-                      {harmonization ? (
-                        <div className="flex items-center space-x-4 bg-black p-4 rounded-xl border border-zinc-700">
-                          <div className="w-14 h-14 rounded-xl bg-zinc-900 p-1 flex-shrink-0 border-2 border-white shadow-md">
-                            <img
-                              src={getHuaxuImageUrl(harmonization.iconBig || harmonization.icon)}
-                              alt={harmonization.name || 'Harmonization Memory'}
-                              className="w-full h-full object-cover rounded-lg"
-                            />
+                      {/* 2 Columns: Left = Harmony Memory (Large Image), Right = Harmony Skills */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* LEFT COLUMN: HARMONY MEMORY */}
+                        <div className="bg-black/60 p-4 rounded-xl border border-zinc-800 space-y-3 flex flex-col justify-between">
+                          <div className="flex items-center space-x-1.5 border-b border-zinc-800/80 pb-2">
+                            <Disc className="w-3.5 h-3.5 text-zinc-400" />
+                            <span className="text-[11px] font-heading font-bold text-zinc-300 uppercase tracking-wider">
+                              HARMONY MEMORY
+                            </span>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center space-x-2">
-                              <h6 className="font-heading font-bold text-base text-white truncate">
-                                {harmonization.name}
-                              </h6>
-                              <span className="bg-zinc-800 text-zinc-200 border border-zinc-600 text-[10px] font-tech font-bold px-2 py-0.5 rounded">
-                                {harmonization.quality || 6}★ Memory
-                              </span>
+
+                          {harmonization ? (
+                            <div className="flex items-center space-x-4">
+                              {/* Large Memory Image */}
+                              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-zinc-900 p-1 flex-shrink-0 border-2 border-white shadow-xl overflow-hidden">
+                                <img
+                                  src={getHuaxuImageUrl(harmonization.iconBig || harmonization.icon)}
+                                  alt={harmonization.name || 'Harmonization Memory'}
+                                  className="w-full h-full object-cover rounded-xl hover:scale-105 transition-transform"
+                                />
+                              </div>
+                              <div className="flex-1 min-w-0 space-y-1">
+                                <h6 className="font-heading font-bold text-lg text-white truncate">
+                                  {harmonization.name}
+                                </h6>
+                                <div className="flex items-center space-x-2">
+                                  <span className="bg-zinc-800 text-zinc-200 border border-zinc-600 text-[10px] font-tech font-bold px-2 py-0.5 rounded">
+                                    {harmonization.quality || 6}★ Memory
+                                  </span>
+                                </div>
+                                <p className="text-xs font-tech text-zinc-400 pt-0.5">
+                                  Suit Set #{harmonization.suit || 1641}
+                                </p>
+                              </div>
                             </div>
-                            <p className="text-xs font-tech text-zinc-400 mt-1">
-                              Suit Set #{harmonization.suit || 1641} • Extra Memory Harmonized on Signature Weapon
-                            </p>
+                          ) : (
+                            <div className="text-center py-6 text-xs font-tech text-zinc-500">
+                              No Harmonization Memory Attached
+                            </div>
+                          )}
+                        </div>
+
+                        {/* RIGHT COLUMN: HARMONY SKILLS */}
+                        <div className="bg-black/60 p-4 rounded-xl border border-zinc-800 space-y-3 flex flex-col justify-between">
+                          <div className="flex items-center space-x-1.5 border-b border-zinc-800/80 pb-2">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                            <span className="text-[11px] font-heading font-bold text-zinc-300 uppercase tracking-wider">
+                              HARMONY SKILLS
+                            </span>
                           </div>
+
+                          {harmonizationSkill ? (
+                            <div className="flex items-center space-x-4">
+                              {/* Skill Icon */}
+                              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-900 border border-zinc-700 p-1.5 flex-shrink-0 flex items-center justify-center overflow-hidden shadow-lg">
+                                {harmonizationSkill.icon ? (
+                                  <img
+                                    src={getHuaxuImageUrl(harmonizationSkill.icon)}
+                                    alt={harmonizationSkill.name}
+                                    className="w-full h-full object-contain filter contrast-125"
+                                    onError={(e) => {
+                                      (e.target as HTMLElement).style.display = 'none';
+                                    }}
+                                  />
+                                ) : (
+                                  <Sparkles className="w-8 h-8 text-amber-400" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0 space-y-1">
+                                <h6 className="font-heading font-bold text-base text-white leading-tight">
+                                  {harmonizationSkill.name}
+                                </h6>
+                                <span className="inline-block bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-tech font-bold px-2 py-0.5 rounded uppercase">
+                                  Active Harmony Skill
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="text-center py-6 text-xs font-tech text-zinc-500">
+                              Harmonization LVL 1 (Memory Only)
+                            </div>
+                          )}
                         </div>
-                      ) : (
-                        <div className="text-center py-6 bg-black/50 rounded-xl border border-zinc-800 text-xs font-tech text-zinc-500">
-                          No Harmonization Memory Attached to Weapon
-                        </div>
-                      )}
+                      </div>
                     </div>
                   </div>
                 )}

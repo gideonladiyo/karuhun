@@ -56,13 +56,16 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}): Promise
 
 /**
  * Fetch Guild data by server & guildId with client-side caching
+ * @param isLive If true, uses the live endpoint (`/servers/:server/live/guilds/:guildId`) with 5-min server cache
  */
-export async function getGuildData(server: string, guildId: number): Promise<GuildResponse> {
-  const cacheKey = `guild_${server}_${guildId}`;
+export async function getGuildData(server: string, guildId: number, isLive: boolean = false): Promise<GuildResponse> {
+  const cacheKey = `guild_${isLive ? 'live_' : ''}${server}_${guildId}`;
   const cached = getCachedData<GuildResponse>(cacheKey);
   if (cached) return cached;
 
-  const url = `${HUAXU_BASE_URL}/servers/${server}/guilds/${guildId}`;
+  const url = isLive
+    ? `${HUAXU_BASE_URL}/servers/${server}/live/guilds/${guildId}`
+    : `${HUAXU_BASE_URL}/servers/${server}/guilds/${guildId}`;
   try {
     const res = await fetchWithTimeout(url);
     if (res.ok) {
@@ -73,7 +76,7 @@ export async function getGuildData(server: string, guildId: number): Promise<Gui
       }
     }
   } catch (err) {
-    console.warn(`[APIService] Fetching live guild ${guildId} failed, using fallback data.`, err);
+    console.warn(`[APIService] Fetching ${isLive ? 'live ' : ''}guild ${guildId} failed, using fallback data.`, err);
   }
 
   // Fallback adjustment for the requested guildId

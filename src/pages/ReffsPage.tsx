@@ -14,7 +14,7 @@ interface ReffsPageProps {
 }
 
 export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRefDetail }) => {
-  const [selectedCategory, setSelectedCategory] = useState<'guild_challenge' | 'warzone' | 'ppc'>('guild_challenge');
+  const [selectedCategory, setSelectedCategory] = useState<'guild_challenge' | 'warzone' | 'ppc'>('warzone');
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [activeDetailItem, setActiveDetailItem] = useState<ReferenceItem | null>(null);

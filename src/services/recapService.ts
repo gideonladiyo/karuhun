@@ -71,7 +71,7 @@ export async function fetchAllGuildMembersSnapshot(isAuto = false): Promise<Base
 
   for (const branch of GUILD_BRANCHES) {
     try {
-      const res = await getGuildData(branch.server, branch.id);
+      const res = await getGuildData(branch.server, branch.id, true);
       if (res && res.data && res.data.members) {
         const guildName = res.data.guild?.name || branch.name;
         const membersList = res.data.members.map((m) => ({
