@@ -634,9 +634,14 @@ export const AdminPage: React.FC = () => {
             
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-[#27272a] pb-6">
               <div className="space-y-1">
-                <div className="flex items-center space-x-2 text-amber-400 font-tech text-xl font-bold uppercase">
-                  <AlertTriangle className="w-4 h-4" />
-                  <span>MEMBER GUILD CHALLANGE DETECTION</span>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-amber-400 font-tech text-xl font-bold uppercase">
+                  <div className="flex items-center space-x-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    <span>MEMBER GUILD CHALLANGE DETECTION</span>
+                  </div>
+                  <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-tech font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                    Under Development
+                  </span>
                 </div>
                 <p className="text-xs font-tech text-zinc-400">
                   last Updated Data <span className="text-zinc-200">{baselineData.fetchedAt ? new Date(baselineData.fetchedAt).toLocaleString('id-ID') : 'Belum Ada Snapshot'}</span> ({baselineData.totalMembers || baselineData.members?.length || 0} Member) {baselineData.isAutoSnapshot && <strong className="text-amber-400">(Auto-Captured 11:58 WIB)</strong>}
