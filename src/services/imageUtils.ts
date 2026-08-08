@@ -25,6 +25,18 @@ export const getHuaxuImageUrl = (imagePath?: string): string => {
   return `${HUAXU_ASSETS_BASE}/${cleanPath}.webp`;
 };
 
+export const getNameplateUrl = (nameplate: any): string => {
+  if (!nameplate) return '';
+  if (typeof nameplate === 'string') {
+    return getHuaxuImageUrl(nameplate);
+  }
+  if (typeof nameplate === 'object') {
+    const iconPath = nameplate.icon || nameplate.image || nameplate.url || nameplate.iconUrl || nameplate.path;
+    if (iconPath) return getHuaxuImageUrl(iconPath);
+  }
+  return '';
+};
+
 // Formats Construct Rank Label based on quality and stars:
 // quality 6 -> SSS+
 // quality 5, stars 3 -> SSS3

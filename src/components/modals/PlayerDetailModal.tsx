@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GuildMember, PlayerProfileData, PlayerCharacter } from '@/types';
 import { getPlayerProfile } from '@/services/apiService';
-import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
+import { getHuaxuImageUrl, getNameplateUrl, getConstructRankLabel } from '@/services/imageUtils';
 import { X, Heart, Shield, Award, Sparkles, ChevronRight } from 'lucide-react';
 
 interface PlayerDetailModalProps {
@@ -52,6 +52,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
     nameplate: null
   };
 
+  const nameplateUrl = getNameplateUrl(player.nameplate);
   const characters = profileData?.characters || [];
 
   const filteredCharacters = characters.filter((c) => {
@@ -95,9 +96,6 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
               alt={player.name}
               className="w-20 h-20 object-cover rounded-xl"
             />
-            <div className="absolute -bottom-3 bg-white text-black font-heading font-black text-xs px-2.5 py-0.5 rounded-full z-20 shadow-md">
-              LVL {player.level}
-            </div>
           </div>
 
           {/* Commander Stats & Sign */}
@@ -106,8 +104,18 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
               <h2 className="text-2xl font-heading font-black text-white">
                 {player.name}
               </h2>
-              <span className="bg-zinc-900 text-zinc-300 border border-zinc-700 text-xs font-tech font-bold px-2.5 py-0.5 rounded-full">
-                UID: {player.id}
+              {nameplateUrl ? (
+                <img
+                  src={nameplateUrl}
+                  alt="Nameplate"
+                  className="h-7 sm:h-8 object-contain rounded-md max-w-[130px]"
+                  onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                />
+              ) : null}
+              <span className="bg-zinc-900 text-zinc-300 border border-zinc-700 text-xs font-tech font-bold px-2.5 py-0.5 rounded-full flex items-center space-x-1.5">
+                <span>UID: {player.id}</span>
+                <span className="text-zinc-600">•</span>
+                <span className="text-amber-400 font-bold">LVL {player.level}</span>
               </span>
             </div>
 

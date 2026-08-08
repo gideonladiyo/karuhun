@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { PlayerProfileData, PlayerCharacter } from '@/types';
 import { getPlayerProfile } from '@/services/apiService';
-import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
-import { ArrowLeft, User, Shield, Trophy, ChevronRight, Award, Sparkles, AlertCircle } from 'lucide-react';
+import { getHuaxuImageUrl, getNameplateUrl, getConstructRankLabel } from '@/services/imageUtils';
+import { ArrowLeft, User, Shield, Trophy, ChevronRight, Award, Sparkles, AlertCircle, Users } from 'lucide-react';
 
 interface PlayerProfilePageProps {
   uid: number;
@@ -60,6 +60,7 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
   }
 
   const { player, characters = [] } = profileData;
+  const nameplateUrl = getNameplateUrl(player.nameplate);
 
   const filteredCharacters = characters.filter(
     (c) => {
@@ -89,7 +90,7 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
         </button>
 
         <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
-          SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{player.id}</strong>
+          SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{player.id}</strong> • LVL: <strong className="text-white">{player.level}</strong>
         </span>
       </div>
 
@@ -120,9 +121,18 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
               <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white tracking-tight">
                 {player.name}
               </h1>
-              <span className="bg-white text-black text-xs font-heading font-bold px-3 py-0.5 rounded-full uppercase">
-                LVL {player.level}
-              </span>
+              {nameplateUrl ? (
+                <img
+                  src={nameplateUrl}
+                  alt="Nameplate"
+                  className="h-7 sm:h-8 object-contain rounded-md max-w-[140px]"
+                  onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                />
+              ) : player.nameplate && typeof player.nameplate === 'string' && !player.nameplate.includes('/') ? (
+                <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-tech font-bold px-2.5 py-0.5 rounded-md uppercase">
+                  {player.nameplate}
+                </span>
+              ) : null}
             </div>
 
             <p className="text-xs font-sans text-zinc-400 italic max-w-2xl leading-relaxed">
@@ -130,8 +140,12 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-2 text-xs font-tech text-zinc-300">
-              <span className="bg-[#18181b] border border-[#27272a] px-3 py-1 rounded-xl">
-                Player ID: <code className="text-white font-bold">{player.id}</code>
+              <span className="bg-[#18181b] border border-[#27272a] px-3 py-1 rounded-xl flex items-center space-x-2">
+                <span>Player ID: <code className="text-white font-bold">{player.id}</code></span>
+                <span className="text-zinc-600">•</span>
+                <span className="bg-white text-black text-[10px] font-heading font-bold px-2 py-0.5 rounded-md uppercase shadow-sm">
+                  LVL {player.level}
+                </span>
               </span>
               {player.guild && (
                 <span className="bg-[#18181b] border border-[#27272a] px-3 py-1 rounded-xl flex items-center space-x-1.5">
@@ -149,9 +163,9 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
           <div className="flex items-center space-x-2">
-            <UsersIcon className="w-4 h-4 text-white" />
+            <Users className="w-4 h-4 text-white" />
             <h2 className="font-heading font-bold text-lg text-white uppercase tracking-wider">
-              CONSTRUCT ROSTER ({filteredCharacters.length})
+              CONSTRUCTS ({filteredCharacters.length})
             </h2>
           </div>
 
