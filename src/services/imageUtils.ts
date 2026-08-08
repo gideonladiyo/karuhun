@@ -27,41 +27,48 @@ export const getHuaxuImageUrl = (imagePath?: string): string => {
 
 // Formats Construct Rank Label based on quality and stars:
 // quality 6 -> SSS+
-// quality 4, stars 4 -> SS4
+// quality 5, stars 3 -> SSS3
+// quality 4, stars 3 -> SS3
 // quality 3, stars 5 -> S5
 export const getConstructRankLabel = (quality: number, stars: number = 0) => {
-  if (quality === 6) {
-    return { label: 'SSS+', classNames: 'bg-white text-black font-bold border-white' };
+  const q = Number(quality) || 6;
+  const s = Number(stars) || 0;
+
+  if (q >= 6) {
+    return {
+      label: 'SSS+',
+      classNames: 'bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-500 text-black font-extrabold border-amber-300 shadow-md'
+    };
   }
 
   let baseLabel = 'B';
   let classNames = 'bg-[#18181b] text-zinc-500 border-[#27272a]';
 
-  switch (quality) {
+  switch (q) {
     case 5:
       baseLabel = 'SSS';
-      classNames = 'bg-zinc-200 text-black font-bold border-zinc-200';
+      classNames = 'bg-rose-950/90 text-rose-300 border-rose-500/80 font-bold shadow-md';
       break;
     case 4:
       baseLabel = 'SS';
-      classNames = 'bg-zinc-800 text-zinc-200 border-zinc-700';
+      classNames = 'bg-purple-950/90 text-purple-300 border-purple-500/80 font-bold shadow-md';
       break;
     case 3:
       baseLabel = 'S';
-      classNames = 'bg-[#18181b] text-zinc-300 border-[#27272a]';
+      classNames = 'bg-sky-950/90 text-sky-300 border-sky-500/80 font-bold shadow-md';
       break;
     case 2:
       baseLabel = 'A';
-      classNames = 'bg-[#18181b] text-zinc-400 border-[#27272a]';
+      classNames = 'bg-emerald-950/90 text-emerald-300 border-emerald-500/80 font-bold shadow-md';
       break;
     case 1:
     default:
       baseLabel = 'B';
-      classNames = 'bg-[#18181b] text-zinc-500 border-[#27272a]';
+      classNames = 'bg-[#18181b] text-zinc-400 border-[#27272a] font-bold shadow-md';
       break;
   }
 
-  const finalLabel = stars && stars > 0 ? `${baseLabel}${stars}` : baseLabel;
+  const finalLabel = s > 0 ? `${baseLabel}${s}` : baseLabel;
 
   return {
     label: finalLabel,

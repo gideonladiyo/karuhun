@@ -43,6 +43,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
     frameType: character.frameType || 'Omniframe',
     level: character.level || 80,
     quality: character.quality || 6,
+    stars: character.stars || 0,
     awakeningLevel: character.awakeningLevel || 3,
     icons: {
       normal: character.normalIcon || character.fashionIcon || '',
@@ -51,7 +52,10 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
     }
   };
 
-  const rankBadge = getConstructRankLabel(charInfo.quality || character.quality || 6, charInfo.stars || character.stars || 0);
+  const rankBadge = getConstructRankLabel(
+    charInfo.quality ?? character.quality ?? 6,
+    charInfo.stars ?? character.stars ?? 0
+  );
 
   const portraitSrc = getHuaxuImageUrl(
     charInfo.icons?.normal ||
@@ -143,21 +147,29 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           
           <div className="flex items-center space-x-5">
-            {/* Construct Portrait */}
+            {/* Construct Portrait with Rank Overlay */}
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-black border border-[#27272a] p-1 flex-shrink-0 overflow-hidden shadow-xl">
               <img
                 src={portraitSrc}
                 alt={charInfo.characterName}
                 className="w-full h-full object-cover rounded-2xl"
               />
+              <div className="absolute top-1.5 left-1.5 z-10">
+                <span className={`text-[10px] font-tech font-bold px-1.5 py-0.2 rounded uppercase border shadow-md ${rankBadge.classNames}`}>
+                  {rankBadge.label}
+                </span>
+              </div>
             </div>
 
             {/* Construct Information */}
             <div className="space-y-1">
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2.5">
                 <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white tracking-tight">
                   {charInfo.characterName}
                 </h1>
+                <span className={`text-xs font-tech font-bold px-2.5 py-0.5 rounded-md uppercase border shadow-md ${rankBadge.classNames}`}>
+                  {rankBadge.label}
+                </span>
               </div>
 
               <p className="text-sm font-heading text-zinc-300">
@@ -165,6 +177,8 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
               </p>
 
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-tech text-zinc-400 pt-1">
+                <span>RANK <strong className={`px-2 py-0.5 rounded text-[10px] font-bold border ml-1 ${rankBadge.classNames}`}>{rankBadge.label}</strong></span>
+                <span>•</span>
                 <span>LVL <strong className="text-white">{charInfo.level || 80}</strong></span>
                 <span>•</span>
                 <span>Class: <strong className="text-white uppercase">{charInfo.class || charInfo.frameType || 'Omniframe'}</strong></span>
@@ -185,15 +199,22 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
           </div>
 
           {/* Construct Stats Pills */}
-          <div className="grid grid-cols-2 gap-3 w-full md:w-auto">
-            <div className="bg-black/60 border border-[#27272a] rounded-2xl p-4 text-center min-w-[120px]">
+          <div className="grid grid-cols-3 gap-3 w-full md:w-auto">
+            <div className="bg-black/60 border border-[#27272a] rounded-2xl p-4 text-center min-w-[100px] flex flex-col justify-center items-center">
+              <span className="text-[10px] font-tech uppercase text-zinc-400 block font-bold">RANK</span>
+              <span className={`inline-block font-heading font-bold text-xs sm:text-sm px-2.5 py-0.5 rounded-md border mt-1 ${rankBadge.classNames}`}>
+                {rankBadge.label}
+              </span>
+            </div>
+
+            <div className="bg-black/60 border border-[#27272a] rounded-2xl p-4 text-center min-w-[100px] flex flex-col justify-center items-center">
               <span className="text-[10px] font-tech uppercase text-zinc-400 block font-bold">LEVEL</span>
               <span className="font-heading font-bold text-xl text-white">
                 {charInfo.level || 80} / 80
               </span>
             </div>
 
-            <div className="bg-black/60 border border-[#27272a] rounded-2xl p-4 text-center min-w-[120px]">
+            <div className="bg-black/60 border border-[#27272a] rounded-2xl p-4 text-center min-w-[100px] flex flex-col justify-center items-center">
               <span className="text-[10px] font-tech uppercase text-zinc-400 block font-bold">AWAKENING</span>
               <span className="font-heading font-bold text-xl text-white">
                 LVL {charInfo.awakeningLevel || 3}
@@ -286,7 +307,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                 <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
                   <div className="flex items-center space-x-2">
                     <Sparkles className="w-4 h-4 text-white" />
-                    <h3 className="font-heading font-bold text-base text-white">CUB COMPANION</h3>
+                    <h3 className="font-heading font-bold text-base text-white">CUB</h3>
                   </div>
                   {cub && (
                     <span className="bg-[#18181b] text-zinc-300 border border-[#27272a] text-xs font-tech font-bold px-2.5 py-0.5 rounded uppercase">
