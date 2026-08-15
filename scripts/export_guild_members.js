@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const HUAXU_BASE_URL = process.env.VITE_HUAXU_API_URL || 'https://api.huaxu.app';
-const HUAXU_API_KEY = process.env.VITE_HUAXU_API_KEY || process.env.HUAXU_API_KEY || 'hxu-sWhLLMiqNnbAJRmYRMmnAknPmkWpderauqUxAsCvV7ppohcbugoqeKVdkPCJ';
+const HUAXU_API_KEY = process.env.VITE_HUAXU_API_KEY || process.env.HUAXU_API_KEY || '';
 
 const GUILDS = [
   { id: 3638, server: 'ap', name: 'Karuhun 夜' },

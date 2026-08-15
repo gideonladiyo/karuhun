@@ -13,7 +13,7 @@ import ppcFallback from '@/data/fallbacks/ppc_fallback.json';
 import warzoneFallback from '@/data/fallbacks/warzone_fallback.json';
 
 const HUAXU_BASE_URL = import.meta.env.VITE_HUAXU_API_URL || 'https://api.huaxu.app';
-const HUAXU_API_KEY = import.meta.env.VITE_HUAXU_API_KEY || 'hxu-sWhLLMiqNnbAJRmYRMmnAknPmkWpderauqUxAsCvV7ppohcbugoqeKVdkPCJ';
+const HUAXU_API_KEY = import.meta.env.VITE_HUAXU_API_KEY || '';
 const FETCH_TIMEOUT_MS = 4000;
 const CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes cache
 
