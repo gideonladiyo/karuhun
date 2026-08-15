@@ -80,7 +80,7 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
     const CategoryIcon = getCategoryIcon(activeDetailItem.category);
 
     return (
-      <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
+      <div className="space-y-6 sm:space-y-8 animate-fadeIn">
         
         {/* Navigation & Breadcrumb Header */}
         <div className="flex items-center justify-between">
@@ -187,7 +187,7 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
 
   // MAIN REFFS HUB CATALOG VIEW
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
+    <div className="space-y-6 sm:space-y-8 animate-fadeIn">
       
       {/* Category Tabs Header Banner */}
       <div className="minimal-card p-5 sm:p-8 space-y-6">

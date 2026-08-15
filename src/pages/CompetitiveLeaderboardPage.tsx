@@ -1,29 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getWarzoneLeaderboard, getPPCLeaderboard } from '@/services/apiService';
 import { getHuaxuImageUrl, GUILD_BRANCHES } from '@/services/imageUtils';
+import { 
+  fetchCompositeAllianceLeaderboard, 
+  sortAllianceMembers, 
+  MemberCompetitiveAchievement 
+} from '@/services/rankingUtils';
 import { Trophy, Swords, Skull, Globe, Search, ArrowUpDown, ChevronRight, Award, Shield } from 'lucide-react';
-
-interface MemberCompetitiveAchievement {
-  id: number;
-  name: string;
-  guildName: string;
-  server: string;
-  portrait: string;
-  frame?: string;
-  warzone?: {
-    rank: number;
-    division: string;
-    divisionRank: number;
-    score: number;
-    team?: any[];
-  } | null;
-  ppc?: {
-    rank: number;
-    level: string;
-    levelId: number;
-    score: number;
-  } | null;
-}
 
 interface CompetitiveLeaderboardProps {
   onSelectPlayer: (playerId: number, server: string) => void;
@@ -38,158 +20,29 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
 
   useEffect(() => {
     setLoading(true);
-
-    const fetchPromises = [
-      getWarzoneLeaderboard('na', 16),
-      getWarzoneLeaderboard('na', 15),
-      getWarzoneLeaderboard('ap', 16),
-      getWarzoneLeaderboard('ap', 15),
-      getPPCLeaderboard('na', 4),
-      getPPCLeaderboard('na', 3),
-      getPPCLeaderboard('ap', 4),
-      getPPCLeaderboard('ap', 3),
-    ];
-
-    Promise.allSettled(fetchPromises).then((results) => {
-      const achievementsMap: Record<number, MemberCompetitiveAchievement> = {};
-
-      const isKaruhun = (name: string, guildName?: string) => {
-        if (guildName && (guildName.includes('Karuhun') || guildName.includes('Izanami') || guildName.includes('Astrelume'))) {
-          return true;
-        }
-        return name.includes('夜') || name.startsWith('Karuhun');
-      };
-
-      // 1. Process Warzone Leaderboard Responses (Indices 0 to 3)
-      results.slice(0, 4).forEach((res) => {
-        if (res.status !== 'fulfilled' || !res.value || !res.value.data) return;
-        const data = res.value.data as any;
-
-        const wzRankings = (data.warzone && data.warzone.rankings) || (data.rankings && !data.ppc ? data.rankings : null);
-        if (!wzRankings || !Array.isArray(wzRankings)) return;
-
-        const srv = (data.warzone && data.warzone.server) || 'na';
-        const divRank = (data.warzone && data.warzone.challenge) || 16;
-        const divLabel = divRank === 16 ? 'Legend' : divRank === 15 ? 'Hero' : 'Leader';
-
-        wzRankings.forEach((item: any) => {
-          const p = item.player || item;
-          const name = p.name || item.name || '';
-          const gname = p.guildName || item.guildName || '';
-          const pid = p.id || item.playerId || item.id;
-
-          if (pid && isKaruhun(name, gname)) {
-            if (!achievementsMap[pid]) {
-              achievementsMap[pid] = {
-                id: pid,
-                name,
-                guildName: gname || 'Karuhun 夜',
-                server: srv,
-                portrait: p.portrait || item.portrait || 'image/roleplayersp/roleplayer01',
-                frame: p.frame || item.frame,
-                warzone: null,
-                ppc: null
-              };
-            }
-
-            if (!achievementsMap[pid].warzone || item.score > (achievementsMap[pid].warzone?.score || 0)) {
-              achievementsMap[pid].warzone = {
-                rank: item.rank || item.ranking || 1,
-                division: divLabel,
-                divisionRank: divRank,
-                score: item.score || 0,
-                team: item.zones?.[0]?.characters || item.team || []
-              };
-            }
-          }
-        });
+    fetchCompositeAllianceLeaderboard()
+      .then((list) => {
+        setMemberRankings(list);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Failed to load composite leaderboard', err);
+        setLoading(false);
       });
-
-      // 2. Process PPC Leaderboard Responses (Indices 4 to 7)
-      results.slice(4, 8).forEach((res) => {
-        if (res.status !== 'fulfilled' || !res.value || !res.value.data) return;
-        const data = res.value.data as any;
-
-        const ppcRankings = (data.ppc && (data.ppc.ranking || data.ppc.rankings)) || (data.ranking ? data.ranking : null);
-        if (!ppcRankings || !Array.isArray(ppcRankings)) return;
-
-        const srv = (data.ppc && data.ppc.server) || 'na';
-        const lvlId = (data.ppc && data.ppc.level?.id) || 4;
-        const lvlLabel = lvlId === 4 ? 'Ultimate' : 'Advanced';
-
-        ppcRankings.forEach((item: any) => {
-          const p = item.player || item;
-          const name = p.name || item.name || '';
-          const gname = p.guildName || item.guildName || '';
-          const pid = p.id || item.playerId || item.id;
-
-          if (pid && isKaruhun(name, gname)) {
-            if (!achievementsMap[pid]) {
-              achievementsMap[pid] = {
-                id: pid,
-                name,
-                guildName: gname || 'Karuhun 夜',
-                server: srv,
-                portrait: p.portrait || item.portrait || 'image/roleplayersp/roleplayer01',
-                frame: p.frame || item.frame,
-                warzone: null,
-                ppc: null
-              };
-            }
-
-            if (!achievementsMap[pid].ppc || item.score > (achievementsMap[pid].ppc?.score || 0)) {
-              achievementsMap[pid].ppc = {
-                rank: item.rank || item.ranking || 1,
-                level: lvlLabel,
-                levelId: lvlId,
-                score: item.score || 0
-              };
-            }
-          }
-        });
-      });
-
-      const list = Object.values(achievementsMap);
-      setMemberRankings(list);
-      setLoading(false);
-    });
   }, []);
 
-  const getAchievementScore = (m: MemberCompetitiveAchievement): number => {
-    let score = 0;
-    if (m.warzone) {
-      const divBonus = m.warzone.divisionRank === 16 ? 1000000 : 500000;
-      score += divBonus + (1000 - m.warzone.rank);
-    }
-    if (m.ppc) {
-      const lvlBonus = m.ppc.levelId === 4 ? 1000000 : 500000;
-      score += lvlBonus + (1000 - m.ppc.rank);
-    }
-    return score;
-  };
-
-  const filteredAndSortedMembers = memberRankings
-    .filter((m) => {
-      const matchesServer = selectedServer === 'all' || m.server === selectedServer;
+  const filteredAndSortedMembers = sortAllianceMembers(
+    memberRankings.filter((m) => {
+      const matchesServer = selectedServer === 'all' || m.server.toLowerCase() === selectedServer.toLowerCase();
       const matchesSearch =
         m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         m.id.toString().includes(searchTerm) ||
         m.guildName.toLowerCase().includes(searchTerm.toLowerCase());
       return matchesServer && matchesSearch;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'warzone') {
-        const aW = a.warzone ? (a.warzone.divisionRank * 1000 - a.warzone.rank) : 0;
-        const bW = b.warzone ? (b.warzone.divisionRank * 1000 - b.warzone.rank) : 0;
-        return bW - aW;
-      }
-      if (sortBy === 'ppc') {
-        const aP = a.ppc ? (a.ppc.levelId * 1000 - a.ppc.rank) : 0;
-        const bP = b.ppc ? (b.ppc.levelId * 1000 - b.ppc.rank) : 0;
-        return bP - aP;
-      }
-      return getAchievementScore(b) - getAchievementScore(a);
-    });
+    }),
+    sortBy === 'rank' ? 'composite' : sortBy,
+    'all'
+  );
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">

@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-08-02T15:25:13.345Z",
-  "totalMembers": 299,
+  "fetchedAt": "2026-08-10T04:06:15.972Z",
+  "totalMembers": 286,
   "members": [
     {
       "guildId": 3638,
@@ -8,7 +8,7 @@
       "server": "ap",
       "playerId": 18445854,
       "name": "夜’ Narasula_",
-      "weeklyContribution": 7251
+      "weeklyContribution": 8045
     },
     {
       "guildId": 3638,
@@ -16,7 +16,7 @@
       "server": "ap",
       "playerId": 11143541,
       "name": "夜’ Yezki",
-      "weeklyContribution": 4611
+      "weeklyContribution": 5320
     },
     {
       "guildId": 3638,
@@ -24,7 +24,7 @@
       "server": "ap",
       "playerId": 26438993,
       "name": "夜’ Larkshin",
-      "weeklyContribution": 7431
+      "weeklyContribution": 4749
     },
     {
       "guildId": 3638,
@@ -32,7 +32,7 @@
       "server": "ap",
       "playerId": 10722729,
       "name": "夜’ Eisritter",
-      "weeklyContribution": 8691
+      "weeklyContribution": 8803
     },
     {
       "guildId": 3638,
@@ -40,7 +40,7 @@
       "server": "ap",
       "playerId": 11189956,
       "name": "夜' Anna",
-      "weeklyContribution": 8371
+      "weeklyContribution": 8311
     },
     {
       "guildId": 3638,
@@ -48,87 +48,7 @@
       "server": "ap",
       "playerId": 11876605,
       "name": "夜’ Hori",
-      "weeklyContribution": 4758
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 12844055,
-      "name": "夜' Zeis",
-      "weeklyContribution": 8693
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 15777547,
-      "name": "夜’ Velvet2nd",
-      "weeklyContribution": 7859
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 19418999,
-      "name": "夜’ ChiFrosty",
-      "weeklyContribution": 7745
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 23044141,
-      "name": "夜’  Lux",
-      "weeklyContribution": 8271
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 29518140,
-      "name": "夜' weiss",
-      "weeklyContribution": 8251
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 10238574,
-      "name": "夜’ SAN -",
-      "weeklyContribution": 6207
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 10433374,
-      "name": "夜' 你是臭企鹅咕咕嘎嘎",
-      "weeklyContribution": 6771
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 11048245,
-      "name": "夜’ Lexus",
-      "weeklyContribution": 4313
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 11255291,
-      "name": "夜’ BeelZebub",
-      "weeklyContribution": 4644
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 11860595,
-      "name": "夜` Licht",
-      "weeklyContribution": 0
+      "weeklyContribution": 5672
     },
     {
       "guildId": 3638,
@@ -136,15 +56,127 @@
       "server": "ap",
       "playerId": 12084931,
       "name": "夜’ Bakekok",
-      "weeklyContribution": 6225
+      "weeklyContribution": 7232
     },
     {
       "guildId": 3638,
       "guildName": "Karuhun 夜",
       "server": "ap",
-      "playerId": 12200916,
-      "name": "夜’ Nightmare",
-      "weeklyContribution": 3047
+      "playerId": 12844055,
+      "name": "夜' Zeis",
+      "weeklyContribution": 7865
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 14162252,
+      "name": "夜’ Sylva",
+      "weeklyContribution": 7771
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 18082385,
+      "name": "夜’ Unit-6969",
+      "weeklyContribution": 7559
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 19418999,
+      "name": "夜’ ChiFrosty",
+      "weeklyContribution": 7236
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 20217468,
+      "name": "夜’ Zill",
+      "weeklyContribution": 7256
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 23044141,
+      "name": "夜’  Lux",
+      "weeklyContribution": 7831
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 23572995,
+      "name": "夜’ Teramisu",
+      "weeklyContribution": 7335
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 25867321,
+      "name": "夜’ MIKUU²",
+      "weeklyContribution": 7615
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 27079066,
+      "name": "夜' cadecause",
+      "weeklyContribution": 7686
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 29518140,
+      "name": "夜' weiss",
+      "weeklyContribution": 8207
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 10238574,
+      "name": "夜’ SAN -",
+      "weeklyContribution": 4944
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 10433374,
+      "name": "夜' 你是臭企鹅咕咕嘎嘎",
+      "weeklyContribution": 6502
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 11048245,
+      "name": "夜’ Lexus",
+      "weeklyContribution": 4748
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 11255291,
+      "name": "夜’ BeelZebub",
+      "weeklyContribution": 4552
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 11719717,
+      "name": "KuchibaChisa",
+      "weeklyContribution": 0
     },
     {
       "guildId": 3638,
@@ -152,7 +184,7 @@
       "server": "ap",
       "playerId": 12482735,
       "name": "夜’ Jourast01",
-      "weeklyContribution": 4982
+      "weeklyContribution": 6026
     },
     {
       "guildId": 3638,
@@ -160,7 +192,7 @@
       "server": "ap",
       "playerId": 13422124,
       "name": "夜’ Lumer:3",
-      "weeklyContribution": 0
+      "weeklyContribution": 6692
     },
     {
       "guildId": 3638,
@@ -168,6 +200,14 @@
       "server": "ap",
       "playerId": 13469963,
       "name": "夜' MyGiyux",
+      "weeklyContribution": 6128
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 13495024,
+      "name": "夜'Ouroboros",
       "weeklyContribution": 0
     },
     {
@@ -176,7 +216,7 @@
       "server": "ap",
       "playerId": 13509339,
       "name": "夜' ダークXスカイ",
-      "weeklyContribution": 5385
+      "weeklyContribution": 5352
     },
     {
       "guildId": 3638,
@@ -184,7 +224,7 @@
       "server": "ap",
       "playerId": 13530647,
       "name": "夜' MyNia",
-      "weeklyContribution": 7387
+      "weeklyContribution": 5957
     },
     {
       "guildId": 3638,
@@ -192,7 +232,7 @@
       "server": "ap",
       "playerId": 14002407,
       "name": "夜FL",
-      "weeklyContribution": 4860
+      "weeklyContribution": 5171
     },
     {
       "guildId": 3638,
@@ -200,15 +240,15 @@
       "server": "ap",
       "playerId": 14017405,
       "name": "夜’ Keysha",
-      "weeklyContribution": 5950
+      "weeklyContribution": 608
     },
     {
       "guildId": 3638,
       "guildName": "Karuhun 夜",
       "server": "ap",
-      "playerId": 14162252,
-      "name": "夜’ Sylva",
-      "weeklyContribution": 7456
+      "playerId": 14860624,
+      "name": "Viole",
+      "weeklyContribution": 0
     },
     {
       "guildId": 3638,
@@ -216,7 +256,7 @@
       "server": "ap",
       "playerId": 14865008,
       "name": "夜’ MIKUU",
-      "weeklyContribution": 5876
+      "weeklyContribution": 6079
     },
     {
       "guildId": 3638,
@@ -224,7 +264,7 @@
       "server": "ap",
       "playerId": 15216423,
       "name": "夜’ Ikanaide",
-      "weeklyContribution": 6666
+      "weeklyContribution": 6944
     },
     {
       "guildId": 3638,
@@ -232,7 +272,15 @@
       "server": "ap",
       "playerId": 15280800,
       "name": "夜’ Yuna",
-      "weeklyContribution": 5426
+      "weeklyContribution": 5371
+    },
+    {
+      "guildId": 3638,
+      "guildName": "Karuhun 夜",
+      "server": "ap",
+      "playerId": 15777547,
+      "name": "夜’ Velvet2nd",
+      "weeklyContribution": 6805
     },
     {
       "guildId": 3638,
@@ -240,7 +288,7 @@
       "server": "ap",
       "playerId": 15785803,
       "name": "夜’ MIKUU³",
-      "weeklyContribution": 5658
+      "weeklyContribution": 4779
     },
     {
       "guildId": 3638,
@@ -248,7 +296,7 @@
       "server": "ap",
       "playerId": 15832346,
       "name": "夜’ Mrsll",
-      "weeklyContribution": 5532
+      "weeklyContribution": 5454
     },
     {
       "guildId": 3638,
@@ -256,7 +304,7 @@
       "server": "ap",
       "playerId": 15897845,
       "name": "夜’ Zenoth",
-      "weeklyContribution": 5277
+      "weeklyContribution": 5937
     },
     {
       "guildId": 3638,
@@ -264,7 +312,7 @@
       "server": "ap",
       "playerId": 15907806,
       "name": "夜’ Rainn",
-      "weeklyContribution": 0
+      "weeklyContribution": 4342
     },
     {
       "guildId": 3638,
@@ -272,7 +320,7 @@
       "server": "ap",
       "playerId": 16396316,
       "name": "夜’ Sheesshhh",
-      "weeklyContribution": 4116
+      "weeklyContribution": 5347
     },
     {
       "guildId": 3638,
@@ -280,7 +328,7 @@
       "server": "ap",
       "playerId": 16480723,
       "name": "夜’ Ryuuen",
-      "weeklyContribution": 9685
+      "weeklyContribution": 5208
     },
     {
       "guildId": 3638,
@@ -288,7 +336,7 @@
       "server": "ap",
       "playerId": 16990993,
       "name": "夜’ Sanszz",
-      "weeklyContribution": 4471
+      "weeklyContribution": 6433
     },
     {
       "guildId": 3638,
@@ -296,7 +344,7 @@
       "server": "ap",
       "playerId": 17024701,
       "name": "夜'Kuc'hai",
-      "weeklyContribution": 6803
+      "weeklyContribution": 6793
     },
     {
       "guildId": 3638,
@@ -304,7 +352,7 @@
       "server": "ap",
       "playerId": 17091746,
       "name": "夜' Kiera",
-      "weeklyContribution": 6284
+      "weeklyContribution": 6088
     },
     {
       "guildId": 3638,
@@ -312,7 +360,7 @@
       "server": "ap",
       "playerId": 17155031,
       "name": "夜’ Tenebriss",
-      "weeklyContribution": 5902
+      "weeklyContribution": 6771
     },
     {
       "guildId": 3638,
@@ -320,23 +368,7 @@
       "server": "ap",
       "playerId": 17624749,
       "name": "夜' Night",
-      "weeklyContribution": 4871
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 17768464,
-      "name": "夜’ Ƴuuri",
-      "weeklyContribution": 4062
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 18082385,
-      "name": "夜’ Unit-6969",
-      "weeklyContribution": 7275
+      "weeklyContribution": 6132
     },
     {
       "guildId": 3638,
@@ -344,7 +376,7 @@
       "server": "ap",
       "playerId": 18455618,
       "name": "夜’ Josa",
-      "weeklyContribution": 7664
+      "weeklyContribution": 6716
     },
     {
       "guildId": 3638,
@@ -352,7 +384,7 @@
       "server": "ap",
       "playerId": 18679508,
       "name": "夜'阿斯",
-      "weeklyContribution": 6868
+      "weeklyContribution": 5586
     },
     {
       "guildId": 3638,
@@ -360,7 +392,7 @@
       "server": "ap",
       "playerId": 18758725,
       "name": "夜’ 風悠",
-      "weeklyContribution": 5150
+      "weeklyContribution": 5714
     },
     {
       "guildId": 3638,
@@ -368,7 +400,7 @@
       "server": "ap",
       "playerId": 19156620,
       "name": "夜’ Xidon",
-      "weeklyContribution": 7543
+      "weeklyContribution": 6907
     },
     {
       "guildId": 3638,
@@ -376,7 +408,7 @@
       "server": "ap",
       "playerId": 19282726,
       "name": "夜` Sir schwi",
-      "weeklyContribution": 4590
+      "weeklyContribution": 4884
     },
     {
       "guildId": 3638,
@@ -384,7 +416,7 @@
       "server": "ap",
       "playerId": 19611841,
       "name": "夜' Shimein",
-      "weeklyContribution": 0
+      "weeklyContribution": 4511
     },
     {
       "guildId": 3638,
@@ -392,7 +424,7 @@
       "server": "ap",
       "playerId": 19662603,
       "name": "夜’ Rexzuu",
-      "weeklyContribution": 5254
+      "weeklyContribution": 4503
     },
     {
       "guildId": 3638,
@@ -400,15 +432,7 @@
       "server": "ap",
       "playerId": 20059850,
       "name": "夜' Haruka",
-      "weeklyContribution": 4674
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 20217468,
-      "name": "夜’ Zill",
-      "weeklyContribution": 7672
+      "weeklyContribution": 4740
     },
     {
       "guildId": 3638,
@@ -416,7 +440,7 @@
       "server": "ap",
       "playerId": 20490988,
       "name": "夜’×Ｄｙｚｅｅ",
-      "weeklyContribution": 0
+      "weeklyContribution": 5115
     },
     {
       "guildId": 3638,
@@ -424,7 +448,7 @@
       "server": "ap",
       "playerId": 21015862,
       "name": "夜' Taramoon",
-      "weeklyContribution": 7028
+      "weeklyContribution": 6304
     },
     {
       "guildId": 3638,
@@ -432,7 +456,7 @@
       "server": "ap",
       "playerId": 22364754,
       "name": "夜’ queen'sy",
-      "weeklyContribution": 5460
+      "weeklyContribution": 5722
     },
     {
       "guildId": 3638,
@@ -440,7 +464,7 @@
       "server": "ap",
       "playerId": 22829164,
       "name": "夜' OgOnta",
-      "weeklyContribution": 0
+      "weeklyContribution": 7036
     },
     {
       "guildId": 3638,
@@ -448,7 +472,7 @@
       "server": "ap",
       "playerId": 23102587,
       "name": "夜’ Twilight",
-      "weeklyContribution": 4164
+      "weeklyContribution": 5522
     },
     {
       "guildId": 3638,
@@ -456,23 +480,7 @@
       "server": "ap",
       "playerId": 23511266,
       "name": "夜' Iceey.",
-      "weeklyContribution": 7549
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 23572995,
-      "name": "夜’ Teramisu",
-      "weeklyContribution": 0
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 24090815,
-      "name": "夜' ketaopeia",
-      "weeklyContribution": 3755
+      "weeklyContribution": 7191
     },
     {
       "guildId": 3638,
@@ -480,7 +488,7 @@
       "server": "ap",
       "playerId": 24529449,
       "name": "夜' ＤＵＮＧ ʜʟᥴ",
-      "weeklyContribution": 5650
+      "weeklyContribution": 5690
     },
     {
       "guildId": 3638,
@@ -488,23 +496,7 @@
       "server": "ap",
       "playerId": 24972171,
       "name": "夜’ 15.",
-      "weeklyContribution": 0
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 25867321,
-      "name": "夜’ MIKUU²",
-      "weeklyContribution": 8596
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 27079066,
-      "name": "夜' cadecause",
-      "weeklyContribution": 7728
+      "weeklyContribution": 5488
     },
     {
       "guildId": 3638,
@@ -512,7 +504,7 @@
       "server": "ap",
       "playerId": 27616410,
       "name": "夜’ Zeryn",
-      "weeklyContribution": 6343
+      "weeklyContribution": 6108
     },
     {
       "guildId": 3638,
@@ -520,7 +512,7 @@
       "server": "ap",
       "playerId": 28361595,
       "name": "夜' Charlotte",
-      "weeklyContribution": 6732
+      "weeklyContribution": 6863
     },
     {
       "guildId": 3638,
@@ -528,7 +520,7 @@
       "server": "ap",
       "playerId": 28739461,
       "name": "夜` Ndardette",
-      "weeklyContribution": 6427
+      "weeklyContribution": 6044
     },
     {
       "guildId": 3638,
@@ -536,15 +528,7 @@
       "server": "ap",
       "playerId": 28833567,
       "name": "夜'Floyen",
-      "weeklyContribution": 5013
-    },
-    {
-      "guildId": 3638,
-      "guildName": "Karuhun 夜",
-      "server": "ap",
-      "playerId": 29920667,
-      "name": "夜’ Iwak teri",
-      "weeklyContribution": 5391
+      "weeklyContribution": 5928
     },
     {
       "guildId": 1164,
@@ -552,7 +536,7 @@
       "server": "ap",
       "playerId": 19564764,
       "name": "夜’ N4BE.",
-      "weeklyContribution": 8736
+      "weeklyContribution": 7207
     },
     {
       "guildId": 1164,
@@ -560,87 +544,7 @@
       "server": "ap",
       "playerId": 12301680,
       "name": "夜’ しにがみ",
-      "weeklyContribution": 6982
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 10269498,
-      "name": "夜' Gene",
-      "weeklyContribution": 6032
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 14492979,
-      "name": "夜’ Taka.",
-      "weeklyContribution": 3149
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 14627162,
-      "name": "夜’ Noritoshi",
-      "weeklyContribution": 6748
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 14678075,
-      "name": "夜’ Jroje",
-      "weeklyContribution": 7152
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 14797188,
-      "name": "夜’ 納拉蘇拉",
-      "weeklyContribution": 5685
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 18583245,
-      "name": "夜’ Saikyo",
-      "weeklyContribution": 6476
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 22991760,
-      "name": "夜’ Kuukaiii",
-      "weeklyContribution": 5273
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 27733110,
-      "name": "夜’ TongFang",
-      "weeklyContribution": 6510
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 28255002,
-      "name": "夜’ CIMOY",
-      "weeklyContribution": 6571
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 29375482,
-      "name": "夜’ Aleph א",
-      "weeklyContribution": 6525
+      "weeklyContribution": 7237
     },
     {
       "guildId": 1164,
@@ -648,7 +552,111 @@
       "server": "ap",
       "playerId": 10555763,
       "name": "夜’ Zolt",
-      "weeklyContribution": 4209
+      "weeklyContribution": 6543
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 14492979,
+      "name": "夜’ Taka.",
+      "weeklyContribution": 7105
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 14627162,
+      "name": "夜’ Noritoshi",
+      "weeklyContribution": 7087
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 14678075,
+      "name": "夜’ Jroje",
+      "weeklyContribution": 7143
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 18583245,
+      "name": "夜’ Saikyo",
+      "weeklyContribution": 6529
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 21018883,
+      "name": "夜’ Number28.",
+      "weeklyContribution": 6304
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 24239444,
+      "name": "夜’ NR's",
+      "weeklyContribution": 6460
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 26240363,
+      "name": "夜'Raviel ʜʟᴄ",
+      "weeklyContribution": 6239
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 27285652,
+      "name": "夜' Finality",
+      "weeklyContribution": 6247
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 27733110,
+      "name": "夜’ TongFang",
+      "weeklyContribution": 6586
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 28255002,
+      "name": "夜’ CIMOY",
+      "weeklyContribution": 6860
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 29375482,
+      "name": "夜’ Aleph א",
+      "weeklyContribution": 6780
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 10269498,
+      "name": "夜' Gene",
+      "weeklyContribution": 5972
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 10353724,
+      "name": "夜’ YukiTo",
+      "weeklyContribution": 0
     },
     {
       "guildId": 1164,
@@ -656,7 +664,7 @@
       "server": "ap",
       "playerId": 10962072,
       "name": "夜’ Valnn",
-      "weeklyContribution": 3238
+      "weeklyContribution": 3334
     },
     {
       "guildId": 1164,
@@ -664,7 +672,7 @@
       "server": "ap",
       "playerId": 11100870,
       "name": "夜’ Saiijiee",
-      "weeklyContribution": 3670
+      "weeklyContribution": 5150
     },
     {
       "guildId": 1164,
@@ -672,7 +680,7 @@
       "server": "ap",
       "playerId": 11293255,
       "name": "夜’ RiceField",
-      "weeklyContribution": 4847
+      "weeklyContribution": 5214
     },
     {
       "guildId": 1164,
@@ -680,7 +688,7 @@
       "server": "ap",
       "playerId": 11793008,
       "name": "夜’ Adeline",
-      "weeklyContribution": 5345
+      "weeklyContribution": 5022
     },
     {
       "guildId": 1164,
@@ -694,17 +702,9 @@
       "guildId": 1164,
       "guildName": "Izanami 夜",
       "server": "ap",
-      "playerId": 12336124,
-      "name": "夜’ Kagura_-\"",
-      "weeklyContribution": 2466
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
       "playerId": 12350938,
       "name": "夜' Zinia",
-      "weeklyContribution": 5360
+      "weeklyContribution": 5521
     },
     {
       "guildId": 1164,
@@ -712,7 +712,7 @@
       "server": "ap",
       "playerId": 12473317,
       "name": "夜' Reiga",
-      "weeklyContribution": 2654
+      "weeklyContribution": 0
     },
     {
       "guildId": 1164,
@@ -720,15 +720,7 @@
       "server": "ap",
       "playerId": 13001289,
       "name": "夜’ Neko",
-      "weeklyContribution": 4634
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 13495024,
-      "name": "夜'Ouroboros",
-      "weeklyContribution": 0
+      "weeklyContribution": 119
     },
     {
       "guildId": 1164,
@@ -736,23 +728,15 @@
       "server": "ap",
       "playerId": 13714461,
       "name": "夜’seele ʜʟᴄ",
-      "weeklyContribution": 5371
+      "weeklyContribution": 5652
     },
     {
       "guildId": 1164,
       "guildName": "Izanami 夜",
       "server": "ap",
       "playerId": 13817819,
-      "name": "夜’ Shiro",
-      "weeklyContribution": 4237
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 13849780,
-      "name": "Kaysel",
-      "weeklyContribution": 0
+      "name": "夜’ Schnee",
+      "weeklyContribution": 5013
     },
     {
       "guildId": 1164,
@@ -760,23 +744,15 @@
       "server": "ap",
       "playerId": 14252977,
       "name": "夜’NurRochman",
-      "weeklyContribution": 0
+      "weeklyContribution": 6124
     },
     {
       "guildId": 1164,
       "guildName": "Izanami 夜",
       "server": "ap",
-      "playerId": 14600779,
-      "name": "夜’ ☆☆☆☆☆",
-      "weeklyContribution": 0
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 14641400,
-      "name": "夜’ ☆☆☆☆☆☆",
-      "weeklyContribution": 0
+      "playerId": 14797188,
+      "name": "夜’ 納拉蘇拉",
+      "weeklyContribution": 5693
     },
     {
       "guildId": 1164,
@@ -784,7 +760,7 @@
       "server": "ap",
       "playerId": 14884097,
       "name": "夜' Livy",
-      "weeklyContribution": 4329
+      "weeklyContribution": 4333
     },
     {
       "guildId": 1164,
@@ -792,7 +768,7 @@
       "server": "ap",
       "playerId": 14974334,
       "name": "夜’ D'Ash Age",
-      "weeklyContribution": 4208
+      "weeklyContribution": 5838
     },
     {
       "guildId": 1164,
@@ -800,7 +776,7 @@
       "server": "ap",
       "playerId": 15694425,
       "name": "夜’ Eydish",
-      "weeklyContribution": 4514
+      "weeklyContribution": 4675
     },
     {
       "guildId": 1164,
@@ -808,7 +784,7 @@
       "server": "ap",
       "playerId": 16406962,
       "name": "夜’ Zephyr",
-      "weeklyContribution": 4347
+      "weeklyContribution": 3835
     },
     {
       "guildId": 1164,
@@ -816,15 +792,7 @@
       "server": "ap",
       "playerId": 16447456,
       "name": "夜’slaim",
-      "weeklyContribution": 4231
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 17344269,
-      "name": "夜' violinist",
-      "weeklyContribution": 5124
+      "weeklyContribution": 4668
     },
     {
       "guildId": 1164,
@@ -832,7 +800,7 @@
       "server": "ap",
       "playerId": 17387862,
       "name": "夜’ Lazones",
-      "weeklyContribution": 4354
+      "weeklyContribution": 4677
     },
     {
       "guildId": 1164,
@@ -840,15 +808,7 @@
       "server": "ap",
       "playerId": 17392565,
       "name": "夜' BARON",
-      "weeklyContribution": 0
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 17574960,
-      "name": "Reynard",
-      "weeklyContribution": 0
+      "weeklyContribution": 5843
     },
     {
       "guildId": 1164,
@@ -856,14 +816,6 @@
       "server": "ap",
       "playerId": 17593640,
       "name": "夜’ Hirohito",
-      "weeklyContribution": 4878
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 17601765,
-      "name": "Moci",
       "weeklyContribution": 0
     },
     {
@@ -872,7 +824,15 @@
       "server": "ap",
       "playerId": 17722596,
       "name": "夜’ Marin",
-      "weeklyContribution": 3490
+      "weeklyContribution": 5004
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 17768464,
+      "name": "夜’ Ƴuuri",
+      "weeklyContribution": 4621
     },
     {
       "guildId": 1164,
@@ -880,7 +840,7 @@
       "server": "ap",
       "playerId": 18078257,
       "name": "夜’ Archbiter",
-      "weeklyContribution": 0
+      "weeklyContribution": 8770
     },
     {
       "guildId": 1164,
@@ -888,7 +848,7 @@
       "server": "ap",
       "playerId": 18096497,
       "name": "夜’ Sancaka™",
-      "weeklyContribution": 5392
+      "weeklyContribution": 6146
     },
     {
       "guildId": 1164,
@@ -896,7 +856,7 @@
       "server": "ap",
       "playerId": 18534745,
       "name": "夜’ Loli_luv™",
-      "weeklyContribution": 0
+      "weeklyContribution": 6040
     },
     {
       "guildId": 1164,
@@ -904,7 +864,7 @@
       "server": "ap",
       "playerId": 18737125,
       "name": "夜’ Elios",
-      "weeklyContribution": 4205
+      "weeklyContribution": 2538
     },
     {
       "guildId": 1164,
@@ -912,7 +872,7 @@
       "server": "ap",
       "playerId": 18839137,
       "name": "夜' Yuura",
-      "weeklyContribution": 5236
+      "weeklyContribution": 5524
     },
     {
       "guildId": 1164,
@@ -920,15 +880,15 @@
       "server": "ap",
       "playerId": 18868671,
       "name": "夜' Nyx☪︎",
-      "weeklyContribution": 0
+      "weeklyContribution": 5248
     },
     {
       "guildId": 1164,
       "guildName": "Izanami 夜",
       "server": "ap",
       "playerId": 20230366,
-      "name": "夜'TeddyHolic",
-      "weeklyContribution": 2683
+      "name": "夜'Teddy ʜʟᴄ",
+      "weeklyContribution": 4513
     },
     {
       "guildId": 1164,
@@ -936,7 +896,7 @@
       "server": "ap",
       "playerId": 20623330,
       "name": "夜’ Nerv",
-      "weeklyContribution": 3552
+      "weeklyContribution": 4387
     },
     {
       "guildId": 1164,
@@ -944,7 +904,7 @@
       "server": "ap",
       "playerId": 20634626,
       "name": "夜' ETERNAL",
-      "weeklyContribution": 4057
+      "weeklyContribution": 5570
     },
     {
       "guildId": 1164,
@@ -952,7 +912,7 @@
       "server": "ap",
       "playerId": 20636807,
       "name": "夜’ Arata",
-      "weeklyContribution": 4621
+      "weeklyContribution": 4845
     },
     {
       "guildId": 1164,
@@ -960,15 +920,7 @@
       "server": "ap",
       "playerId": 20844566,
       "name": "夜' Tancho",
-      "weeklyContribution": 3769
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 21018883,
-      "name": "夜’ Number28.",
-      "weeklyContribution": 5620
+      "weeklyContribution": 4280
     },
     {
       "guildId": 1164,
@@ -976,7 +928,7 @@
       "server": "ap",
       "playerId": 21683752,
       "name": "夜’ Yuukiyu",
-      "weeklyContribution": 5142
+      "weeklyContribution": 5455
     },
     {
       "guildId": 1164,
@@ -984,7 +936,7 @@
       "server": "ap",
       "playerId": 21810439,
       "name": "夜’ Achmad MU",
-      "weeklyContribution": 5588
+      "weeklyContribution": 5514
     },
     {
       "guildId": 1164,
@@ -992,7 +944,7 @@
       "server": "ap",
       "playerId": 21889557,
       "name": "夜' Mortis",
-      "weeklyContribution": 3481
+      "weeklyContribution": 4599
     },
     {
       "guildId": 1164,
@@ -1000,7 +952,7 @@
       "server": "ap",
       "playerId": 21958216,
       "name": "夜’ Ridzdrgn",
-      "weeklyContribution": 0
+      "weeklyContribution": 4511
     },
     {
       "guildId": 1164,
@@ -1008,7 +960,15 @@
       "server": "ap",
       "playerId": 22491353,
       "name": "夜’ Morian",
-      "weeklyContribution": 4844
+      "weeklyContribution": 0
+    },
+    {
+      "guildId": 1164,
+      "guildName": "Izanami 夜",
+      "server": "ap",
+      "playerId": 22991760,
+      "name": "夜’ Kuukaiii",
+      "weeklyContribution": 5063
     },
     {
       "guildId": 1164,
@@ -1016,7 +976,7 @@
       "server": "ap",
       "playerId": 23350373,
       "name": "夜' violinst",
-      "weeklyContribution": 5317
+      "weeklyContribution": 4477
     },
     {
       "guildId": 1164,
@@ -1024,14 +984,14 @@
       "server": "ap",
       "playerId": 24004014,
       "name": "夜' Rynn",
-      "weeklyContribution": 4322
+      "weeklyContribution": 0
     },
     {
       "guildId": 1164,
       "guildName": "Izanami 夜",
       "server": "ap",
-      "playerId": 24239444,
-      "name": "夜’ NR's",
+      "playerId": 24090815,
+      "name": "夜' ketaopeia",
       "weeklyContribution": 0
     },
     {
@@ -1040,7 +1000,7 @@
       "server": "ap",
       "playerId": 24694636,
       "name": "夜’ Oblivion",
-      "weeklyContribution": 5272
+      "weeklyContribution": 5680
     },
     {
       "guildId": 1164,
@@ -1048,15 +1008,7 @@
       "server": "ap",
       "playerId": 24863855,
       "name": "夜' JENGGEL",
-      "weeklyContribution": 4747
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 24928170,
-      "name": "夜’ Satt",
-      "weeklyContribution": 5119
+      "weeklyContribution": 4656
     },
     {
       "guildId": 1164,
@@ -1064,7 +1016,7 @@
       "server": "ap",
       "playerId": 25096739,
       "name": "夜' VALT",
-      "weeklyContribution": 3103
+      "weeklyContribution": 3967
     },
     {
       "guildId": 1164,
@@ -1072,15 +1024,7 @@
       "server": "ap",
       "playerId": 25687729,
       "name": "夜’ kriss",
-      "weeklyContribution": 0
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 26240363,
-      "name": "夜' Vera ʜʟᴄ",
-      "weeklyContribution": 6113
+      "weeklyContribution": 6232
     },
     {
       "guildId": 1164,
@@ -1088,7 +1032,7 @@
       "server": "ap",
       "playerId": 26340667,
       "name": "夜' Kurayami",
-      "weeklyContribution": 3141
+      "weeklyContribution": 4472
     },
     {
       "guildId": 1164,
@@ -1096,7 +1040,7 @@
       "server": "ap",
       "playerId": 26430591,
       "name": "夜’ Yukki",
-      "weeklyContribution": 5110
+      "weeklyContribution": 4619
     },
     {
       "guildId": 1164,
@@ -1104,7 +1048,7 @@
       "server": "ap",
       "playerId": 26523528,
       "name": "夜’ MoskDark",
-      "weeklyContribution": 5934
+      "weeklyContribution": 6173
     },
     {
       "guildId": 1164,
@@ -1112,7 +1056,7 @@
       "server": "ap",
       "playerId": 26836517,
       "name": "夜`Krainfallツ",
-      "weeklyContribution": 4227
+      "weeklyContribution": 4761
     },
     {
       "guildId": 1164,
@@ -1120,15 +1064,7 @@
       "server": "ap",
       "playerId": 27019849,
       "name": "夜' AnShan",
-      "weeklyContribution": 0
-    },
-    {
-      "guildId": 1164,
-      "guildName": "Izanami 夜",
-      "server": "ap",
-      "playerId": 27285652,
-      "name": "夜' Finality",
-      "weeklyContribution": 5316
+      "weeklyContribution": 10340
     },
     {
       "guildId": 1164,
@@ -1136,7 +1072,7 @@
       "server": "ap",
       "playerId": 27751744,
       "name": "夜’ Sailess",
-      "weeklyContribution": 3874
+      "weeklyContribution": 4253
     },
     {
       "guildId": 1164,
@@ -1144,7 +1080,7 @@
       "server": "ap",
       "playerId": 28331052,
       "name": "夜’ sora",
-      "weeklyContribution": 5168
+      "weeklyContribution": 5397
     },
     {
       "guildId": 1164,
@@ -1152,7 +1088,7 @@
       "server": "ap",
       "playerId": 29053085,
       "name": "夜’ Sigillum",
-      "weeklyContribution": 4485
+      "weeklyContribution": 4432
     },
     {
       "guildId": 1164,
@@ -1160,7 +1096,7 @@
       "server": "ap",
       "playerId": 29380576,
       "name": "夜 Arsya",
-      "weeklyContribution": 4342
+      "weeklyContribution": 4800
     },
     {
       "guildId": 1164,
@@ -1168,7 +1104,7 @@
       "server": "ap",
       "playerId": 29481987,
       "name": "夜’   Doom",
-      "weeklyContribution": 3686
+      "weeklyContribution": 0
     },
     {
       "guildId": 1164,
@@ -1176,7 +1112,7 @@
       "server": "ap",
       "playerId": 29747734,
       "name": "夜' Teru",
-      "weeklyContribution": 2333
+      "weeklyContribution": 3246
     },
     {
       "guildId": 7641,
@@ -1184,7 +1120,7 @@
       "server": "ap",
       "playerId": 27755862,
       "name": "夜’ Holou帆楼",
-      "weeklyContribution": 0
+      "weeklyContribution": 2595
     },
     {
       "guildId": 7641,
@@ -1192,7 +1128,7 @@
       "server": "ap",
       "playerId": 11128784,
       "name": "夜’ Hana_",
-      "weeklyContribution": 6850
+      "weeklyContribution": 6166
     },
     {
       "guildId": 7641,
@@ -1216,7 +1152,7 @@
       "server": "ap",
       "playerId": 13470170,
       "name": "夜' Saki",
-      "weeklyContribution": 6086
+      "weeklyContribution": 6184
     },
     {
       "guildId": 7641,
@@ -1232,7 +1168,7 @@
       "server": "ap",
       "playerId": 15305504,
       "name": "夜' Reze",
-      "weeklyContribution": 0
+      "weeklyContribution": 3567
     },
     {
       "guildId": 7641,
@@ -1240,7 +1176,7 @@
       "server": "ap",
       "playerId": 15345618,
       "name": "夜’ KZR125cc",
-      "weeklyContribution": 2987
+      "weeklyContribution": 3705
     },
     {
       "guildId": 7641,
@@ -1248,7 +1184,7 @@
       "server": "ap",
       "playerId": 16450506,
       "name": "夜’ Strèlizia",
-      "weeklyContribution": 0
+      "weeklyContribution": 2123
     },
     {
       "guildId": 7641,
@@ -1256,7 +1192,7 @@
       "server": "ap",
       "playerId": 16725018,
       "name": "夜' LuzrovRu",
-      "weeklyContribution": 4663
+      "weeklyContribution": 4740
     },
     {
       "guildId": 7641,
@@ -1264,7 +1200,7 @@
       "server": "ap",
       "playerId": 19708976,
       "name": "夜' Kurumi",
-      "weeklyContribution": 4008
+      "weeklyContribution": 4190
     },
     {
       "guildId": 7641,
@@ -1272,7 +1208,7 @@
       "server": "ap",
       "playerId": 22066319,
       "name": "夜’ ItzMayMia",
-      "weeklyContribution": 2536
+      "weeklyContribution": 3885
     },
     {
       "guildId": 7641,
@@ -1280,7 +1216,7 @@
       "server": "ap",
       "playerId": 22490669,
       "name": "夜' Nero",
-      "weeklyContribution": 2957
+      "weeklyContribution": 4843
     },
     {
       "guildId": 7641,
@@ -1296,7 +1232,7 @@
       "server": "ap",
       "playerId": 29394423,
       "name": "夜’Illyasviel",
-      "weeklyContribution": 0
+      "weeklyContribution": 4482
     },
     {
       "guildId": 7641,
@@ -1304,7 +1240,7 @@
       "server": "ap",
       "playerId": 10073012,
       "name": "夜' annz..?",
-      "weeklyContribution": 1385
+      "weeklyContribution": 5260
     },
     {
       "guildId": 7641,
@@ -1312,7 +1248,7 @@
       "server": "ap",
       "playerId": 10566026,
       "name": "夜’ Lilith",
-      "weeklyContribution": 1841
+      "weeklyContribution": 1612
     },
     {
       "guildId": 7641,
@@ -1320,7 +1256,7 @@
       "server": "ap",
       "playerId": 11811053,
       "name": "夜’ lightA",
-      "weeklyContribution": 2912
+      "weeklyContribution": 3793
     },
     {
       "guildId": 7641,
@@ -1336,7 +1272,15 @@
       "server": "ap",
       "playerId": 12134899,
       "name": "夜’ Gu xun'er",
-      "weeklyContribution": 2513
+      "weeklyContribution": 2214
+    },
+    {
+      "guildId": 7641,
+      "guildName": "Astrelume 夜",
+      "server": "ap",
+      "playerId": 12200916,
+      "name": "夜’ Nightmare",
+      "weeklyContribution": 0
     },
     {
       "guildId": 7641,
@@ -1344,15 +1288,7 @@
       "server": "ap",
       "playerId": 12647919,
       "name": "夜’ O'hara",
-      "weeklyContribution": 2452
-    },
-    {
-      "guildId": 7641,
-      "guildName": "Astrelume 夜",
-      "server": "ap",
-      "playerId": 12751406,
-      "name": "夜’ Rover",
-      "weeklyContribution": 0
+      "weeklyContribution": 3204
     },
     {
       "guildId": 7641,
@@ -1360,7 +1296,7 @@
       "server": "ap",
       "playerId": 13356243,
       "name": "夜 Shane",
-      "weeklyContribution": 3764
+      "weeklyContribution": 3600
     },
     {
       "guildId": 7641,
@@ -1392,7 +1328,7 @@
       "server": "ap",
       "playerId": 14513512,
       "name": "夜' Pixchii",
-      "weeklyContribution": 720
+      "weeklyContribution": 0
     },
     {
       "guildId": 7641,
@@ -1400,7 +1336,7 @@
       "server": "ap",
       "playerId": 14606743,
       "name": "夜' RuiYuki",
-      "weeklyContribution": 3649
+      "weeklyContribution": 4140
     },
     {
       "guildId": 7641,
@@ -1416,7 +1352,7 @@
       "server": "ap",
       "playerId": 15002141,
       "name": "夜' Lena",
-      "weeklyContribution": 3108
+      "weeklyContribution": 3418
     },
     {
       "guildId": 7641,
@@ -1424,7 +1360,7 @@
       "server": "ap",
       "playerId": 15870187,
       "name": "夜' Kizshi",
-      "weeklyContribution": 3798
+      "weeklyContribution": 4245
     },
     {
       "guildId": 7641,
@@ -1432,7 +1368,7 @@
       "server": "ap",
       "playerId": 16802312,
       "name": "夜' AKI",
-      "weeklyContribution": 0
+      "weeklyContribution": 1779
     },
     {
       "guildId": 7641,
@@ -1448,7 +1384,7 @@
       "server": "ap",
       "playerId": 17881905,
       "name": "夜’UsaKo",
-      "weeklyContribution": 2871
+      "weeklyContribution": 0
     },
     {
       "guildId": 7641,
@@ -1464,7 +1400,7 @@
       "server": "ap",
       "playerId": 18269045,
       "name": "夜’ saann",
-      "weeklyContribution": 2444
+      "weeklyContribution": 0
     },
     {
       "guildId": 7641,
@@ -1472,7 +1408,7 @@
       "server": "ap",
       "playerId": 18278689,
       "name": "夜` AlleN",
-      "weeklyContribution": 2757
+      "weeklyContribution": 3244
     },
     {
       "guildId": 7641,
@@ -1480,7 +1416,7 @@
       "server": "ap",
       "playerId": 18769862,
       "name": "夜’ AI",
-      "weeklyContribution": 2534
+      "weeklyContribution": 2602
     },
     {
       "guildId": 7641,
@@ -1488,7 +1424,7 @@
       "server": "ap",
       "playerId": 18972442,
       "name": "夜'Insiko",
-      "weeklyContribution": 0
+      "weeklyContribution": 2706
     },
     {
       "guildId": 7641,
@@ -1512,7 +1448,7 @@
       "server": "ap",
       "playerId": 20212067,
       "name": "夜’Jake",
-      "weeklyContribution": 0
+      "weeklyContribution": 1873
     },
     {
       "guildId": 7641,
@@ -1520,7 +1456,7 @@
       "server": "ap",
       "playerId": 21060735,
       "name": "夜’ Kuze_",
-      "weeklyContribution": 2843
+      "weeklyContribution": 3756
     },
     {
       "guildId": 7641,
@@ -1528,7 +1464,7 @@
       "server": "ap",
       "playerId": 21101336,
       "name": "夜' Yuuki",
-      "weeklyContribution": 916
+      "weeklyContribution": 2078
     },
     {
       "guildId": 7641,
@@ -1544,7 +1480,7 @@
       "server": "ap",
       "playerId": 22013981,
       "name": "夜' kanoizen",
-      "weeklyContribution": 0
+      "weeklyContribution": 782
     },
     {
       "guildId": 7641,
@@ -1566,17 +1502,9 @@
       "guildId": 7641,
       "guildName": "Astrelume 夜",
       "server": "ap",
-      "playerId": 22660973,
-      "name": "夜' Lọ Thánh",
-      "weeklyContribution": 0
-    },
-    {
-      "guildId": 7641,
-      "guildName": "Astrelume 夜",
-      "server": "ap",
       "playerId": 23361000,
       "name": "夜’ AmatirAsu",
-      "weeklyContribution": 2462
+      "weeklyContribution": 2679
     },
     {
       "guildId": 7641,
@@ -1584,7 +1512,7 @@
       "server": "ap",
       "playerId": 23524430,
       "name": "夜' Cherry♡",
-      "weeklyContribution": 811
+      "weeklyContribution": 876
     },
     {
       "guildId": 7641,
@@ -1600,7 +1528,7 @@
       "server": "ap",
       "playerId": 24883001,
       "name": "夜mcsloth",
-      "weeklyContribution": 3277
+      "weeklyContribution": 3572
     },
     {
       "guildId": 7641,
@@ -1608,7 +1536,7 @@
       "server": "ap",
       "playerId": 25395247,
       "name": "夜' Thea ʜʟᴄ",
-      "weeklyContribution": 5105
+      "weeklyContribution": 5140
     },
     {
       "guildId": 7641,
@@ -1616,7 +1544,7 @@
       "server": "ap",
       "playerId": 25568259,
       "name": "夜’ Yuuriha",
-      "weeklyContribution": 3200
+      "weeklyContribution": 3679
     },
     {
       "guildId": 7641,
@@ -1624,7 +1552,7 @@
       "server": "ap",
       "playerId": 25679687,
       "name": "夜’ Kaelith.",
-      "weeklyContribution": 1783
+      "weeklyContribution": 2359
     },
     {
       "guildId": 7641,
@@ -1632,7 +1560,7 @@
       "server": "ap",
       "playerId": 25779629,
       "name": "夜’ Lelouch",
-      "weeklyContribution": 3073
+      "weeklyContribution": 4314
     },
     {
       "guildId": 7641,
@@ -1640,7 +1568,7 @@
       "server": "ap",
       "playerId": 25943592,
       "name": "夜' ZenHiraku",
-      "weeklyContribution": 4501
+      "weeklyContribution": 4634
     },
     {
       "guildId": 7641,
@@ -1664,7 +1592,7 @@
       "server": "ap",
       "playerId": 26555847,
       "name": "夜'AzureStorm",
-      "weeklyContribution": 4619
+      "weeklyContribution": 4509
     },
     {
       "guildId": 7641,
@@ -1672,7 +1600,7 @@
       "server": "ap",
       "playerId": 26853418,
       "name": "夜'NxynSparda",
-      "weeklyContribution": 1715
+      "weeklyContribution": 2462
     },
     {
       "guildId": 7641,
@@ -1680,7 +1608,7 @@
       "server": "ap",
       "playerId": 26940007,
       "name": "夜'huring",
-      "weeklyContribution": 2534
+      "weeklyContribution": 2461
     },
     {
       "guildId": 7641,
@@ -1688,15 +1616,7 @@
       "server": "ap",
       "playerId": 27152187,
       "name": "夜’ Shabrina",
-      "weeklyContribution": 2337
-    },
-    {
-      "guildId": 7641,
-      "guildName": "Astrelume 夜",
-      "server": "ap",
-      "playerId": 27340153,
-      "name": "夜 RAIXAR",
-      "weeklyContribution": 0
+      "weeklyContribution": 3086
     },
     {
       "guildId": 7641,
@@ -1704,7 +1624,7 @@
       "server": "ap",
       "playerId": 27553335,
       "name": "夜 HaraKunn",
-      "weeklyContribution": 1314
+      "weeklyContribution": 1354
     },
     {
       "guildId": 7641,
@@ -1712,7 +1632,7 @@
       "server": "ap",
       "playerId": 27645372,
       "name": "夜’ ROSSI FN",
-      "weeklyContribution": 2836
+      "weeklyContribution": 3130
     },
     {
       "guildId": 7641,
@@ -1720,15 +1640,7 @@
       "server": "ap",
       "playerId": 27749818,
       "name": "夜’ Xiao Cai",
-      "weeklyContribution": 3194
-    },
-    {
-      "guildId": 7641,
-      "guildName": "Astrelume 夜",
-      "server": "ap",
-      "playerId": 28267089,
-      "name": "夜' Raven",
-      "weeklyContribution": 0
+      "weeklyContribution": 3520
     },
     {
       "guildId": 7641,
@@ -1736,7 +1648,7 @@
       "server": "ap",
       "playerId": 28504240,
       "name": "夜' Leon",
-      "weeklyContribution": 0
+      "weeklyContribution": 2271
     },
     {
       "guildId": 7641,
@@ -1744,7 +1656,7 @@
       "server": "ap",
       "playerId": 28813943,
       "name": "夜' Kaede.",
-      "weeklyContribution": 0
+      "weeklyContribution": 1939
     },
     {
       "guildId": 7641,
@@ -1752,7 +1664,7 @@
       "server": "ap",
       "playerId": 29357493,
       "name": "夜’ Tendou",
-      "weeklyContribution": 2258
+      "weeklyContribution": 4518
     },
     {
       "guildId": 7641,
@@ -1768,7 +1680,7 @@
       "server": "na",
       "playerId": 12199689,
       "name": "夜' VICTORIA",
-      "weeklyContribution": 5940
+      "weeklyContribution": 6281
     },
     {
       "guildId": 2013,
@@ -1776,7 +1688,7 @@
       "server": "na",
       "playerId": 12648858,
       "name": "夜’ Darkness",
-      "weeklyContribution": 6477
+      "weeklyContribution": 6523
     },
     {
       "guildId": 2013,
@@ -1784,7 +1696,7 @@
       "server": "na",
       "playerId": 13932565,
       "name": "夜' Kirara",
-      "weeklyContribution": 6124
+      "weeklyContribution": 5694
     },
     {
       "guildId": 2013,
@@ -1800,7 +1712,7 @@
       "server": "na",
       "playerId": 17172478,
       "name": "夜’ Ryndette",
-      "weeklyContribution": 6049
+      "weeklyContribution": 6072
     },
     {
       "guildId": 2013,
@@ -1808,7 +1720,7 @@
       "server": "na",
       "playerId": 18730452,
       "name": "夜' Jingran",
-      "weeklyContribution": 4896
+      "weeklyContribution": 4060
     },
     {
       "guildId": 2013,
@@ -1816,7 +1728,7 @@
       "server": "na",
       "playerId": 23106295,
       "name": "夜’ SKY",
-      "weeklyContribution": 3056
+      "weeklyContribution": 3835
     },
     {
       "guildId": 2013,
@@ -1824,7 +1736,7 @@
       "server": "na",
       "playerId": 23583298,
       "name": "夜'Popcorn",
-      "weeklyContribution": 3598
+      "weeklyContribution": 3778
     },
     {
       "guildId": 2013,
@@ -1832,15 +1744,15 @@
       "server": "na",
       "playerId": 23972754,
       "name": "夜` yachio",
-      "weeklyContribution": 4876
+      "weeklyContribution": 4969
     },
     {
       "guildId": 2013,
       "guildName": "Karuhun 夜’",
       "server": "na",
       "playerId": 26130837,
-      "name": "夜’ MilimNava",
-      "weeklyContribution": 5224
+      "name": "夜’ War_Crime",
+      "weeklyContribution": 6463
     },
     {
       "guildId": 2013,
@@ -1848,7 +1760,7 @@
       "server": "na",
       "playerId": 10306805,
       "name": "夜' Umiholic",
-      "weeklyContribution": 2652
+      "weeklyContribution": 0
     },
     {
       "guildId": 2013,
@@ -1856,14 +1768,14 @@
       "server": "na",
       "playerId": 10608685,
       "name": "夜' Atlas",
-      "weeklyContribution": 1163
+      "weeklyContribution": 625
     },
     {
       "guildId": 2013,
       "guildName": "Karuhun 夜’",
       "server": "na",
-      "playerId": 11414651,
-      "name": "ndraa",
+      "playerId": 11148828,
+      "name": "夜 Aaron",
       "weeklyContribution": 0
     },
     {
@@ -1872,23 +1784,15 @@
       "server": "na",
       "playerId": 11525388,
       "name": "夜' Kyy",
-      "weeklyContribution": 3519
-    },
-    {
-      "guildId": 2013,
-      "guildName": "Karuhun 夜’",
-      "server": "na",
-      "playerId": 11822381,
-      "name": "Dragoner967",
-      "weeklyContribution": 921
+      "weeklyContribution": 3893
     },
     {
       "guildId": 2013,
       "guildName": "Karuhun 夜’",
       "server": "na",
       "playerId": 11842008,
-      "name": "夜'HyunaHolic",
-      "weeklyContribution": 4729
+      "name": "夜’ Ryuka ʜʟᴄ",
+      "weeklyContribution": 4864
     },
     {
       "guildId": 2013,
@@ -1896,7 +1800,7 @@
       "server": "na",
       "playerId": 12231785,
       "name": "夜‘ Millicent",
-      "weeklyContribution": 0
+      "weeklyContribution": 3021
     },
     {
       "guildId": 2013,
@@ -1912,7 +1816,7 @@
       "server": "na",
       "playerId": 12571700,
       "name": "夜’ Aurielle",
-      "weeklyContribution": 0
+      "weeklyContribution": 2291
     },
     {
       "guildId": 2013,
@@ -1920,7 +1824,7 @@
       "server": "na",
       "playerId": 12614181,
       "name": "夜’ Relic",
-      "weeklyContribution": 1576
+      "weeklyContribution": 896
     },
     {
       "guildId": 2013,
@@ -1928,7 +1832,7 @@
       "server": "na",
       "playerId": 12912932,
       "name": "夜’Kaiser",
-      "weeklyContribution": 2650
+      "weeklyContribution": 2632
     },
     {
       "guildId": 2013,
@@ -1944,7 +1848,7 @@
       "server": "na",
       "playerId": 13739637,
       "name": "夜' WhiteLily",
-      "weeklyContribution": 3499
+      "weeklyContribution": 4322
     },
     {
       "guildId": 2013,
@@ -1952,7 +1856,7 @@
       "server": "na",
       "playerId": 13871271,
       "name": "夜’ Zhaes",
-      "weeklyContribution": 1211
+      "weeklyContribution": 0
     },
     {
       "guildId": 2013,
@@ -1976,7 +1880,7 @@
       "server": "na",
       "playerId": 14452392,
       "name": "夜’ Neko",
-      "weeklyContribution": 3323
+      "weeklyContribution": 4868
     },
     {
       "guildId": 2013,
@@ -1984,7 +1888,7 @@
       "server": "na",
       "playerId": 14792244,
       "name": "夜' Haru",
-      "weeklyContribution": 3161
+      "weeklyContribution": 3414
     },
     {
       "guildId": 2013,
@@ -2000,7 +1904,7 @@
       "server": "na",
       "playerId": 15168566,
       "name": "夜' JGR4",
-      "weeklyContribution": 0
+      "weeklyContribution": 1039
     },
     {
       "guildId": 2013,
@@ -2008,7 +1912,15 @@
       "server": "na",
       "playerId": 16667588,
       "name": "夜' Reze",
-      "weeklyContribution": 4158
+      "weeklyContribution": 3559
+    },
+    {
+      "guildId": 2013,
+      "guildName": "Karuhun 夜’",
+      "server": "na",
+      "playerId": 16731328,
+      "name": "夜' rullynn.",
+      "weeklyContribution": 0
     },
     {
       "guildId": 2013,
@@ -2016,7 +1928,7 @@
       "server": "na",
       "playerId": 17870650,
       "name": "夜’ Rara",
-      "weeklyContribution": 5292
+      "weeklyContribution": 5804
     },
     {
       "guildId": 2013,
@@ -2024,7 +1936,7 @@
       "server": "na",
       "playerId": 18018522,
       "name": "夜' •Avicii•",
-      "weeklyContribution": 3160
+      "weeklyContribution": 4156
     },
     {
       "guildId": 2013,
@@ -2032,15 +1944,7 @@
       "server": "na",
       "playerId": 19260994,
       "name": "夜' Ryukii",
-      "weeklyContribution": 5560
-    },
-    {
-      "guildId": 2013,
-      "guildName": "Karuhun 夜’",
-      "server": "na",
-      "playerId": 19366062,
-      "name": "Nounou.",
-      "weeklyContribution": 0
+      "weeklyContribution": 5121
     },
     {
       "guildId": 2013,
@@ -2048,7 +1952,7 @@
       "server": "na",
       "playerId": 19515339,
       "name": "夜' Kyuuin.",
-      "weeklyContribution": 2215
+      "weeklyContribution": 0
     },
     {
       "guildId": 2013,
@@ -2056,7 +1960,7 @@
       "server": "na",
       "playerId": 20159885,
       "name": "夜’ Ruminas",
-      "weeklyContribution": 0
+      "weeklyContribution": 3036
     },
     {
       "guildId": 2013,
@@ -2064,7 +1968,7 @@
       "server": "na",
       "playerId": 20412473,
       "name": "夜' Aluna",
-      "weeklyContribution": 4884
+      "weeklyContribution": 5264
     },
     {
       "guildId": 2013,
@@ -2072,7 +1976,7 @@
       "server": "na",
       "playerId": 20829249,
       "name": "夜Ren.",
-      "weeklyContribution": 0
+      "weeklyContribution": 1713
     },
     {
       "guildId": 2013,
@@ -2080,7 +1984,7 @@
       "server": "na",
       "playerId": 20890318,
       "name": "夜’ Kyouka",
-      "weeklyContribution": 2966
+      "weeklyContribution": 2768
     },
     {
       "guildId": 2013,
@@ -2096,7 +2000,7 @@
       "server": "na",
       "playerId": 21156150,
       "name": "夜’ Lèctõr",
-      "weeklyContribution": 2755
+      "weeklyContribution": 2855
     },
     {
       "guildId": 2013,
@@ -2111,8 +2015,8 @@
       "guildName": "Karuhun 夜’",
       "server": "na",
       "playerId": 21253754,
-      "name": "夜'QuenxTzy",
-      "weeklyContribution": 0
+      "name": "夜' QuenxTzy",
+      "weeklyContribution": 2472
     },
     {
       "guildId": 2013,
@@ -2120,14 +2024,6 @@
       "server": "na",
       "playerId": 21576610,
       "name": "夜' milin",
-      "weeklyContribution": 1384
-    },
-    {
-      "guildId": 2013,
-      "guildName": "Karuhun 夜’",
-      "server": "na",
-      "playerId": 21641917,
-      "name": "Xennodus",
       "weeklyContribution": 0
     },
     {
@@ -2136,7 +2032,7 @@
       "server": "na",
       "playerId": 21924947,
       "name": "夜' Jise",
-      "weeklyContribution": 0
+      "weeklyContribution": 1272
     },
     {
       "guildId": 2013,
@@ -2152,7 +2048,7 @@
       "server": "na",
       "playerId": 21953222,
       "name": "夜’ Knowledge",
-      "weeklyContribution": 0
+      "weeklyContribution": 3827
     },
     {
       "guildId": 2013,
@@ -2168,7 +2064,7 @@
       "server": "na",
       "playerId": 22722082,
       "name": "夜’No wata 3s",
-      "weeklyContribution": 4134
+      "weeklyContribution": 4828
     },
     {
       "guildId": 2013,
@@ -2176,15 +2072,23 @@
       "server": "na",
       "playerId": 22756508,
       "name": "夜' Ascalon●",
-      "weeklyContribution": 0
+      "weeklyContribution": 1455
     },
     {
       "guildId": 2013,
       "guildName": "Karuhun 夜’",
       "server": "na",
       "playerId": 23386997,
-      "name": "夜’ Feldway",
-      "weeklyContribution": 5108
+      "name": "夜’ Yachiya",
+      "weeklyContribution": 0
+    },
+    {
+      "guildId": 2013,
+      "guildName": "Karuhun 夜’",
+      "server": "na",
+      "playerId": 23512399,
+      "name": "夜 poOka",
+      "weeklyContribution": 0
     },
     {
       "guildId": 2013,
@@ -2192,7 +2096,7 @@
       "server": "na",
       "playerId": 23788470,
       "name": "夜’ Kurumi",
-      "weeklyContribution": 2912
+      "weeklyContribution": 3114
     },
     {
       "guildId": 2013,
@@ -2200,15 +2104,7 @@
       "server": "na",
       "playerId": 24073754,
       "name": "夜'swalowstar",
-      "weeklyContribution": 1778
-    },
-    {
-      "guildId": 2013,
-      "guildName": "Karuhun 夜’",
-      "server": "na",
-      "playerId": 24344426,
-      "name": "No.21",
-      "weeklyContribution": 2846
+      "weeklyContribution": 0
     },
     {
       "guildId": 2013,
@@ -2216,7 +2112,7 @@
       "server": "na",
       "playerId": 24345202,
       "name": "夜'Brianz.",
-      "weeklyContribution": 1908
+      "weeklyContribution": 2808
     },
     {
       "guildId": 2013,
@@ -2232,7 +2128,7 @@
       "server": "na",
       "playerId": 24865813,
       "name": "夜’ Anoo",
-      "weeklyContribution": 4471
+      "weeklyContribution": 4550
     },
     {
       "guildId": 2013,
@@ -2240,7 +2136,7 @@
       "server": "na",
       "playerId": 25017183,
       "name": "夜’ MoskDark",
-      "weeklyContribution": 3977
+      "weeklyContribution": 4518
     },
     {
       "guildId": 2013,
@@ -2248,7 +2144,7 @@
       "server": "na",
       "playerId": 25202323,
       "name": "夜' Envy",
-      "weeklyContribution": 0
+      "weeklyContribution": 1428
     },
     {
       "guildId": 2013,
@@ -2256,14 +2152,14 @@
       "server": "na",
       "playerId": 25531326,
       "name": "夜’ Achmad MU",
-      "weeklyContribution": 4173
+      "weeklyContribution": 4435
     },
     {
       "guildId": 2013,
       "guildName": "Karuhun 夜’",
       "server": "na",
-      "playerId": 26006117,
-      "name": "™ARSANTA™",
+      "playerId": 25946476,
+      "name": "夜' Noctiszie",
       "weeklyContribution": 0
     },
     {
@@ -2272,7 +2168,7 @@
       "server": "na",
       "playerId": 26151626,
       "name": "夜' Z e n",
-      "weeklyContribution": 894
+      "weeklyContribution": 799
     },
     {
       "guildId": 2013,
@@ -2288,7 +2184,7 @@
       "server": "na",
       "playerId": 26349566,
       "name": "夜' Versace",
-      "weeklyContribution": 3519
+      "weeklyContribution": 2832
     },
     {
       "guildId": 2013,
@@ -2296,7 +2192,7 @@
       "server": "na",
       "playerId": 26697229,
       "name": "夜’ kasakizx",
-      "weeklyContribution": 1963
+      "weeklyContribution": 1900
     },
     {
       "guildId": 2013,
@@ -2304,7 +2200,7 @@
       "server": "na",
       "playerId": 27078849,
       "name": "夜' SyruSenya",
-      "weeklyContribution": 4090
+      "weeklyContribution": 4166
     },
     {
       "guildId": 2013,
@@ -2312,7 +2208,7 @@
       "server": "na",
       "playerId": 27112302,
       "name": "夜’ Mori",
-      "weeklyContribution": 6023
+      "weeklyContribution": 3798
     },
     {
       "guildId": 2013,
@@ -2335,8 +2231,8 @@
       "guildName": "Karuhun 夜’",
       "server": "na",
       "playerId": 28526706,
-      "name": "夜’ Osakaa",
-      "weeklyContribution": 1708
+      "name": "夜' Zeninh",
+      "weeklyContribution": 1693
     },
     {
       "guildId": 2013,
@@ -2344,15 +2240,15 @@
       "server": "na",
       "playerId": 28877769,
       "name": "夜’ Kyo san",
-      "weeklyContribution": 2156
+      "weeklyContribution": 2010
     },
     {
       "guildId": 2013,
       "guildName": "Karuhun 夜’",
       "server": "na",
       "playerId": 29037355,
-      "name": "夜'Helenholic",
-      "weeklyContribution": 3672
+      "name": "夜'Helena ʜʟᴄ",
+      "weeklyContribution": 3693
     },
     {
       "guildId": 2013,
@@ -2360,7 +2256,7 @@
       "server": "na",
       "playerId": 29240995,
       "name": "夜' hanas",
-      "weeklyContribution": 3739
+      "weeklyContribution": 3790
     },
     {
       "guildId": 2013,
@@ -2368,7 +2264,7 @@
       "server": "na",
       "playerId": 29241245,
       "name": "夜 Shèiraaও",
-      "weeklyContribution": 2946
+      "weeklyContribution": 0
     },
     {
       "guildId": 2013,
@@ -2376,7 +2272,7 @@
       "server": "na",
       "playerId": 29506855,
       "name": "夜' Xenn",
-      "weeklyContribution": 920
+      "weeklyContribution": 0
     },
     {
       "guildId": 2013,
@@ -2384,7 +2280,7 @@
       "server": "na",
       "playerId": 29766181,
       "name": "夜’ Vinnoki",
-      "weeklyContribution": 2848
+      "weeklyContribution": 3085
     },
     {
       "guildId": 2013,
@@ -2392,7 +2288,7 @@
       "server": "na",
       "playerId": 29910550,
       "name": "夜’ Fzyncy",
-      "weeklyContribution": 1368
+      "weeklyContribution": 1699
     }
   ]
 }

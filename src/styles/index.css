@@ -71,3 +71,73 @@
 .animate-fadeIn {
   animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Tactical Telemetry & Typography Utilities */
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-tech {
+  font-family: var(--font-tech);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Double-Bezel Tactical Card */
+.tactical-bezel {
+  background-color: #121215;
+  border: 1px solid #27272a;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tactical-bezel:hover {
+  border-color: #3f3f46;
+}
+
+/* Technical Bracket Corner Effect */
+.bracket-corner {
+  position: relative;
+}
+.bracket-corner::before,
+.bracket-corner::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-color: #3f3f46;
+  pointer-events: none;
+}
+.bracket-corner::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid #52525b;
+  border-left: 1px solid #52525b;
+}
+.bracket-corner::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid #52525b;
+  border-right: 1px solid #52525b;
+}
+
+/* Accessible focus ring */
+.focus-tactical:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar } from '@/components/common/Navbar';
+import { Navbar, MainTab } from '@/components/common/Navbar';
 import { Footer } from '@/components/common/Footer';
+import { HomePage } from '@/pages/HomePage';
 import { GuildHub } from '@/pages/GuildHubPage';
 import { MemberList } from '@/pages/MemberListPage';
 import { PlayerProfilePage } from '@/pages/PlayerProfilePage';
@@ -22,7 +23,7 @@ export default function App() {
     return !seen;
   });
 
-  const [activeTab, setActiveTab] = useState<'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact'>('hub');
+  const [activeTab, setActiveTab] = useState<MainTab>('home');
   const [ppcSubTab, setPpcSubTab] = useState<'bosses' | 'calculator'>('bosses');
   const [selectedBranchId, setSelectedBranchId] = useState<number>(3638);
   const [activeBossSlug, setActiveBossSlug] = useState<string | undefined>(undefined);
@@ -116,8 +117,10 @@ export default function App() {
         if (parts[1] && !isNaN(Number(parts[1]))) {
           setSelectedBranchId(Number(parts[1]));
         }
+      } else if (parts[0] === 'home') {
+        setActiveTab('home');
       } else {
-        setActiveTab('hub');
+        setActiveTab('home');
       }
     }
   };
@@ -136,6 +139,11 @@ export default function App() {
       window.removeEventListener('hashchange', syncRouteFromLocation);
     };
   }, []);
+
+  // Auto reset window scroll to top whenever tab or view mode changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [activeTab, currentViewMode, selectedBranchId, activePlayerUid]);
 
   // Fetch active guild branch data when branch selection changes
   useEffect(() => {
@@ -159,22 +167,27 @@ export default function App() {
 
   const activeBranch = GUILD_BRANCHES.find((b) => b.id === selectedBranchId) || GUILD_BRANCHES[0];
 
-  const handleNavigateTab = (
-    tab: 'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact',
-    branchId?: number
-  ) => {
+  const handleNavigateTab = (tab: MainTab, branchId?: number) => {
     const targetBranch = branchId || selectedBranchId;
     if (branchId) setSelectedBranchId(branchId);
     setActiveTab(tab);
     setCurrentViewMode('mainTab');
 
-    if (tab === 'hub') navigateToPath(`/guild/${targetBranch}`);
+    if (tab === 'home') navigateToPath(`/`);
+    else if (tab === 'hub') navigateToPath(`/guild/${targetBranch}`);
     else if (tab === 'members') navigateToPath(`/members/${targetBranch}`);
     else if (tab === 'reffs') navigateToPath(`/reffs`);
     else if (tab === 'leaderboards') navigateToPath(`/rankings`);
     else if (tab === 'ppc') navigateToPath(`/ppc`);
     else if (tab === 'admin') navigateToPath(`/admin`);
     else if (tab === 'contact') navigateToPath(`/contact`);
+  };
+
+  const handleOpenPpcTool = (subTab: 'bosses' | 'calculator') => {
+    setPpcSubTab(subTab);
+    setActiveTab('ppc');
+    setCurrentViewMode('mainTab');
+    navigateToPath(subTab === 'calculator' ? '/calculator' : '/ppc');
   };
 
   const handleOpenPlayerProfile = (uid: number, srv?: string) => {
@@ -217,8 +230,31 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 font-sans selection:bg-white selection:text-black flex flex-col">
+    <div className="min-h-screen bg-[#09090b] text-zinc-100 font-sans selection:bg-amber-500/30 selection:text-amber-200 flex flex-col relative overflow-x-clip">
       
+      {/* Atmospheric Dual-Side Amber Light Leaks Background */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none">
+        
+        {/* 1. Primary Right-Side Amber Light Leak */}
+        <div 
+          className="absolute top-[5%] -right-[15%] sm:-right-[8%] w-[550px] sm:w-[850px] h-[550px] sm:h-[850px] rounded-full opacity-45 blur-[120px] sm:blur-[160px] mix-blend-screen"
+          style={{
+            background: 'radial-gradient(circle, rgba(245, 158, 11, 0.38) 0%, rgba(217, 119, 6, 0.16) 85%, transparent 75%)'
+          }}
+        />
+
+        {/* 2. Secondary Left-Side Amber Light Leak */}
+        <div 
+          className="absolute top-[48%] -left-[15%] sm:-left-[8%] w-[550px] sm:w-[850px] h-[550px] sm:h-[850px] rounded-full opacity-35 blur-[120px] sm:blur-[160px] mix-blend-screen"
+          style={{
+            background: 'radial-gradient(circle, rgba(251, 191, 36, 0.32) 0%, rgba(180, 83, 9, 0.12) 80%, transparent 80%)'
+          }}
+        />
+
+        {/* Soft Vignette Overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(9,9,11,0.4)_100%)]" />
+      </div>
+
       {/* Optional First Visit Video Intro Overlay */}
       {showIntro && (
         <GuildIntroOverlay
@@ -238,11 +274,20 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         
-        {/* VIEW MODE 1: MAIN TABS (Hub, Members, Reffs, Leaderboards, PPC Tools, Admin, Contact) */}
+        {/* VIEW MODE 1: MAIN TABS (Home, Hub, Members, Reffs, Leaderboards, PPC Tools, Admin, Contact) */}
         {currentViewMode === 'mainTab' && (
           <>
+            {activeTab === 'home' && (
+              <HomePage
+                onNavigate={handleNavigateTab}
+                onSelectPlayer={handleOpenPlayerProfile}
+                onOpenPpcTool={handleOpenPpcTool}
+                onNavigateRefDetail={handleNavigateRefDetail}
+              />
+            )}
+
             {activeTab === 'hub' && (
               <GuildHub
                 currentGuild={currentGuild}
@@ -317,8 +362,8 @@ export default function App() {
 
       </main>
 
-      {/* Main Footer Component */}
-      <Footer />
+      {/* Universal Full-Width Tactical Footer Across All Pages */}
+      <Footer onNavigate={handleNavigateTab} />
     </div>
   );
 }
