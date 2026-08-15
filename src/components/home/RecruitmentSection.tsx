@@ -20,7 +20,7 @@ export const RecruitmentSection: React.FC<RecruitmentSectionProps> = ({ onNaviga
       requirements: [
         'Minimum Simulated Siege score of 4,000,000 (4M) scores',
         'Mandatory weekly Simulated Siege active participation',
-        'Active gameplay required (inactivity >14 days without notice will be kicked)'
+        'Active gameplay required (No Simulated Siege Contribution 2x = Kick)'
       ]
     },
     sub_competitive: {
@@ -33,7 +33,7 @@ export const RecruitmentSection: React.FC<RecruitmentSectionProps> = ({ onNaviga
       requirements: [
         'Minimum Simulated Siege score of 3,000,000 (3M) scores',
         'Mandatory weekly Simulated Siege active participation',
-        'Active gameplay required (inactivity >14 days without notice will be kicked)'
+        'Active gameplay required (No Simulated Siege Contribution 2x = Kick)'
       ]
     },
     casual: {
@@ -45,7 +45,7 @@ export const RecruitmentSection: React.FC<RecruitmentSectionProps> = ({ onNaviga
       description: 'A welcoming and supportive home for casual commanders, collectors, and cross-server players. Enjoy Punishing: Gray Raven at your own pace across AP and NA regions.',
       requirements: [
         'Complete weekly Simulated Siege runs (no minimum score required)',
-        'Active gameplay required (inactivity >14 days without notice will be kicked)'
+        'Active gameplay required (No Simulated Siege Contribution 2x = Kick)'
       ]
     }
   };
