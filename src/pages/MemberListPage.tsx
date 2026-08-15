@@ -95,7 +95,7 @@ export const MemberList: React.FC<MemberListProps> = ({
     });
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-16 md:pb-0">
+    <div className="space-y-6 animate-fadeIn">
       
       {/* Branch Selection Bar */}
       <div className="minimal-card p-4 space-y-3">

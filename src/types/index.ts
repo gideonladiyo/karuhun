@@ -37,6 +37,50 @@ export interface GuildMember {
   lastLoginTime?: string;
 }
 
+export interface GuildListItem {
+  uuid?: string;
+  server: string;
+  guildId: number;
+  name: string;
+  level: number;
+  memberCount: number;
+  maxMemberCount: number;
+  contributionWeek: number;
+  leaderName: string;
+  declaration?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  icon?: string;
+}
+
+export interface GuildsListResponse {
+  status: string;
+  data: {
+    guilds: GuildListItem[];
+  };
+}
+
+export interface GuildActivityStats {
+  guildId: number;
+  server: string;
+  name: string;
+  totalMembers: number;
+  maxMembers: number;
+  activeMembers: number;
+  inactiveMembers: number;
+  activePercentage: number;
+  contributionWeek: number;
+  leaderName: string;
+}
+
+export interface AllianceActivitySummary {
+  totalMembers: number;
+  totalActive: number;
+  totalInactive: number;
+  overallActivePercentage: number;
+  branches: Record<number, GuildActivityStats>;
+}
+
 export interface GuildDataResponse {
   status: string;
   data: {

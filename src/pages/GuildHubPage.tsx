@@ -36,7 +36,7 @@ export const GuildHub: React.FC<GuildHubProps> = ({
     (members.length > 0 ? members.reduce((acc, m) => acc + (m.contributeTotal || (m as any).approximateScore || 0), 0) : 186542000);
 
   return (
-    <div className="space-y-8 animate-fadeIn pb-16 md:pb-0">
+    <div className="space-y-8 animate-fadeIn">
       
       {/* Alliance Division Branch Selector */}
       <div className="minimal-card p-4 space-y-3">
