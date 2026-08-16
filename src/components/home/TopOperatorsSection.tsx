@@ -109,7 +109,7 @@ export const TopOperatorsSection: React.FC<TopOperatorsSectionProps> = ({
               onClick={() => onNavigate('leaderboards')}
               className="w-full flex items-center justify-center space-x-2 p-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs sm:text-sm transition-all focus-tactical shadow-md"
             >
-              <span>VIEW FULL ALLIANCE RANKINGS</span>
+              <span>VIEW FULL MEMBER RANKINGS</span>
               <ArrowUpRight className="w-4 h-4 text-black" />
             </button>
           </div>

@@ -85,7 +85,7 @@ export const AllianceTelemetrySection: React.FC = () => {
           KARUHUN STATISTICS
         </h2>
         <p className="text-zinc-400 text-xs sm:text-sm font-sans mt-1 max-w-3xl leading-relaxed">
-          Live operational telemetry across all 4 Karuhun union divisions, tracking real-time readiness rates, roster capacities, and cumulative weekly performance.
+          Live operational telemetry across all 4 Karuhun union branches, tracking real-time readiness rates, roster capacities, and cumulative weekly performance.
         </p>
       </div>
 
