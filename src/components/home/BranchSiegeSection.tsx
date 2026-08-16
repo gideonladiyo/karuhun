@@ -187,18 +187,11 @@ export const BranchSiegeSection: React.FC<BranchSiegeSectionProps> = ({ onNaviga
 
                   <div className="flex items-center space-x-2">
                     <button
-                      onClick={() => onNavigate('members', branch.id)}
-                      className="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg bg-[#18181b] hover:bg-[#222228] text-zinc-300 hover:text-white border border-[#27272a] text-xs font-heading font-bold transition-all focus-tactical"
-                    >
-                      ROSTER
-                    </button>
-
-                    <button
                       onClick={() => onNavigate('hub', branch.id)}
                       className="flex-1 sm:flex-initial flex items-center justify-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-zinc-200 text-black text-xs font-heading font-bold transition-all focus-tactical shadow-sm"
                     >
-                      <span>ENTER HUB</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <span>ENTER GUILD</span>
+                      <ChevronRight className="w-3 h-3 text-black" />
                     </button>
                   </div>
                 </div>

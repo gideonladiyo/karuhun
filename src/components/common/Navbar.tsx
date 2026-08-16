@@ -3,7 +3,7 @@ import { Home, Shield, Video, Trophy, ExternalLink, Skull, Menu, X, Mail } from 
 import { GUILD_BRANCHES } from '@/services/imageUtils';
 const karuhunLogo = '/logo.png';
 
-export type MainTab = 'home' | 'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact';
+export type MainTab = 'home' | 'hub' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact';
 
 interface NavbarProps {
   activeTab: MainTab;

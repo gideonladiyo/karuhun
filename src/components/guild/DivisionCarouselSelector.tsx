@@ -1,18 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { GUILD_BRANCHES } from '@/services/imageUtils';
+import { getAllGuildBranchIcons } from '@/services/apiService';
 import { CoverflowCarousel } from '@/components/ui/coverflow-carousel';
+import { GuildBranchCard } from '@/components/common/GuildBranchCard';
 
 interface DivisionCarouselSelectorProps {
   selectedBranchId: number;
   onSelectBranch: (branchId: number) => void;
 }
 
-const karuhunLogo = '/logo.png';
+const fallbackLogo = '/logo.png';
 
 export const DivisionCarouselSelector: React.FC<DivisionCarouselSelectorProps> = ({
   selectedBranchId,
   onSelectBranch
 }) => {
+  const [branchIcons, setBranchIcons] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    getAllGuildBranchIcons()
+      .then((icons) => {
+        setBranchIcons(icons);
+      })
+      .catch((err) => {
+        console.warn('Failed to load guild branch icons in DivisionCarouselSelector', err);
+      });
+  }, []);
+
   const currentIndex = GUILD_BRANCHES.findIndex((b) => b.id === selectedBranchId);
   const safeIndex = currentIndex >= 0 ? currentIndex : 0;
 
@@ -25,7 +39,7 @@ export const DivisionCarouselSelector: React.FC<DivisionCarouselSelectorProps> =
 
   const slides = GUILD_BRANCHES.map((branch) => ({
     ...branch,
-    src: karuhunLogo,
+    src: branchIcons[branch.id] || fallbackLogo,
     alt: branch.name,
     title: branch.name,
     subtitle: `${branch.region} • ID: ${String(branch.id).padStart(8, '0')}`
@@ -59,72 +73,15 @@ export const DivisionCarouselSelector: React.FC<DivisionCarouselSelectorProps> =
         className="py-1"
         renderCard={(_, index, isActive) => {
           const branch = GUILD_BRANCHES[index];
-          const isCompetitive = branch.tag === 'Competitive';
-          const isSubCompetitive = branch.tag === 'Sub-Competitive';
-
-          // Color for the bottom label
-          const tagColorClass = isCompetitive
-            ? 'text-amber-400'
-            : isSubCompetitive
-            ? 'text-sky-400'
-            : 'text-zinc-400';
+          const iconSrc = branchIcons[branch.id] || fallbackLogo;
 
           return (
-            <div
-              className={`w-full h-full relative p-5 sm:p-6 flex flex-col justify-between overflow-hidden rounded-2xl sm:rounded-3xl transition-all duration-300 ${
-                isActive
-                  ? 'bg-gradient-to-br from-[#1e1a12] via-[#141418] to-[#09090b] border-2 border-amber-400 shadow-[0_0_35px_rgba(245,158,11,0.25)] ring-1 ring-amber-400/50'
-                  : 'bg-[#0d0d11] hover:bg-[#121215] border border-[#27272a] hover:border-zinc-500'
-              }`}
-            >
-
-              {/* Main Content Area (Left 3 Rows + Right Watermark Logo) */}
-              <div className="flex items-center justify-between gap-3 flex-1">
-                
-                {/* 3 ROWS OF TEXT */}
-                <div className="space-y-1 min-w-0 flex-1 z-20">
-                  {/* Row 1: Nama Guild (Large) */}
-                  <h3 className={`font-heading font-black text-xl sm:text-2xl lg:text-3xl tracking-tight truncate ${
-                    isActive ? 'text-white drop-shadow-sm' : 'text-zinc-200'
-                  }`}>
-                    {branch.name}
-                  </h3>
-
-                  {/* Row 2: ID Guild */}
-                  <p className="text-xs sm:text-sm font-tech text-zinc-400">
-                    ID: <strong className="text-white font-mono font-bold">{String(branch.id).padStart(8, '0')}</strong>
-                  </p>
-
-                  {/* Row 3: Server (Full Region Name) */}
-                  <p className="text-xs sm:text-sm font-tech text-zinc-400 truncate">
-                    Server: <strong className="text-zinc-200 font-semibold">{branch.region}</strong>
-                  </p>
-                </div>
-
-                {/* RIGHT SIDE: Guild Logo Watermark */}
-                <div className="relative z-10 w-20 h-20 sm:w-28 sm:h-28 flex-shrink-0 flex items-center justify-center pointer-events-none select-none">
-                  <img
-                    src={karuhunLogo}
-                    alt="Guild Logo"
-                    className={`w-full h-full object-contain filter contrast-125 transition-opacity duration-300 ${
-                      isActive ? 'opacity-25 grayscale-0' : 'opacity-15 grayscale'
-                    }`}
-                  />
-                  {isActive && (
-                    <div className="absolute inset-0 bg-amber-500/10 rounded-full blur-xl pointer-events-none" />
-                  )}
-                </div>
-
-              </div>
-
-              {/* BOTTOM SECTION: Line + Tag Label (Competitive / Sub-Competitive / Casual) */}
-              <div className="pt-2.5 border-t border-[#27272a]/80 flex items-center justify-between z-20">
-                <h4 className={`font-heading font-bold text-xs sm:text-sm tracking-widest uppercase ${tagColorClass}`}>
-                  {branch.tag} BRANCH
-                </h4>
-              </div>
-
-            </div>
+            <GuildBranchCard
+              branch={branch}
+              isActive={isActive}
+              iconUrl={iconSrc}
+              onClick={() => handleSelectIndex(index)}
+            />
           );
         }}
       />

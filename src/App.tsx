@@ -3,7 +3,6 @@ import { Navbar, MainTab } from '@/components/common/Navbar';
 import { Footer } from '@/components/common/Footer';
 import { HomePage } from '@/pages/HomePage';
 import { GuildHub } from '@/pages/GuildHubPage';
-import { MemberList } from '@/pages/MemberListPage';
 import { PlayerProfilePage } from '@/pages/PlayerProfilePage';
 import { CharacterInspectPage } from '@/pages/CharacterInspectPage';
 import { CompetitiveLeaderboard } from '@/pages/CompetitiveLeaderboardPage';
@@ -91,8 +90,8 @@ export default function App() {
         setActiveTab('admin');
       } else if (parts[0] === 'contact' || parts[0] === 'support' || parts[0] === 'help') {
         setActiveTab('contact');
-      } else if (parts[0] === 'members' || parts[0] === 'roster') {
-        setActiveTab('members');
+      } else if (parts[0] === 'members' || parts[0] === 'roster' || parts[0] === 'guild' || parts[0] === 'hub') {
+        setActiveTab('hub');
         if (parts[1] && !isNaN(Number(parts[1]))) {
           setSelectedBranchId(Number(parts[1]));
         }
@@ -111,11 +110,6 @@ export default function App() {
           setPpcSubTab('calculator');
         } else {
           setPpcSubTab('bosses');
-        }
-      } else if (parts[0] === 'guild' || parts[0] === 'hub') {
-        setActiveTab('hub');
-        if (parts[1] && !isNaN(Number(parts[1]))) {
-          setSelectedBranchId(Number(parts[1]));
         }
       } else if (parts[0] === 'home') {
         setActiveTab('home');
@@ -175,7 +169,6 @@ export default function App() {
 
     if (tab === 'home') navigateToPath(`/`);
     else if (tab === 'hub') navigateToPath(`/guild/${targetBranch}`);
-    else if (tab === 'members') navigateToPath(`/members/${targetBranch}`);
     else if (tab === 'reffs') navigateToPath(`/reffs`);
     else if (tab === 'leaderboards') navigateToPath(`/rankings`);
     else if (tab === 'ppc') navigateToPath(`/ppc`);
@@ -211,13 +204,13 @@ export default function App() {
       navigateToPath(`/player/${activePlayerServer}/${activePlayerUid}`);
     } else {
       setCurrentViewMode('mainTab');
-      navigateToPath(`/members/${selectedBranchId}`);
+      navigateToPath(`/guild/${selectedBranchId}`);
     }
   };
 
   const handleBackToMainTab = () => {
     setCurrentViewMode('mainTab');
-    navigateToPath(`/members/${selectedBranchId}`);
+    navigateToPath(`/guild/${selectedBranchId}`);
   };
 
   const handleNavigateRefDetail = (refId?: string) => {
@@ -276,7 +269,7 @@ export default function App() {
       {/* Main Content Area */}
       <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         
-        {/* VIEW MODE 1: MAIN TABS (Home, Hub, Members, Reffs, Leaderboards, PPC Tools, Admin, Contact) */}
+        {/* VIEW MODE 1: MAIN TABS (Home, Hub, Reffs, Leaderboards, PPC Tools, Admin, Contact) */}
         {currentViewMode === 'mainTab' && (
           <>
             {activeTab === 'home' && (
@@ -296,18 +289,6 @@ export default function App() {
                 selectedBranchId={selectedBranchId}
                 onSelectBranch={(bId: number) => handleNavigateTab('hub', bId)}
                 onSelectPlayer={(uid: number, srv?: string) => handleOpenPlayerProfile(uid, srv)}
-                onViewMembers={() => handleNavigateTab('members', selectedBranchId)}
-              />
-            )}
-
-            {activeTab === 'members' && (
-              <MemberList
-                members={members}
-                guildInfo={currentGuild}
-                loading={loadingGuild}
-                selectedBranchId={selectedBranchId}
-                onSelectBranch={(bId: number) => handleNavigateTab('members', bId)}
-                onSelectMember={(m: GuildMember) => handleOpenPlayerProfile(m.playerId)}
               />
             )}
 

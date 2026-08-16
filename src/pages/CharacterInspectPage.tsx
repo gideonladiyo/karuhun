@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PlayerCharacter, CharacterDetailResponse, CharacterDetailInfo } from '@/types';
 import { getCharacterDetail } from '@/services/apiService';
 import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
+import { BackButton } from '@/components/common/BackButton';
 import { ArrowLeft, Shield, Sword, Award, Sparkles, CheckCircle2, ChevronRight, AlertCircle, Info, Zap, Disc } from 'lucide-react';
 
 interface CharacterInspectPageProps {
@@ -129,13 +130,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
       
       {/* Back Button & Breadcrumbs */}
       <div className="flex items-center justify-between">
-        <button
-          onClick={onBack}
-          className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#121215] hover:bg-[#18181b] border border-[#27272a] hover:border-white text-white font-heading font-bold text-xs transition-all shadow-sm"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>BACK TO PROFILE</span>
-        </button>
+        <BackButton label="BACK TO PROFILE" onClick={onBack} />
 
         <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
           INSPECTING: <strong className="text-white font-bold">{charInfo.characterName}</strong> ({charInfo.frameName})
