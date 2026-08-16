@@ -53,12 +53,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
             
             {/* LEFT COLUMN: Macro Title, Mission Copy, Dual CTA Buttons (7 cols on desktop) */}
             <div className="lg:col-span-7 space-y-5 sm:space-y-6">
-              
-              {/* Top Tag */}
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a] text-[10px] sm:text-xs font-tech font-bold text-amber-400 uppercase tracking-widest">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                <span>UNION COMMAND CONSOLE</span>
-              </div>
 
               {/* Macro Title */}
               <div className="space-y-1">
