@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PlayerProfileData, PlayerCharacter } from '@/types';
 import { getPlayerProfile } from '@/services/apiService';
 import { getHuaxuImageUrl, getNameplateUrl, getConstructRankLabel } from '@/services/imageUtils';
+import { BackButton } from '@/components/common/BackButton';
 import { ArrowLeft, User, Shield, Trophy, ChevronRight, Award, Sparkles, AlertCircle, Users } from 'lucide-react';
 
 interface PlayerProfilePageProps {
@@ -81,13 +82,7 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
       
       {/* Top Back Navigation */}
       <div className="flex items-center justify-between">
-        <button
-          onClick={onBack}
-          className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#121215] hover:bg-[#18181b] border border-[#27272a] hover:border-white text-white font-heading font-bold text-xs transition-all shadow-sm"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>BACK TO MEMBERS</span>
-        </button>
+        <BackButton label="BACK TO GUILD" onClick={onBack} />
 
         <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
           SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{player.id}</strong> • LVL: <strong className="text-white">{player.level}</strong>

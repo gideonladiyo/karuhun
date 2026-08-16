@@ -94,7 +94,7 @@ export const HomepageFooter: React.FC<HomepageFooterProps> = ({ onNavigate }) =>
               </li>
               <li>
                 <button
-                  onClick={() => onNavigate('members')}
+                  onClick={() => onNavigate('hub')}
                   className="hover:text-amber-300 transition-colors flex items-center space-x-1"
                 >
                   <ChevronRight className="w-3 h-3 text-zinc-600" />

@@ -8,7 +8,7 @@ import { AllianceTelemetrySection } from '@/components/home/AllianceTelemetrySec
 import { RecruitmentSection } from '@/components/home/RecruitmentSection';
 import { ScrollReveal } from '@/components/common/ScrollReveal';
 
-export type MainTab = 'home' | 'hub' | 'members' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact';
+export type MainTab = 'home' | 'hub' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact';
 
 export interface HomePageProps {
   onNavigate: (tab: MainTab, branchId?: number) => void;

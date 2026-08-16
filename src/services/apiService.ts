@@ -14,6 +14,7 @@ import profileFallback from '@/data/fallbacks/profile_fallback.json';
 import characterFallback from '@/data/fallbacks/character_fallback.json';
 import ppcFallback from '@/data/fallbacks/ppc_fallback.json';
 import warzoneFallback from '@/data/fallbacks/warzone_fallback.json';
+import { GUILD_BRANCHES, getHuaxuImageUrl } from './imageUtils';
 
 const HUAXU_BASE_URL = import.meta.env.VITE_HUAXU_API_URL || 'https://api.huaxu.app';
 const HUAXU_API_KEY = import.meta.env.VITE_HUAXU_API_KEY || '';
@@ -102,6 +103,33 @@ export async function getGuildData(server: string, guildId: number, isLive: bool
 
   setCachedData(cacheKey, fallback);
   return fallback;
+}
+
+/**
+ * Fetch and cache icons for all alliance guild branches from /guilds/:id API
+ */
+export async function getAllGuildBranchIcons(): Promise<Record<number, string>> {
+  const cacheKey = 'guild_branch_icons_map';
+  const cached = getCachedData<Record<number, string>>(cacheKey);
+  if (cached) return cached;
+
+  const iconsMap: Record<number, string> = {};
+
+  await Promise.all(
+    GUILD_BRANCHES.map(async (branch) => {
+      try {
+        const res = await getGuildData(branch.server, branch.id);
+        if (res?.data?.guild?.icon) {
+          iconsMap[branch.id] = getHuaxuImageUrl(res.data.guild.icon);
+        }
+      } catch (err) {
+        console.warn(`[APIService] Failed to fetch icon for guild ${branch.id}`, err);
+      }
+    })
+  );
+
+  setCachedData(cacheKey, iconsMap);
+  return iconsMap;
 }
 
 /**
