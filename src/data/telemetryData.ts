@@ -12,7 +12,7 @@ export const ALLIANCE_TELEMETRY_MODULES: TelemetryModule[] = [
   {
     id: 'active_divisions',
     metricLabel: 'Active Branch',
-    metricValue: '04 BRANCH',
+    metricValue: '04 BRANCHES',
     subValue: '3 Asia-Pacific • 1 North America',
     category: 'operational',
     description: '',

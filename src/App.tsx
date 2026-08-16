@@ -295,6 +295,7 @@ export default function App() {
                 loading={loadingGuild}
                 selectedBranchId={selectedBranchId}
                 onSelectBranch={(bId: number) => handleNavigateTab('hub', bId)}
+                onSelectPlayer={(uid: number, srv?: string) => handleOpenPlayerProfile(uid, srv)}
                 onViewMembers={() => handleNavigateTab('members', selectedBranchId)}
               />
             )}
