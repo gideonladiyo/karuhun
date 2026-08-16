@@ -3,10 +3,13 @@ import {
   getStoredReferences,
   fetchLiveReferences,
   CATEGORIES_CONFIG,
-  ReferenceItem
+  ReferenceItem,
+  VideoPlatform
 } from '@/data/static/reffsData';
 import { MarkdownRenderer } from '@/components/common/MarkdownRenderer';
-import { Video, Search, Play, ArrowLeft, ExternalLink, Lightbulb, Shield, Swords, Skull, CheckCircle2, Sparkles } from 'lucide-react';
+import { MultiPlatformVideoPlayer } from '@/components/reffs/MultiPlatformVideoPlayer';
+import { BackButton } from '@/components/common/BackButton';
+import { Video, Search, Play, ArrowLeft, ExternalLink, Lightbulb, Shield, Swords, Skull, Sparkles } from 'lucide-react';
 
 interface ReffsPageProps {
   initialRefId?: string;
@@ -16,6 +19,7 @@ interface ReffsPageProps {
 export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRefDetail }) => {
   const [selectedCategory, setSelectedCategory] = useState<'guild_challenge' | 'warzone' | 'ppc'>('warzone');
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>('all');
+  const [selectedPlatform, setSelectedPlatform] = useState<'all' | VideoPlatform>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [activeDetailItem, setActiveDetailItem] = useState<ReferenceItem | null>(null);
 
@@ -47,17 +51,45 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
   const filteredReferences = publishedReferences.filter((item) => {
     const matchesCategory = item.category === selectedCategory;
     const matchesSubcategory = selectedSubcategory === 'all' || item.subcategory.toLowerCase() === selectedSubcategory.toLowerCase();
+    const itemPlat = item.platform || 'youtube';
+    const matchesPlatform = selectedPlatform === 'all' || itemPlat === selectedPlatform;
     const matchesSearch =
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSubcategory && matchesSearch;
+    return matchesCategory && matchesSubcategory && matchesPlatform && matchesSearch;
   });
 
   const getCategoryIcon = (cat: 'guild_challenge' | 'warzone' | 'ppc') => {
     if (cat === 'guild_challenge') return Shield;
     if (cat === 'warzone') return Swords;
     return Skull;
+  };
+
+  const getPlatformBadge = (platform?: VideoPlatform) => {
+    const plat = platform || 'youtube';
+    if (plat === 'tiktok') {
+      return {
+        label: 'TikTok',
+        classes: 'bg-black/90 text-cyan-400 border-cyan-500/50 shadow-[0_0_10px_rgba(34,211,238,0.2)]',
+        btnText: 'OPEN ON TIKTOK',
+        btnClass: 'bg-cyan-500 hover:bg-cyan-400 text-black',
+      };
+    }
+    if (plat === 'bilibili') {
+      return {
+        label: 'Bilibili',
+        classes: 'bg-pink-950/90 text-pink-300 border-pink-500/50 shadow-[0_0_10px_rgba(244,114,182,0.2)]',
+        btnText: 'OPEN ON BILIBILI',
+        btnClass: 'bg-pink-500 hover:bg-pink-400 text-black',
+      };
+    }
+    return {
+      label: 'YouTube',
+      classes: 'bg-red-950/90 text-red-300 border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.2)]',
+      btnText: 'OPEN ON YOUTUBE',
+      btnClass: 'bg-white hover:bg-zinc-200 text-black',
+    };
   };
 
   const handleOpenDetail = (item: ReferenceItem) => {
@@ -78,19 +110,16 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
   // FULL-PAGE THEATER DETAIL VIEW (`/reffs/:refId`)
   if (activeDetailItem) {
     const CategoryIcon = getCategoryIcon(activeDetailItem.category);
+    const itemPlat = activeDetailItem.platform || 'youtube';
+    const platBadge = getPlatformBadge(itemPlat);
+    const directUrl = activeDetailItem.videoUrl || activeDetailItem.youtubeUrl || '';
 
     return (
       <div className="space-y-6 sm:space-y-8 animate-fadeIn">
         
         {/* Navigation & Breadcrumb Header */}
         <div className="flex items-center justify-between">
-          <button
-            onClick={handleBackToList}
-            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#121215] hover:bg-[#18181b] border border-[#27272a] hover:border-white text-white font-heading font-bold text-xs transition-all shadow-sm uppercase tracking-wider"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>BACK TO REFERENCES LIST</span>
-          </button>
+          <BackButton label="BACK TO REFERENCES" onClick={handleBackToList} />
 
           <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider hidden sm:inline-block">
             INSPECTING: <strong className="text-white">{activeDetailItem.title}</strong>
@@ -99,13 +128,15 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
 
         {/* Video Player Theater Screen */}
         <div className="minimal-card p-4 sm:p-6 space-y-6 relative overflow-hidden">
-          <div className="aspect-video w-full rounded-2xl bg-black overflow-hidden border border-[#27272a] shadow-2xl relative">
-            <iframe
-              src={`https://www.youtube.com/embed/${activeDetailItem.videoId}?autoplay=1`}
+          
+          {/* Universal Multi-Platform Video Player */}
+          <div className="w-full flex justify-center">
+            <MultiPlatformVideoPlayer
+              platform={itemPlat}
+              videoId={activeDetailItem.videoId}
+              videoUrl={directUrl}
               title={activeDetailItem.title}
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
+              thumbnailUrl={activeDetailItem.thumbnailUrl}
             />
           </div>
 
@@ -117,8 +148,13 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
                   <CategoryIcon className="w-3.5 h-3.5 text-white" />
                   <span>{CATEGORIES_CONFIG[activeDetailItem.category]?.label || activeDetailItem.category}</span>
                 </span>
+                
                 <span className="bg-white text-black text-xs font-heading font-bold px-2.5 py-0.5 rounded-md uppercase">
                   {activeDetailItem.subcategory}
+                </span>
+
+                <span className={`text-[10px] font-tech font-bold px-2.5 py-0.5 rounded-full border uppercase ${platBadge.classes}`}>
+                  {platBadge.label}
                 </span>
               </div>
 
@@ -133,12 +169,12 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
 
             <div>
               <a
-                href={activeDetailItem.youtubeUrl}
+                href={directUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-md"
+                className={`inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl font-heading font-bold text-xs uppercase tracking-wider transition-all shadow-md ${platBadge.btnClass}`}
               >
-                <span>OPEN ON YOUTUBE</span>
+                <span>{platBadge.btnText}</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
             </div>
@@ -193,15 +229,15 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
       <div className="minimal-card p-5 sm:p-8 space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a] text-zinc-300 text-xs font-tech font-bold uppercase tracking-wider">
-              <Video className="w-3.5 h-3.5 text-white" />
-              <span>Competitive References Library</span>
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-tech font-bold uppercase tracking-wider">
+              <Video className="w-3.5 h-3.5" />
+              <span>Multi-Platform Rotation Library</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white">
               GAMEPLAY <span className="text-zinc-500 font-normal">ROTATION REFERENCES</span>
             </h1>
             <p className="text-xs font-tech text-zinc-400">
-              Verified high score rotations and strategy guides curated by Dalaos
+              Verified high score rotations and strategy guides across YouTube, TikTok, and Bilibili
             </p>
           </div>
 
@@ -262,11 +298,11 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
         </div>
       </div>
 
-      {/* Search Input Bar */}
+      {/* Search & Platform Filter Bar */}
       <div className="minimal-card p-4 space-y-3">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           
-          <div className="relative min-w-[260px]">
+          <div className="relative min-w-[260px] flex-1">
             <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
@@ -277,7 +313,28 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
             />
           </div>
 
-          <div className="text-xs font-tech text-zinc-400">
+          {/* Platform Filter Tabs */}
+          <div className="flex items-center space-x-1.5 bg-[#09090b] p-1 rounded-xl border border-[#27272a]">
+            {(['all', 'youtube', 'tiktok', 'bilibili'] as const).map((plat) => {
+              const isActive = selectedPlatform === plat;
+              const label = plat === 'all' ? 'All Platforms' : plat === 'youtube' ? 'YouTube' : plat === 'tiktok' ? 'TikTok' : 'Bilibili';
+              return (
+                <button
+                  key={plat}
+                  onClick={() => setSelectedPlatform(plat)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold uppercase transition-all ${
+                    isActive
+                      ? 'bg-white text-black shadow-sm'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="text-xs font-tech text-zinc-400 whitespace-nowrap">
             Showing <strong className="text-white">{filteredReferences.length}</strong> References
           </div>
 
@@ -296,50 +353,63 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredReferences.map((refItem) => (
-            <div
-              key={refItem.id}
-              onClick={() => handleOpenDetail(refItem)}
-              className="minimal-card-interactive p-4 space-y-4 flex flex-col justify-between cursor-pointer group rounded-3xl border border-[#27272a] hover:border-zinc-400 transition-all"
-            >
-              {/* Thumbnail with Play Overlay */}
-              <div className="relative w-full aspect-video rounded-2xl bg-black border border-[#27272a] overflow-hidden group-hover:border-white transition-colors">
-                <img
-                  src={refItem.thumbnailUrl}
-                  alt={refItem.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full bg-white/90 text-black flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                    <Play className="w-5 h-5 fill-current ml-0.5" />
+          {filteredReferences.map((refItem) => {
+            const plat = refItem.platform || 'youtube';
+            const platBadge = getPlatformBadge(plat);
+
+            return (
+              <div
+                key={refItem.id}
+                onClick={() => handleOpenDetail(refItem)}
+                className="minimal-card-interactive p-4 space-y-4 flex flex-col justify-between cursor-pointer group rounded-3xl border border-[#27272a] hover:border-zinc-400 transition-all"
+              >
+                {/* Thumbnail with Play Overlay & Platform Badge */}
+                <div className="relative w-full aspect-video rounded-2xl bg-black border border-[#27272a] overflow-hidden group-hover:border-white transition-colors">
+                  <img
+                    src={refItem.thumbnailUrl}
+                    alt={refItem.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-white/90 text-black flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                      <Play className="w-5 h-5 fill-current ml-0.5" />
+                    </div>
+                  </div>
+
+                  {/* Subcategory Badge (Top Left) */}
+                  <div className="absolute top-3 left-3">
+                    <span className="bg-black/90 text-white text-[10px] font-tech font-bold px-2.5 py-0.5 rounded-full border border-[#27272a] uppercase">
+                      {refItem.subcategory}
+                    </span>
+                  </div>
+
+                  {/* Platform Badge (Top Right) */}
+                  <div className="absolute top-3 right-3">
+                    <span className={`text-[10px] font-tech font-bold px-2.5 py-0.5 rounded-full border uppercase ${platBadge.classes}`}>
+                      {platBadge.label}
+                    </span>
                   </div>
                 </div>
 
-                <div className="absolute top-3 left-3">
-                  <span className="bg-black/90 text-white text-[10px] font-tech font-bold px-2.5 py-0.5 rounded-full border border-[#27272a] uppercase">
-                    {refItem.subcategory}
-                  </span>
+                {/* Title & Author Info */}
+                <div className="space-y-1.5 flex-1">
+                  <h3 className="font-heading font-bold text-base text-white group-hover:text-zinc-200 transition-colors line-clamp-2">
+                    {refItem.title}
+                  </h3>
+                  <p className="text-xs font-tech text-zinc-400">
+                    By <strong className="text-white">{refItem.author || 'Karuhun Corps'}</strong>
+                  </p>
+                </div>
+
+                {/* Action Link Footer */}
+                <div className="pt-3 border-t border-[#27272a] flex items-center justify-between text-xs font-tech text-zinc-400 group-hover:text-white">
+                  <span className="font-bold uppercase tracking-wider">FULL THEATER VIEW</span>
+                  <span className="font-heading font-bold">→</span>
                 </div>
               </div>
-
-              {/* Title & Author Info */}
-              <div className="space-y-1.5 flex-1">
-                <h3 className="font-heading font-bold text-base text-white group-hover:text-zinc-200 transition-colors line-clamp-2">
-                  {refItem.title}
-                </h3>
-                <p className="text-xs font-tech text-zinc-400">
-                  By <strong className="text-white">{refItem.author || 'Karuhun Corps'}</strong>
-                </p>
-              </div>
-
-              {/* Action Link Footer */}
-              <div className="pt-3 border-t border-[#27272a] flex items-center justify-between text-xs font-tech text-zinc-400 group-hover:text-white">
-                <span className="font-bold uppercase tracking-wider">FULL THEATER VIEW</span>
-                <span className="font-heading font-bold">→</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

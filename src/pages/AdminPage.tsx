@@ -6,10 +6,15 @@ import {
   saveStoredReference,
   deleteStoredReference,
   toggleStoredReferencePublish,
-  extractYoutubeVideoId
+  extractYoutubeVideoId,
+  detectVideoPlatform,
+  extractVideoId,
+  getPlatformThumbnail,
+  VideoPlatform
 } from '@/data/static/reffsData';
 import { supabase, isSupabaseConfigured } from '@/services/supabase/client';
 import { MarkdownRenderer } from '@/components/common/MarkdownRenderer';
+import { MultiPlatformVideoPlayer } from '@/components/reffs/MultiPlatformVideoPlayer';
 import {
   fetchAllGuildMembersSnapshot,
   saveBaselineSnapshot,
@@ -100,6 +105,7 @@ export const AdminPage: React.FC = () => {
 
   const [formTitle, setTitle] = useState<string>('');
   const [formYoutubeUrl, setYoutubeUrl] = useState<string>('');
+  const [formThumbnailUrl, setThumbnailUrl] = useState<string>('');
   const [formDescription, setDescription] = useState<string>('');
   const [formAuthor, setAuthor] = useState<string>('Karuhun');
   const [formIsPublished, setIsPublished] = useState<boolean>(true);
@@ -282,6 +288,7 @@ export const AdminPage: React.FC = () => {
     setCustomSubcategory('');
     setTitle('');
     setYoutubeUrl('');
+    setThumbnailUrl('');
     setDescription('### Rotation & Strategy Guide\nWrite strategy details using **Markdown** formatting...');
     setAuthor('');
     setIsPublished(true);
@@ -309,7 +316,8 @@ export const AdminPage: React.FC = () => {
     }
 
     setTitle(refItem.title);
-    setYoutubeUrl(refItem.youtubeUrl);
+    setYoutubeUrl(refItem.videoUrl || refItem.youtubeUrl || '');
+    setThumbnailUrl(refItem.thumbnailUrl || '');
     setDescription(refItem.description);
     setAuthor(refItem.author || 'Karuhun Corps');
     setIsPublished(refItem.isPublished !== false);
@@ -324,8 +332,9 @@ export const AdminPage: React.FC = () => {
     setSaveError(null);
     setSaveSuccess(null);
 
-    const ytId = extractYoutubeVideoId(formYoutubeUrl) || 'cVxAQcUtZn0';
-    const thumbUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+    const detectedPlat = detectVideoPlatform(formYoutubeUrl);
+    const vId = extractVideoId(formYoutubeUrl, detectedPlat) || 'cVxAQcUtZn0';
+    const thumbUrl = getPlatformThumbnail(detectedPlat, vId, formThumbnailUrl);
     const finalSubcategory = isCustomSubcategory ? customSubcategory.trim() : formSubcategory;
 
     const newRef: ReferenceItem = {
@@ -333,8 +342,10 @@ export const AdminPage: React.FC = () => {
       category: formCategory,
       subcategory: finalSubcategory || 'General',
       title: formTitle,
+      platform: detectedPlat,
+      videoUrl: formYoutubeUrl,
       youtubeUrl: formYoutubeUrl,
-      videoId: ytId,
+      videoId: vId,
       thumbnailUrl: thumbUrl,
       description: formDescription,
       author: formAuthor.trim() || 'Karuhun Corps',
@@ -1110,27 +1121,56 @@ export const AdminPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">YouTube URL</label>
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">Video Reference URL</label>
+                      {formYoutubeUrl.trim() && (
+                        <span className={`text-[10px] font-tech font-bold px-2 py-0.5 rounded-full border uppercase ${
+                          detectVideoPlatform(formYoutubeUrl) === 'tiktok'
+                            ? 'bg-black text-cyan-400 border-cyan-500/50'
+                            : detectVideoPlatform(formYoutubeUrl) === 'bilibili'
+                            ? 'bg-pink-950 text-pink-300 border-pink-500/50'
+                            : 'bg-red-950 text-red-300 border-red-500/50'
+                        }`}>
+                          {detectVideoPlatform(formYoutubeUrl)}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="text"
-                      placeholder="https://youtu.be/..."
+                      placeholder="YouTube, TikTok, atau Bilibili URL..."
                       value={formYoutubeUrl}
                       onChange={(e) => setYoutubeUrl(e.target.value)}
                       required
                       className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3 font-mono"
                     />
+                    <p className="text-[10px] font-tech text-zinc-500">
+                      Mendukung YouTube (watch/shorts/youtu.be), TikTok (video/shortlink), dan Bilibili (BV/b23.tv)
+                    </p>
                   </div>
 
                   <div className="space-y-2">
                     <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">Author / Credit</label>
                     <input
                       type="text"
-                      placeholder="Nama Author..."
+                      placeholder="Nama Author (misal: Karuhun Corps, Lark, Dalao)..."
                       value={formAuthor}
                       onChange={(e) => setAuthor(e.target.value)}
                       className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3"
                     />
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                    Custom Thumbnail URL <span className="text-zinc-500 font-normal">(Opsional - Otomatis terisi jika kosong)</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://... (Biarkan kosong untuk auto-thumbnail YouTube / platform default)"
+                    value={formThumbnailUrl}
+                    onChange={(e) => setThumbnailUrl(e.target.value)}
+                    className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3 font-mono"
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -1357,13 +1397,13 @@ export const AdminPage: React.FC = () => {
             </div>
 
             {/* Video Player */}
-            <div className="aspect-video w-full bg-black rounded-2xl border border-[#27272a] overflow-hidden">
-              <iframe
-                src={`https://www.youtube.com/embed/${previewModalRef.videoId}?autoplay=1`}
+            <div className="w-full flex justify-center">
+              <MultiPlatformVideoPlayer
+                platform={previewModalRef.platform || detectVideoPlatform(previewModalRef.videoUrl || previewModalRef.youtubeUrl || '')}
+                videoId={previewModalRef.videoId}
+                videoUrl={previewModalRef.videoUrl || previewModalRef.youtubeUrl || ''}
                 title={previewModalRef.title}
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+                thumbnailUrl={previewModalRef.thumbnailUrl}
               />
             </div>
 

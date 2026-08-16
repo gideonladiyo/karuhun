@@ -198,10 +198,21 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
                       const badge = getCategoryBadge(featuredGuide.category);
                       const IconComp = badge.icon;
                       return (
-                        <span className={`text-[10px] font-tech font-bold px-2 py-0.5 rounded border ${badge.color} bg-black/80 flex items-center space-x-1 backdrop-blur-sm`}>
-                          <IconComp className="w-3 h-3" />
-                          <span>{badge.label}</span>
-                        </span>
+                        <div className="flex items-center space-x-1.5">
+                          <span className={`text-[10px] font-tech font-bold px-2 py-0.5 rounded border ${badge.color} bg-black/80 flex items-center space-x-1 backdrop-blur-sm`}>
+                            <IconComp className="w-3 h-3" />
+                            <span>{badge.label}</span>
+                          </span>
+                          <span className={`text-[9px] font-tech font-bold px-1.5 py-0.5 rounded border uppercase ${
+                            featuredGuide.platform === 'tiktok'
+                              ? 'bg-black text-cyan-400 border-cyan-500/50'
+                              : featuredGuide.platform === 'bilibili'
+                              ? 'bg-pink-950 text-pink-300 border-pink-500/50'
+                              : 'bg-red-950 text-red-300 border-red-500/50'
+                          }`}>
+                            {featuredGuide.platform || 'YouTube'}
+                          </span>
+                        </div>
                       );
                     })()}
                   </div>
@@ -281,9 +292,18 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
 
                   {/* Title & Category info */}
                   <div className="min-w-0 flex-1 space-y-1">
-                    <div className="flex items-center space-x-1.5">
+                    <div className="flex items-center space-x-1.5 flex-wrap gap-y-1">
                       <span className={`text-[9px] font-tech font-bold px-1.5 py-0.2 rounded border ${badge.color}`}>
                         {badge.label}
+                      </span>
+                      <span className={`text-[9px] font-tech font-bold px-1.5 py-0.2 rounded border uppercase ${
+                        guide.platform === 'tiktok'
+                          ? 'bg-black text-cyan-400 border-cyan-500/50'
+                          : guide.platform === 'bilibili'
+                          ? 'bg-pink-950 text-pink-300 border-pink-500/50'
+                          : 'bg-red-950 text-red-300 border-red-500/50'
+                      }`}>
+                        {guide.platform || 'YouTube'}
                       </span>
                       <span className="text-[10px] font-tech text-zinc-500 truncate">
                         {guide.subcategory}
