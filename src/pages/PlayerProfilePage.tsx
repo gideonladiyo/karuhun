@@ -3,7 +3,8 @@ import { PlayerProfileData, PlayerCharacter } from '@/types';
 import { getPlayerProfile } from '@/services/apiService';
 import { getHuaxuImageUrl, getNameplateUrl, getConstructRankLabel } from '@/services/imageUtils';
 import { BackButton } from '@/components/common/BackButton';
-import { ArrowLeft, User, Shield, Trophy, ChevronRight, Award, Sparkles, AlertCircle, Users } from 'lucide-react';
+import { ArrowLeft, Shield, Users } from 'lucide-react';
+import { NotFound } from '@/components/ui/not-found-2';
 
 interface PlayerProfilePageProps {
   uid: number;
@@ -19,43 +20,76 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
   onSelectCharacter
 }) => {
   const [profileData, setProfileData] = useState<PlayerProfileData | null>(null);
+  const [errorInfo, setErrorInfo] = useState<{ code: string | number; message: string } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
-  useEffect(() => {
+  const fetchProfile = () => {
     setLoading(true);
+    setErrorInfo(null);
     getPlayerProfile(server, uid)
-      .then((data) => {
-        setProfileData(data);
+      .then((res) => {
+        if (res.data) {
+          setProfileData(res.data);
+          setErrorInfo(null);
+        } else {
+          setProfileData(null);
+          setErrorInfo(res.error || { code: 404, message: 'Failed to get player' });
+        }
         setLoading(false);
       })
       .catch((err) => {
         console.error('Failed to load profile', err);
+        setProfileData(null);
+        setErrorInfo({ code: 500, message: err?.message || 'Failed to connect to API' });
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchProfile();
   }, [server, uid]);
 
   if (loading) {
     return (
-      <div className="text-center py-24 bg-[#121215] rounded-3xl border border-[#27272a] animate-fadeIn">
-        <div className="inline-block animate-spin w-10 h-10 border-4 border-white border-t-transparent rounded-full mb-4" />
-        <p className="text-xs font-tech text-zinc-400">Loading Commander Profile...</p>
+      <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
+        <div className="flex items-center justify-between">
+          <BackButton label="BACK TO GUILD" onClick={onBack} />
+          <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
+            SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{uid}</strong>
+          </span>
+        </div>
+        <div className="text-center py-24 bg-[#121215] rounded-3xl border border-[#27272a]">
+          <div className="inline-block animate-spin w-10 h-10 border-4 border-amber-400 border-t-transparent rounded-full mb-4" />
+          <p className="text-xs font-tech text-zinc-300">Retrieving Commander Profile from Huaxu API...</p>
+          <p className="text-[11px] font-tech text-zinc-500 mt-1">Target UID: {uid} • Server: {server.toUpperCase()}</p>
+        </div>
       </div>
     );
   }
 
   if (!profileData || !profileData.player) {
     return (
-      <div className="text-center py-20 bg-[#121215] rounded-3xl border border-[#27272a] space-y-4">
-        <AlertCircle className="w-10 h-10 text-red-400 mx-auto" />
-        <h2 className="text-xl font-heading font-bold text-white">Commander Profile Not Found</h2>
-        <button
-          onClick={onBack}
-          className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-white text-black font-heading font-bold text-xs uppercase"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back</span>
-        </button>
+      <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
+        {/* Top Back Navigation Bar */}
+        <div className="flex items-center justify-between">
+          <BackButton label="BACK TO GUILD" onClick={onBack} />
+          <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
+            SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{uid}</strong>
+          </span>
+        </div>
+
+        {/* Dynamic Not Found / Error UI Component with API Error Code & Message */}
+        <NotFound
+          errorCode={errorInfo?.code ?? 404}
+          title="Commander Profile Unavailable"
+          message={errorInfo?.message ?? "Failed to get player"}
+          subMessage={`Target UID: ${uid} • Server: ${server.toUpperCase()} • Player telemetry might be private in-game or Huaxu API server is experiencing downtime.`}
+          primaryActionLabel="Try Again"
+          onPrimaryAction={fetchProfile}
+          secondaryActionLabel="Back to Guild"
+          onSecondaryAction={onBack}
+        />
       </div>
     );
   }

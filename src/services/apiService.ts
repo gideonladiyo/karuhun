@@ -304,35 +304,53 @@ export async function getAllianceLiveActivity(): Promise<AllianceActivitySummary
   return summary;
 }
 
+export interface PlayerProfileResponse {
+  data: PlayerProfileData | null;
+  error?: {
+    code: string | number;
+    message: string;
+  } | null;
+}
+
 /**
  * Fetch Player Profile by server & uid with client-side caching
  */
-export async function getPlayerProfile(server: string, uid: number): Promise<PlayerProfileData> {
+export async function getPlayerProfile(server: string, uid: number): Promise<PlayerProfileResponse> {
   const cacheKey = `profile_${server}_${uid}`;
   const cached = getCachedData<PlayerProfileData>(cacheKey);
-  if (cached) return cached;
+  if (cached) return { data: cached, error: null };
 
   const url = `${HUAXU_BASE_URL}/servers/${server}/players/${uid}`;
   try {
     const res = await fetchWithTimeout(url);
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.status === 'success' && data.data) {
-        setCachedData(cacheKey, data.data);
-        return data.data as PlayerProfileData;
-      }
+    const json = await res.json().catch(() => null);
+
+    if (res.ok && json && json.status === 'success' && json.data) {
+      setCachedData(cacheKey, json.data);
+      return { data: json.data as PlayerProfileData, error: null };
     }
-  } catch (err) {
-    console.warn(`[APIService] Fetching player ${uid} failed, using fallback.`, err);
-  }
 
-  const fallbackData = JSON.parse(JSON.stringify(profileFallback)).data as PlayerProfileData;
-  if (fallbackData.player) {
-    fallbackData.player.id = uid;
-  }
+    // Capture dynamic error code & message from API response
+    const errorCode = res.status !== 200 ? res.status : (json?.code || 404);
+    const errorMessage = json?.message || (res.status === 404 ? 'Player not found' : 'Failed to get player');
 
-  setCachedData(cacheKey, fallbackData);
-  return fallbackData;
+    return {
+      data: null,
+      error: {
+        code: errorCode,
+        message: errorMessage
+      }
+    };
+  } catch (err: any) {
+    console.warn(`[APIService] Fetching player ${uid} failed.`, err);
+    return {
+      data: null,
+      error: {
+        code: err.name === 'AbortError' ? 504 : 500,
+        message: err.message || 'Network error / API unreachable'
+      }
+    };
+  }
 }
 
 /**
