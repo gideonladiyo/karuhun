@@ -11,6 +11,7 @@ import { ReffsPage } from '@/pages/ReffsPage';
 import { AdminPage } from '@/pages/AdminPage';
 import { ContactPage } from '@/pages/ContactPage';
 import { GuildIntroOverlay } from '@/pages/GuildIntroOverlay';
+import { NotFound } from '@/components/ui/not-found-2';
 
 import { getGuildData } from '@/services/apiService';
 import { GUILD_BRANCHES } from '@/services/imageUtils';
@@ -32,8 +33,8 @@ export default function App() {
   const [members, setMembers] = useState<GuildMember[]>([]);
   const [loadingGuild, setLoadingGuild] = useState<boolean>(true);
 
-  // Active full-page view state: 'mainTab' | 'playerProfile' | 'characterInspect'
-  const [currentViewMode, setCurrentViewMode] = useState<'mainTab' | 'playerProfile' | 'characterInspect'>('mainTab');
+  // Active full-page view state: 'mainTab' | 'playerProfile' | 'characterInspect' | 'notFound'
+  const [currentViewMode, setCurrentViewMode] = useState<'mainTab' | 'playerProfile' | 'characterInspect' | 'notFound'>('mainTab');
 
   // Selected player & character params for full-page views
   const [activePlayerUid, setActivePlayerUid] = useState<number | null>(null);
@@ -84,38 +85,42 @@ export default function App() {
         setActiveCharacter(null);
         setCurrentViewMode('playerProfile');
       }
-    } else {
+    } else if (parts.length === 0 || parts[0] === 'home') {
       setCurrentViewMode('mainTab');
-      if (parts[0] === 'admin' || parts[0] === 'dashboard') {
-        setActiveTab('admin');
-      } else if (parts[0] === 'contact' || parts[0] === 'support' || parts[0] === 'help') {
-        setActiveTab('contact');
-      } else if (parts[0] === 'members' || parts[0] === 'roster' || parts[0] === 'guild' || parts[0] === 'hub') {
-        setActiveTab('hub');
-        if (parts[1] && !isNaN(Number(parts[1]))) {
-          setSelectedBranchId(Number(parts[1]));
-        }
-      } else if (parts[0] === 'reffs' || parts[0] === 'ref' || parts[0] === 'references') {
-        setActiveTab('reffs');
-        if (parts[1]) {
-          setActiveRefId(parts[1]);
-        } else {
-          setActiveRefId(undefined);
-        }
-      } else if (parts[0] === 'rankings' || parts[0] === 'leaderboards') {
-        setActiveTab('leaderboards');
-      } else if (parts[0] === 'ppc' || parts[0] === 'bosses' || parts[0] === 'calculator') {
-        setActiveTab('ppc');
-        if (parts[0] === 'calculator') {
-          setPpcSubTab('calculator');
-        } else {
-          setPpcSubTab('bosses');
-        }
-      } else if (parts[0] === 'home') {
-        setActiveTab('home');
-      } else {
-        setActiveTab('home');
+      setActiveTab('home');
+    } else if (parts[0] === 'admin' || parts[0] === 'dashboard') {
+      setCurrentViewMode('mainTab');
+      setActiveTab('admin');
+    } else if (parts[0] === 'contact' || parts[0] === 'support' || parts[0] === 'help') {
+      setCurrentViewMode('mainTab');
+      setActiveTab('contact');
+    } else if (parts[0] === 'members' || parts[0] === 'roster' || parts[0] === 'guild' || parts[0] === 'hub') {
+      setCurrentViewMode('mainTab');
+      setActiveTab('hub');
+      if (parts[1] && !isNaN(Number(parts[1]))) {
+        setSelectedBranchId(Number(parts[1]));
       }
+    } else if (parts[0] === 'reffs' || parts[0] === 'ref' || parts[0] === 'references') {
+      setCurrentViewMode('mainTab');
+      setActiveTab('reffs');
+      if (parts[1]) {
+        setActiveRefId(parts[1]);
+      } else {
+        setActiveRefId(undefined);
+      }
+    } else if (parts[0] === 'rankings' || parts[0] === 'leaderboards') {
+      setCurrentViewMode('mainTab');
+      setActiveTab('leaderboards');
+    } else if (parts[0] === 'ppc' || parts[0] === 'bosses' || parts[0] === 'calculator') {
+      setCurrentViewMode('mainTab');
+      setActiveTab('ppc');
+      if (parts[0] === 'calculator') {
+        setPpcSubTab('calculator');
+      } else {
+        setPpcSubTab('bosses');
+      }
+    } else {
+      setCurrentViewMode('notFound');
     }
   };
 
@@ -339,6 +344,20 @@ export default function App() {
             server={activePlayerServer}
             uid={activePlayerUid}
             onBack={handleBackToProfile}
+          />
+        )}
+
+        {/* VIEW MODE 4: FULL-PAGE 404 NOT FOUND FOR UNRECOGNIZED ROUTES */}
+        {currentViewMode === 'notFound' && (
+          <NotFound
+            errorCode="404"
+            title="Page Not Found"
+            message={`The page you're looking for might have been moved or doesn't exist.`}
+            subMessage={`Requested Path: ${window.location.pathname}`}
+            primaryActionLabel="Go Home"
+            onPrimaryAction={() => handleNavigateTab('home')}
+            secondaryActionLabel="Explore Guild"
+            onSecondaryAction={() => handleNavigateTab('hub')}
           />
         )}
 
