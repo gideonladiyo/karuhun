@@ -326,88 +326,115 @@ export function getStoredReferences(): ReferenceItem[] {
   return INITIAL_PROTOTYPE_REFERENCES.filter((item) => !deletedIds.includes(item.id));
 }
 
+const REFFS_CACHE_TTL_MS = 3 * 60 * 1000;
+let refsCache: { data: ReferenceItem[]; timestamp: number } | null = null;
+let refsInFlightPromise: Promise<ReferenceItem[]> | null = null;
+
+export function invalidateRefsCache() {
+  refsCache = null;
+}
+
 /**
- * Fetch live references from Supabase DB, fallback to local storage
+ * Fetch live references from Supabase DB, fallback to local storage with in-flight deduplication
  */
 export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
-  const localItems = getStoredReferences();
-  const deletedIds = getDeletedIds();
-
-  if (isSupabaseConfigured() && supabase) {
-    try {
-      const { data, error } = await supabase
-        .from('video_references')
-        .select(`
-          id,
-          title,
-          youtube_url,
-          youtube_video_id,
-          thumbnail_url,
-          description,
-          author_name,
-          is_published,
-          created_at,
-          subcategories (
-            name,
-            category_id
-          ),
-          reference_tips (
-            step_number,
-            tip_content
-          )
-        `)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.warn('Supabase fetch error, using local fallback:', error.message);
-      } else if (data && data.length > 0) {
-        const supabaseMapped: ReferenceItem[] = data.map((item: any) => {
-          const rawUrl = item.youtube_url || '';
-          const detectedPlat = detectVideoPlatform(rawUrl);
-          const resolvedVideoId = item.youtube_video_id || extractVideoId(rawUrl, detectedPlat);
-
-          const tipsList = Array.isArray(item.reference_tips)
-            ? item.reference_tips
-                .sort((a: any, b: any) => (a.step_number || 0) - (b.step_number || 0))
-                .map((t: any) => t.tip_content)
-            : [];
-
-          const subcategoryObj = item.subcategories;
-          const category = (subcategoryObj?.category_id as 'guild_challenge' | 'warzone' | 'ppc') || 'warzone';
-          const subcategory = subcategoryObj?.name || 'General';
-
-          return {
-            id: item.id,
-            category,
-            subcategory,
-            title: item.title,
-            platform: detectedPlat,
-            videoUrl: rawUrl,
-            youtubeUrl: rawUrl,
-            videoId: resolvedVideoId,
-            thumbnailUrl: item.thumbnail_url || getPlatformThumbnail(detectedPlat, resolvedVideoId),
-            description: item.description || '',
-            tips: tipsList,
-            author: item.author_name || 'Karuhun Corps',
-            dateAdded: item.created_at ? item.created_at.split('T')[0] : 'Latest',
-            isPublished: item.is_published !== false
-          };
-        });
-
-        const filteredSupabase = supabaseMapped.filter((item) => !deletedIds.includes(item.id));
-
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredSupabase));
-        } catch (e) {}
-
-        return filteredSupabase;
-      }
-    } catch (err) {
-      console.warn('Supabase live fetch error, falling back to local cache', err);
-    }
+  if (refsCache && Date.now() - refsCache.timestamp < REFFS_CACHE_TTL_MS) {
+    return refsCache.data;
   }
 
-  return localItems.filter((item) => !deletedIds.includes(item.id));
+  if (refsInFlightPromise) {
+    return refsInFlightPromise;
+  }
+
+  refsInFlightPromise = (async () => {
+    try {
+      const localItems = getStoredReferences();
+      const deletedIds = getDeletedIds();
+
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('video_references')
+            .select(`
+              id,
+              title,
+              youtube_url,
+              youtube_video_id,
+              thumbnail_url,
+              description,
+              author_name,
+              is_published,
+              created_at,
+              subcategories (
+                name,
+                category_id
+              ),
+              reference_tips (
+                step_number,
+                tip_content
+              )
+            `)
+            .order('created_at', { ascending: false });
+
+          if (error) {
+            console.warn('Supabase fetch error, using local fallback:', error.message);
+          } else if (data && data.length > 0) {
+            const supabaseMapped: ReferenceItem[] = data.map((item: any) => {
+              const rawUrl = item.youtube_url || '';
+              const detectedPlat = detectVideoPlatform(rawUrl);
+              const resolvedVideoId = item.youtube_video_id || extractVideoId(rawUrl, detectedPlat);
+
+              const tipsList = Array.isArray(item.reference_tips)
+                ? item.reference_tips
+                    .sort((a: any, b: any) => (a.step_number || 0) - (b.step_number || 0))
+                    .map((t: any) => t.tip_content)
+                : [];
+
+              const subcategoryObj = item.subcategories;
+              const category = (subcategoryObj?.category_id as 'guild_challenge' | 'warzone' | 'ppc') || 'warzone';
+              const subcategory = subcategoryObj?.name || 'General';
+
+              return {
+                id: item.id,
+                category,
+                subcategory,
+                title: item.title,
+                platform: detectedPlat,
+                videoUrl: rawUrl,
+                youtubeUrl: rawUrl,
+                videoId: resolvedVideoId,
+                thumbnailUrl: item.thumbnail_url || getPlatformThumbnail(detectedPlat, resolvedVideoId),
+                description: item.description || '',
+                tips: tipsList,
+                author: item.author_name || 'Karuhun Corps',
+                dateAdded: item.created_at ? item.created_at.split('T')[0] : 'Latest',
+                isPublished: item.is_published !== false
+              };
+            });
+
+            const filteredSupabase = supabaseMapped.filter((item) => !deletedIds.includes(item.id));
+
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredSupabase));
+            } catch (e) {}
+
+            refsCache = { data: filteredSupabase, timestamp: Date.now() };
+            return filteredSupabase;
+          }
+        } catch (err) {
+          console.warn('Supabase live fetch error, falling back to local cache', err);
+        }
+      }
+
+      const fallbackData = localItems.filter((item) => !deletedIds.includes(item.id));
+      refsCache = { data: fallbackData, timestamp: Date.now() };
+      return fallbackData;
+    } finally {
+      refsInFlightPromise = null;
+    }
+  })();
+
+  return refsInFlightPromise;
 }
 
 /**
@@ -537,6 +564,8 @@ export async function saveStoredReference(item: ReferenceItem): Promise<SaveResu
     }
   }
 
+  invalidateRefsCache();
+
   return {
     success: !supabaseErrorMessage,
     error: supabaseErrorMessage,
@@ -566,6 +595,7 @@ export async function deleteStoredReference(id: string): Promise<ReferenceItem[]
     }
   }
 
+  invalidateRefsCache();
   return updatedList;
 }
 
@@ -600,6 +630,8 @@ export async function toggleStoredReferencePublish(id: string, explicitStatus?: 
   } catch (err) {
     console.error('Failed to update localStorage after toggle publish', err);
   }
+
+  invalidateRefsCache();
 
   return updatedList;
 }

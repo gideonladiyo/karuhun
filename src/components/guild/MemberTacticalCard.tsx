@@ -64,6 +64,8 @@ export const MemberTacticalCard: React.FC<MemberTacticalCardProps> = ({
           <img
             src={getHuaxuImageUrl(member.frame)}
             alt="Avatar Frame"
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10 scale-125"
             onError={(e) => {
               (e.target as HTMLElement).style.display = 'none';
@@ -75,7 +77,9 @@ export const MemberTacticalCard: React.FC<MemberTacticalCardProps> = ({
         <img
           src={getHuaxuImageUrl(member.portrait)}
           alt={member.name}
-          className="w-full h-full object-cover rounded-xl z-0 filter contrast-105  transition-transform"
+          loading="lazy"
+          decoding="async"
+          className="w-full h-full object-cover rounded-xl z-0 filter contrast-105 transition-transform"
           onError={(e) => {
             (e.target as HTMLImageElement).src = '/logo.png';
           }}

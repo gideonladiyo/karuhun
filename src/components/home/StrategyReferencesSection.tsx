@@ -168,6 +168,8 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
                   <img
                     src={getPlatformThumbnail(featuredGuide.platform || 'youtube', featuredGuide.videoId, featuredGuide.thumbnailUrl)}
                     alt={featuredGuide.title}
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/logo.png';
                     }}
@@ -266,6 +268,8 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
                     <img
                       src={getPlatformThumbnail(guide.platform || 'youtube', guide.videoId, guide.thumbnailUrl)}
                       alt={guide.title}
+                      loading="lazy"
+                      decoding="async"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/logo.png';
                       }}

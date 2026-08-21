@@ -335,11 +335,12 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
                     {/* 2. GUILD NAME / GUILD COLUMN */}
                     <div className="md:col-span-5 flex items-center space-x-3 min-w-0">
                       {/* Guild Crest */}
-                      <div className={`w-10 h-10 p-1 flex-shrink-0 relative overflow-hidden flex items-center justify-center shadow-sm'
-                      `}>
+                      <div className="w-10 h-10 p-1 flex-shrink-0 relative overflow-hidden flex items-center justify-center shadow-sm">
                         <img
                           src={guild.icon ? getHuaxuImageUrl(guild.icon) : '/logo.png'}
                           alt={guild.name}
+                          loading="lazy"
+                          decoding="async"
                           onError={(e) => {
                             (e.target as HTMLElement).style.display = 'none';
                           }}

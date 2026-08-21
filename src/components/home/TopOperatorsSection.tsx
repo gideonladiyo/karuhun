@@ -208,13 +208,14 @@ export const TopOperatorsSection: React.FC<TopOperatorsSectionProps> = ({
                           </div>
 
                           {/* AVATAR PORTRAIT */}
-                          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl p-0.5 flex-shrink-0 relative flex items-center justify-center group-hover:scale-105'
-                          `}>
+                          <div className="relative w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
                             {hasCustomFrame && (
                               <img
                                 src={getHuaxuImageUrl(operator.frame)}
                                 alt="Avatar Frame"
-                                className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10 scale-[1.15]"
+                                loading="lazy"
+                                decoding="async"
+                                className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10 scale-[1.28]"
                                 onError={(e) => {
                                   (e.target as HTMLElement).style.display = 'none';
                                 }}
@@ -224,10 +225,14 @@ export const TopOperatorsSection: React.FC<TopOperatorsSectionProps> = ({
                             <img
                               src={getHuaxuImageUrl(operator.portrait)}
                               alt={operator.name}
+                              loading="lazy"
+                              decoding="async"
                               onError={(e) => {
                                 (e.target as HTMLElement).style.display = 'none';
                               }}
-                              className="w-full h-full object-contain filter contrast-125  transition-transform"
+                              className={`w-full h-full object-cover filter contrast-125 transition-transform ${
+                                hasCustomFrame ? 'rounded-full scale-95' : 'rounded-xl'
+                              }`}
                             />
                           </div>
 
