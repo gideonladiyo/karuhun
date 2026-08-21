@@ -1,0 +1,50 @@
+[
+  {
+    "server": "ap",
+    "guildId": 3638,
+    "name": "Karuhun 夜",
+    "level": 10,
+    "memberCount": 72,
+    "maxMemberCount": 80,
+    "contributionWeek": 422565,
+    "leaderName": "夜’ Narasula_",
+    "declaration": "— Top 1 Asia-Pacific Guild — ▼Recruitment Apply in DC▼ https://linktr.ee/karuhuncorps",
+    "icon": "image/uiguild/uiguildface24"
+  },
+  {
+    "server": "ap",
+    "guildId": 1164,
+    "name": "Izanami 夜",
+    "level": 10,
+    "memberCount": 74,
+    "maxMemberCount": 80,
+    "contributionWeek": 312450,
+    "leaderName": "夜’ Kiana",
+    "declaration": "— Izanami Karuhun Division AP — Join Discord to apply!",
+    "icon": "image/uiguild/uiguildface13"
+  },
+  {
+    "server": "ap",
+    "guildId": 7641,
+    "name": "Astrelume 夜",
+    "level": 10,
+    "memberCount": 70,
+    "maxMemberCount": 80,
+    "contributionWeek": 268920,
+    "leaderName": "夜’ Solaria",
+    "declaration": "— Astrelume Karuhun Division AP — Casual growth division.",
+    "icon": "image/uiguild/uiguildface08"
+  },
+  {
+    "server": "na",
+    "guildId": 2013,
+    "name": "Karuhun 夜’",
+    "level": 10,
+    "memberCount": 79,
+    "maxMemberCount": 80,
+    "contributionWeek": 345120,
+    "leaderName": "夜’ Zeis",
+    "declaration": "— Karuhun North America Division — Top NA Guild!",
+    "icon": "image/uiguild/uiguildface15"
+  }
+]

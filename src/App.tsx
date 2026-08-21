@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Navbar, MainTab } from '@/components/common/Navbar';
 import { Footer } from '@/components/common/Footer';
 import { HomePage } from '@/pages/HomePage';
@@ -25,8 +25,7 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState<MainTab>('home');
   const [ppcSubTab, setPpcSubTab] = useState<'bosses' | 'calculator'>('bosses');
-  const [selectedBranchId, setSelectedBranchId] = useState<number>(3638);
-  const [activeBossSlug, setActiveBossSlug] = useState<string | undefined>(undefined);
+  const [selectedBranchId, setSelectedBranchId] = useState<number>(() => GUILD_BRANCHES[0]?.id ?? 3638);
   const [activeRefId, setActiveRefId] = useState<string | undefined>(undefined);
 
   const [currentGuild, setCurrentGuild] = useState<GuildInfo | null>(null);
@@ -38,7 +37,7 @@ export default function App() {
 
   // Selected player & character params for full-page views
   const [activePlayerUid, setActivePlayerUid] = useState<number | null>(null);
-  const [activePlayerServer, setActivePlayerServer] = useState<string>('ap');
+  const [activePlayerServer, setActivePlayerServer] = useState<string>(() => GUILD_BRANCHES[0]?.server ?? 'ap');
   const [activeCharacter, setActiveCharacter] = useState<PlayerCharacter | null>(null);
 
   // Auto Scroll-To-Top on Page or Route Change
@@ -268,7 +267,6 @@ export default function App() {
         activeTab={activeTab}
         onNavigate={handleNavigateTab}
         selectedBranchId={selectedBranchId}
-        onReplayIntro={() => setShowIntro(true)}
       />
 
       {/* Main Content Area */}
@@ -313,7 +311,7 @@ export default function App() {
             {activeTab === 'ppc' && (
               <PpcPage
                 initialSubTab={ppcSubTab}
-                initialBossSlug={activeBossSlug}
+                initialBossSlug={undefined}
               />
             )}
 

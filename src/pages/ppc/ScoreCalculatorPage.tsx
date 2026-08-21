@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { ADVANCED_PPC_SCORES, ULTIMATE_PPC_SCORES, PPC_BOSSES, PPCBossInfo } from '@/data/static/ppcScores';
-import { Calculator, Copy, Check, Clock, Trophy, Flame, Sparkles, Sliders, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ADVANCED_PPC_SCORES, ULTIMATE_PPC_SCORES } from '@/data/static/ppcScores';
+import { Calculator, Copy, Check, Sparkles } from 'lucide-react';
 
 interface ScoreCalculatorPageProps {
   initialBossSlug?: string;
 }
 
-export const ScoreCalculatorPage: React.FC<ScoreCalculatorPageProps> = ({ initialBossSlug }) => {
+export const ScoreCalculatorPage: React.FC<ScoreCalculatorPageProps> = () => {
   const [calcMode, setCalcMode] = useState<'single' | 'compare'>('compare');
   const [tier, setTier] = useState<'ultimate' | 'advanced'>('ultimate');
   

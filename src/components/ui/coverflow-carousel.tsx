@@ -33,7 +33,6 @@ export interface CoverflowCarouselProps {
   /** Space between cards, as a fraction of card width. */
   gap?: number;
   loop?: boolean;
-  showCaption?: boolean;
   showPagination?: boolean;
   showNavigation?: boolean;
   selectedIndex?: number;
@@ -57,7 +56,6 @@ export function CoverflowCarousel({
   cardHeight = "clamp(190px, 22vw, 230px)",
   gap = 0.12,
   loop = true,
-  showCaption = false,
   showPagination = false,
   showNavigation = true,
   selectedIndex,

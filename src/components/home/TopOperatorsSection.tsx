@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Swords, Skull, ChevronRight, Crown, Shield, User, ArrowUpRight } from 'lucide-react';
+import { Trophy, Swords, Skull, ChevronRight, Shield, ArrowUpRight } from 'lucide-react';
 import { 
   fetchCompositeAllianceLeaderboard, 
   sortAllianceMembers, 

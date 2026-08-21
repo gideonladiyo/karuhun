@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Video, Swords, Skull, Shield, ChevronRight, Play, ExternalLink, Sparkles, ArrowUpRight, User, Calendar } from 'lucide-react';
+import { BookOpen, Swords, Skull, Shield, ChevronRight, Play, ArrowUpRight, User, Calendar } from 'lucide-react';
 import { 
   fetchLiveReferences, 
   getStoredReferences, 
-  ReferenceItem 
+  ReferenceItem,
+  getPlatformThumbnail
 } from '@/data/static/reffsData';
 import { MainTab } from '@/pages/HomePage';
 
@@ -165,19 +166,10 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
                 {/* Thumbnail Container (Maintains 16:9 Aspect Ratio without CLS) */}
                 <div className="relative w-full aspect-video rounded-xl bg-black border border-[#27272a] overflow-hidden mb-5">
                   <img
-                    src={
-                      featuredGuide.thumbnailUrl ||
-                      (featuredGuide.videoId ? `https://img.youtube.com/vi/${featuredGuide.videoId}/maxresdefault.jpg` : '/logo.png')
-                    }
+                    src={getPlatformThumbnail(featuredGuide.platform || 'youtube', featuredGuide.videoId, featuredGuide.thumbnailUrl)}
                     alt={featuredGuide.title}
                     onError={(e) => {
-                      // Fallback to HQ default YouTube thumbnail or Karuhun tactical banner
-                      const target = e.target as HTMLImageElement;
-                      if (featuredGuide.videoId && !target.src.includes('hqdefault')) {
-                        target.src = `https://img.youtube.com/vi/${featuredGuide.videoId}/hqdefault.jpg`;
-                      } else {
-                        target.src = '/logo.png';
-                      }
+                      (e.target as HTMLImageElement).src = '/logo.png';
                     }}
                     className="w-full h-full object-cover filter contrast-110 group-hover:scale-105 transition-transform duration-300"
                   />
@@ -262,7 +254,6 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
           <div className="lg:col-span-5 flex flex-col space-y-3 sm:space-y-3.5">
             {recentGuides.map((guide) => {
               const badge = getCategoryBadge(guide.category);
-              const IconComp = badge.icon;
 
               return (
                 <div
@@ -273,10 +264,7 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
                   {/* Compact Video Thumbnail */}
                   <div className="relative w-28 sm:w-32 aspect-video rounded-xl bg-black border border-[#27272a] overflow-hidden flex-shrink-0">
                     <img
-                      src={
-                        guide.thumbnailUrl ||
-                        (guide.videoId ? `https://img.youtube.com/vi/${guide.videoId}/hqdefault.jpg` : '/logo.png')
-                      }
+                      src={getPlatformThumbnail(guide.platform || 'youtube', guide.videoId, guide.thumbnailUrl)}
                       alt={guide.title}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/logo.png';

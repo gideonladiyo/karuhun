@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getLiveOrStoredPpcBossesInfo, getLiveOrStoredPpcBossesInfoAsync, PPCBossInfo } from '@/data/static/ppcScores';
-import { Skull, Search, Flame, Zap, ShieldAlert, Clock, Sparkles, Filter, ChevronRight } from 'lucide-react';
+import { Skull, Search, Clock } from 'lucide-react';
 
-interface BossesPageProps {
-  onOpenCalculator?: (bossSlug?: string) => void;
-}
-
-export const BossesPage: React.FC<BossesPageProps> = ({ onOpenCalculator }) => {
+export const BossesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'ultimate' | 'advanced'>('all');
   const [bossesData, setBossesData] = useState<{ updatedAt?: string; bosses: PPCBossInfo[] }>(() =>

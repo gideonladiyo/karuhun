@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Shield, ChevronRight, ChevronLeft, Layers, Users, CheckCircle2, Award } from 'lucide-react';
+import { Trophy, Shield, ChevronRight, Layers, Users, CheckCircle2 } from 'lucide-react';
 import { getAllianceLiveActivity } from '@/services/apiService';
 import { AllianceActivitySummary } from '@/types';
 import { GUILD_BRANCHES, GuildBranchConfig } from '@/services/imageUtils';
@@ -9,8 +9,6 @@ import { Hero3DCardStack } from './Hero3DCardStack';
 interface HeroSectionProps {
   onNavigate: (tab: MainTab, branchId?: number) => void;
 }
-
-const karuhunLogo = '/logo.png';
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
   const [activity, setActivity] = useState<AllianceActivitySummary | null>(null);
@@ -30,14 +28,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
   }, []);
 
   const activeBranch: GuildBranchConfig = GUILD_BRANCHES[selectedBranchIndex] || GUILD_BRANCHES[0];
-
-  const handlePrevBranch = () => {
-    setSelectedBranchIndex((prev) => (prev - 1 + GUILD_BRANCHES.length) % GUILD_BRANCHES.length);
-  };
-
-  const handleNextBranch = () => {
-    setSelectedBranchIndex((prev) => (prev + 1) % GUILD_BRANCHES.length);
-  };
 
   return (
     <section className="relative w-full mb-10 sm:mb-16 animate-fadeIn">

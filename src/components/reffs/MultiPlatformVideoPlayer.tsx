@@ -20,7 +20,7 @@ export const MultiPlatformVideoPlayer: React.FC<MultiPlatformVideoPlayerProps> =
   className = '',
 }) => {
   const [hasError, setHasError] = useState<boolean>(false);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [isPlaying] = useState<boolean>(true);
 
   // Dynamically load TikTok embed script if needed
   useEffect(() => {

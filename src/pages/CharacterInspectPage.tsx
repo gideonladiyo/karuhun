@@ -3,7 +3,7 @@ import { PlayerCharacter, CharacterDetailResponse, CharacterDetailInfo } from '@
 import { getCharacterDetail } from '@/services/apiService';
 import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
 import { BackButton } from '@/components/common/BackButton';
-import { ArrowLeft, Shield, Sword, Award, Sparkles, CheckCircle2, ChevronRight, AlertCircle, Info, Zap, Disc } from 'lucide-react';
+import { Sword, Sparkles, Disc } from 'lucide-react';
 
 interface CharacterInspectPageProps {
   character: PlayerCharacter;
@@ -71,7 +71,6 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
   const harmonizationSkill = weapon?.harmonizationSkill || weapon?.harmonizeSkill || harmonization?.harmonizationSkill;
   const cub = detailData?.cub;
   const rawMemories = detailData?.memories || [];
-  const suits = detailData?.suits || [];
 
   // Default sample memory templates with icon assets and descriptions
   const defaultMemoryTemplates = [

@@ -1,4 +1,5 @@
 import { getWarzoneLeaderboard, getPPCLeaderboard } from '@/services/apiService';
+import { GUILD_BRANCHES } from '@/services/imageUtils';
 
 export interface MemberCompetitiveAchievement {
   id: number;
@@ -26,12 +27,13 @@ export interface MemberCompetitiveAchievement {
  * Checks whether a player belongs to the Karuhun alliance
  */
 export const isAllianceMember = (name: string, guildName?: string): boolean => {
-  if (guildName && (
-    guildName.includes('Karuhun') || 
-    guildName.includes('Izanami') || 
-    guildName.includes('Astrelume')
-  )) {
-    return true;
+  if (guildName) {
+    const cleanGuild = guildName.toLowerCase();
+    const matchesBranch = GUILD_BRANCHES.some((b) => {
+      const baseName = b.name.toLowerCase().replace(/[\s夜’']/g, '');
+      return cleanGuild.replace(/[\s夜’']/g, '').includes(baseName);
+    });
+    if (matchesBranch) return true;
   }
   return name.includes('夜') || name.startsWith('Karuhun');
 };

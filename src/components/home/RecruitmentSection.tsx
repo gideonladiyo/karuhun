@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { UserPlus, Shield, Swords, Sparkles, MessageSquare, ExternalLink, CheckCircle2, ChevronRight, ArrowUpRight, HelpCircle } from 'lucide-react';
+import { MessageSquare, CheckCircle2, ChevronRight, ArrowUpRight, HelpCircle } from 'lucide-react';
 import { MainTab } from '@/pages/HomePage';
+import { MAIN_DISCORD_LINK } from '@/data/static/contactData';
 
 interface RecruitmentSectionProps {
   onNavigate: (tab: MainTab, branchId?: number) => void;
@@ -156,7 +157,7 @@ export const RecruitmentSection: React.FC<RecruitmentSectionProps> = ({ onNaviga
             {/* Action Buttons */}
             <div className="pt-4 border-t border-[#27272a] flex flex-col sm:flex-row items-center gap-3">
               <a
-                href="https://discord.gg/Cz9bzjcdV"
+                href={MAIN_DISCORD_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:flex-1 flex items-center justify-center space-x-2 p-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs sm:text-sm transition-all focus-tactical shadow-md"

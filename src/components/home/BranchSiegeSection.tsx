@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Users, ChevronRight, Layers, CheckCircle2, Activity, UserCheck, UserX } from 'lucide-react';
-import { SIEGE_BRANCH_DATA, SiegeBranchData } from '@/data/siegeBranchData';
+import { Users, ChevronRight, Layers, CheckCircle2, UserCheck, UserX } from 'lucide-react';
+import { SIEGE_BRANCH_DATA, SiegeBranchData } from '@/data/static/siegeBranchData';
 import { getAllianceLiveActivity } from '@/services/apiService';
 import { AllianceActivitySummary, GuildActivityStats } from '@/types';
 import { MainTab } from '@/pages/HomePage';

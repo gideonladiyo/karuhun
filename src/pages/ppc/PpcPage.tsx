@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BossesPage } from './BossesPage';
 import { ScoreCalculatorPage } from './ScoreCalculatorPage';
-import { Skull, Calculator, Flame, Sparkles } from 'lucide-react';
+import { Skull, Calculator, Flame } from 'lucide-react';
 
 interface PpcPageProps {
   initialSubTab?: 'bosses' | 'calculator';
@@ -66,11 +66,7 @@ export const PpcPage: React.FC<PpcPageProps> = ({
 
       {/* Render Active Sub-Page */}
       {activeSubTab === 'bosses' ? (
-        <BossesPage
-          onOpenCalculator={(slug) => {
-            setActiveSubTab('calculator');
-          }}
-        />
+        <BossesPage />
       ) : (
         <ScoreCalculatorPage
           initialBossSlug={initialBossSlug}

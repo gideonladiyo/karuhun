@@ -1,15 +1,14 @@
 import React from 'react';
-import { Shield, ArrowUp, ExternalLink, ChevronRight } from 'lucide-react';
+import { ExternalLink, ChevronRight } from 'lucide-react';
 import { MainTab } from '@/components/common/Navbar';
+import { GUILD_BRANCHES } from '@/services/imageUtils';
+import { MAIN_DISCORD_LINK } from '@/data/static/contactData';
 
 interface FooterProps {
   onNavigate?: (tab: MainTab, branchId?: number) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   const handleNav = (tab: MainTab, branchId?: number) => {
     if (onNavigate) {
@@ -47,7 +46,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <a
-                href="https://discord.gg/Cz9bzjcdV"
+                href={MAIN_DISCORD_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-[#18181b] hover:bg-[#27272a] border border-[#27272a] hover:border-zinc-500 text-xs font-tech text-zinc-200 hover:text-white transition-all shadow-sm"
@@ -68,64 +67,64 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          {/* Col 2: Core Navigation (3 of 12) */}
+          {/* Col 2: Navigation Links (3 of 12) */}
           <div className="lg:col-span-3 space-y-3">
             <div className="text-xs font-tech text-white uppercase tracking-wider font-bold">
-              WEBSITE SECTIONS
+              NAVIGATION
             </div>
             <ul className="space-y-2 text-xs font-sans">
               <li>
-                <button
-                  onClick={() => handleNav('hub')}
-                  className="hover:text-amber-300 transition-colors flex items-center space-x-1"
+                <button 
+                  onClick={() => handleNav('home')} 
+                  className="hover:text-white transition-colors flex items-center space-x-1.5 py-1"
                 >
-                  <ChevronRight className="w-3 h-3 text-zinc-600" />
-                  <span>Guild Branches</span>
+                  <ChevronRight className="w-3 h-3 text-zinc-500" />
+                  <span>Alliance Home</span>
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => handleNav('hub')}
-                  className="hover:text-amber-300 transition-colors flex items-center space-x-1"
+                <button 
+                  onClick={() => handleNav('hub')} 
+                  className="hover:text-white transition-colors flex items-center space-x-1.5 py-1"
                 >
-                  <ChevronRight className="w-3 h-3 text-zinc-600" />
-                  <span>Member Roster</span>
+                  <ChevronRight className="w-3 h-3 text-zinc-500" />
+                  <span>Guild Divisions Hub</span>
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => handleNav('leaderboards')}
-                  className="hover:text-amber-300 transition-colors flex items-center space-x-1"
+                <button 
+                  onClick={() => handleNav('reffs')} 
+                  className="hover:text-white transition-colors flex items-center space-x-1.5 py-1"
                 >
-                  <ChevronRight className="w-3 h-3 text-zinc-600" />
-                  <span>Competitive Leaderboards</span>
+                  <ChevronRight className="w-3 h-3 text-zinc-500" />
+                  <span>Combat &amp; Siege References</span>
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => handleNav('ppc')}
-                  className="hover:text-amber-300 transition-colors flex items-center space-x-1"
+                <button 
+                  onClick={() => handleNav('leaderboards')} 
+                  className="hover:text-white transition-colors flex items-center space-x-1.5 py-1"
                 >
-                  <ChevronRight className="w-3 h-3 text-zinc-600" />
-                  <span>PPC Tools</span>
+                  <ChevronRight className="w-3 h-3 text-zinc-500" />
+                  <span>Union Rankings</span>
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => handleNav('reffs')}
-                  className="hover:text-amber-300 transition-colors flex items-center space-x-1"
+                <button 
+                  onClick={() => handleNav('ppc')} 
+                  className="hover:text-white transition-colors flex items-center space-x-1.5 py-1"
                 >
-                  <ChevronRight className="w-3 h-3 text-zinc-600" />
-                  <span>Strategy References</span>
+                  <ChevronRight className="w-3 h-3 text-zinc-500" />
+                  <span>PPC Tactical Suite</span>
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => handleNav('contact')}
-                  className="hover:text-amber-300 transition-colors flex items-center space-x-1"
+                <button 
+                  onClick={() => handleNav('contact')} 
+                  className="hover:text-white transition-colors flex items-center space-x-1.5 py-1"
                 >
-                  <ChevronRight className="w-3 h-3 text-zinc-600" />
-                  <span>Contact &amp; Recruitment</span>
+                  <ChevronRight className="w-3 h-3 text-zinc-500" />
+                  <span>Union Recruitment &amp; Contact</span>
                 </button>
               </li>
             </ul>
@@ -137,57 +136,23 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               BRANCHES
             </div>
             <div className="space-y-2 text-xs font-sans">
-              <button
-                onClick={() => handleNav('hub', 3638)}
-                className="w-full p-2.5 rounded-xl bg-[#121215] hover:bg-[#18181b] border border-[#27272a] flex items-center justify-between text-left transition-colors group"
-              >
-                <div>
-                  <span className="text-white font-heading font-bold block group-hover:text-amber-300">
-                    Karuhun 夜 (AP Server)
-                  </span>
-                  <span className="text-[10px] font-tech text-zinc-500">ID: 00003638 • Competitive Division</span>
-                </div>
-                <ChevronRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white transition-colors" />
-              </button>
-
-              <button
-                onClick={() => handleNav('hub', 1164)}
-                className="w-full p-2.5 rounded-xl bg-[#121215] hover:bg-[#18181b] border border-[#27272a] flex items-center justify-between text-left transition-colors group"
-              >
-                <div>
-                  <span className="text-white font-heading font-bold block group-hover:text-amber-300">
-                    Izanami 夜 (AP Server)
-                  </span>
-                  <span className="text-[10px] font-tech text-zinc-500">ID: 00001164 • Sub-Competitive</span>
-                </div>
-                <ChevronRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white transition-colors" />
-              </button>
-
-              <button
-                onClick={() => handleNav('hub', 7641)}
-                className="w-full p-2.5 rounded-xl bg-[#121215] hover:bg-[#18181b] border border-[#27272a] flex items-center justify-between text-left transition-colors group"
-              >
-                <div>
-                  <span className="text-white font-heading font-bold block group-hover:text-amber-300">
-                    Astrelume 夜 (AP Server)
-                  </span>
-                  <span className="text-[10px] font-tech text-zinc-500">ID: 00007641 • Casual &amp; Community</span>
-                </div>
-                <ChevronRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white transition-colors" />
-              </button>
-
-              <button
-                onClick={() => handleNav('hub', 2013)}
-                className="w-full p-2.5 rounded-xl bg-[#121215] hover:bg-[#18181b] border border-[#27272a] flex items-center justify-between text-left transition-colors group"
-              >
-                <div>
-                  <span className="text-white font-heading font-bold block group-hover:text-amber-300">
-                    Karuhun 夜’ (NA Server)
-                  </span>
-                  <span className="text-[10px] font-tech text-zinc-500">ID: 00002013 • North America Division</span>
-                </div>
-                <ChevronRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white transition-colors" />
-              </button>
+              {GUILD_BRANCHES.map((branch) => (
+                <button
+                  key={branch.id}
+                  onClick={() => handleNav('hub', branch.id)}
+                  className="w-full p-2.5 rounded-xl bg-[#121215] hover:bg-[#18181b] border border-[#27272a] flex items-center justify-between text-left transition-colors group"
+                >
+                  <div>
+                    <span className="text-white font-heading font-bold block group-hover:text-amber-300">
+                      {branch.name} ({branch.shortRegion} Server)
+                    </span>
+                    <span className="text-[10px] font-tech text-zinc-500">
+                      ID: {String(branch.id).padStart(8, '0')} • {branch.tag}
+                    </span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white transition-colors" />
+                </button>
+              ))}
             </div>
           </div>
 

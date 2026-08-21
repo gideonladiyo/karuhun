@@ -1,93 +1,262 @@
-# karuhun
+# Karuhun — Guild Portal
 
+Official guild portal for **Karuhun**, a guild in **Punishing: Gray Raven**. Displays real-time member data, competitive leaderboards, PPC calculations, strategy references, and guild administration tools.
 
+[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://vercel.com/)
 
-## Getting started
+---
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Table of Contents
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Utility Scripts](#utility-scripts)
+- [Deployment](#deployment)
+- [Code Conventions](#code-conventions)
+- [Contributing](#contributing)
 
-## Add your files
+---
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+## Features
+
+| Feature | Description |
+|---|---|
+| Home | Dashboard overview: guild leaderboard, top operators, recruitment |
+| Guild Hub | Full member roster across all four guild branches |
+| Player Profile | Individual member profile with statistics |
+| Character Inspect | Detail view of a player's constructs and equipment |
+| Competitive Leaderboard | Competitive rankings across guild members |
+| PPC (Phantom Pain Cage) | Boss database and tactical score calculator |
+| Strategy References | Internal guild strategy guides and reference materials |
+| Alliance Telemetry | Alliance activity statistics and guild metrics |
+| Contact | Contact form and recruitment information |
+| Admin | Guild data administration panel (authenticated via Supabase) |
+
+---
+
+## Tech Stack
+
+| Category | Technology |
+|---|---|
+| Build Tool | [Vite 5](https://vitejs.dev/) |
+| UI Framework | [React 18](https://react.dev/) |
+| Language | [TypeScript 5](https://www.typescriptlang.org/) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com/) |
+| UI Components | [Radix UI](https://www.radix-ui.com/), [Lucide React](https://lucide.dev/) |
+| Backend / DB | [Supabase](https://supabase.com/) (Auth + PostgreSQL) |
+| Game API | Huaxu API (guild and player data for Punishing: Gray Raven) |
+| Deployment | [Vercel](https://vercel.com/) |
+
+---
+
+## Project Structure
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/gideonladiyo/karuhun.git
-git branch -M main
-git push -uf origin main
+karuhun/
+├── public/                         # Static assets served as-is (not bundled)
+│   └── videos/                     # Guild intro video
+│
+├── scripts/
+│   └── export_guild_members.js     # Node.js script for exporting guild member snapshots
+│
+├── src/
+│   ├── App.tsx                     # Root component + routing state
+│   ├── main.tsx                    # React entry point
+│   │
+│   ├── assets/                     # Bundler-processed assets
+│   │   └── contributors/           # Contributor avatars & badges
+│   │
+│   ├── components/                 # Reusable UI components
+│   │   ├── common/                 # Navbar, Footer, ScrollReveal, etc.
+│   │   ├── guild/                  # Guild-specific display components
+│   │   ├── home/                   # Home page sections
+│   │   ├── reffs/                  # Strategy References page components
+│   │   └── ui/                     # UI primitives (buttons, avatars, etc.)
+│   │
+│   ├── data/
+│   │   ├── config/                 # Shared configs (guild branches)
+│   │   ├── static/                 # Static data (PPC scores, reffs, siege, telemetry, contact)
+│   │   ├── fallbacks/              # JSON fallback data used when the API is unavailable
+│   │   └── generated/              # Script output — NOT committed to Git
+│   │
+│   ├── pages/                      # Full-page views
+│   │   ├── HomePage.tsx
+│   │   ├── GuildHubPage.tsx
+│   │   ├── PlayerProfilePage.tsx
+│   │   ├── CharacterInspectPage.tsx
+│   │   ├── CompetitiveLeaderboardPage.tsx
+│   │   ├── ReffsPage.tsx
+│   │   ├── AdminPage.tsx
+│   │   ├── ContactPage.tsx
+│   │   ├── GuildIntroOverlay.tsx
+│   │   └── ppc/
+│   │       ├── PpcPage.tsx
+│   │       ├── BossesPage.tsx
+│   │       └── ScoreCalculatorPage.tsx
+│   │
+│   ├── services/                   # API integration and utility layer
+│   │   ├── apiService.ts           # Huaxu API wrapper with in-memory cache
+│   │   ├── imageUtils.ts           # Asset URL helpers + GUILD_BRANCHES config
+│   │   ├── rankingUtils.ts         # Ranking calculation logic
+│   │   ├── recapService.ts         # Guild data snapshot and recap
+│   │   └── supabase/
+│   │       └── client.ts           # Supabase client initialization
+│   │
+│   ├── types/
+│   │   └── index.ts                # All TypeScript interfaces and types
+│   │
+│   └── styles/
+│       └── index.css               # Global styles and Tailwind directives
+│
+├── supabase/
+│   └── rls_policies.sql            # Supabase Row Level Security policies
+│
+├── .env.example                    # Environment variable template
+├── vercel.json                     # Vercel deployment config (SPA routing)
+├── vite.config.ts                  # Vite config + path alias (@/)
+└── tsconfig.json                   # TypeScript config
 ```
 
-## Integrate with your tools
+---
 
-* [Set up project integrations](https://gitlab.com/gideonladiyo/karuhun/-/settings/integrations)
+## Getting Started
 
-## Collaborate with your team
+### Prerequisites
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+- [Node.js](https://nodejs.org/) version **18+**
+- npm 9+ (included with Node.js)
 
-## Test and Deploy
+### Steps
 
-Use the built-in continuous integration in GitLab.
+1. Clone the repository
+   ```bash
+   git clone https://gitlab.com/gideonladiyo/karuhun.git
+   cd karuhun
+   ```
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+2. Install dependencies
+   ```bash
+   npm install
+   ```
 
-***
+3. Set up environment variables
+   ```bash
+   cp .env.example .env
+   ```
+   Fill in the required values in `.env` (see [Environment Variables](#environment-variables)).
 
-# Editing this README
+4. Start the dev server
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Available Commands
 
-## Suggestions for a good README
+```bash
+npm run build     # Production build (output to dist/)
+npm run preview   # Preview the production build locally
+npm run lint      # Check for TypeScript errors
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+---
 
-## Name
-Choose a self-explaining name for your project.
+## Environment Variables
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Copy `.env.example` to `.env` and fill in the values:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```env
+# Huaxu Game API
+VITE_HUAXU_API_URL=https://api.huaxu.app
+VITE_HUAXU_API_KEY=your-api-key-here
+VITE_HUAXU_ASSETS_URL=https://assets.huaxu.app/glb
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+# Google Sheets PPC Data
+VITE_PPC_SHEET_CSV_URL=...
+VITE_PPC_SHEET_DOC_URL=...
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+# Discord
+VITE_DISCORD_INVITE_URL=https://discord.gg/karuhun
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+# Supabase
+VITE_SUPABASE_URL=https://xxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-public-key-here
+```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+> [!WARNING]
+> All variables prefixed with `VITE_` are inlined into the JavaScript bundle by Vite and are **visible to the browser**. Do not store sensitive secret keys here. For keys that must remain private, proxy the request through a Supabase Edge Function instead.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+> [!IMPORTANT]
+> Never commit the `.env` file to the repository. It is already listed in `.gitignore`.
+
+---
+
+## Utility Scripts
+
+### `scripts/export_guild_members.js`
+
+A Node.js script that exports a snapshot of guild member data from the Huaxu API to a local JSON file.
+
+```bash
+# Make sure HUAXU_API_KEY is available in your environment
+HUAXU_API_KEY=your-key node scripts/export_guild_members.js
+```
+
+Output is written to `src/data/generated/guild_members_comparison.json`. This folder is excluded from Git and should only be used locally or in CI pipelines.
+
+---
+
+## Deployment
+
+The project is deployed on **Vercel** as a Single Page Application.
+
+`vercel.json` is configured to redirect all paths to `index.html`, so deep links like `/player/ap/12345` or `/reffs/xyz` work correctly when accessed directly.
+
+For manual deployment:
+```bash
+npm run build
+# Deploy the dist/ folder to your hosting provider
+```
+
+---
+
+## Code Conventions
+
+| File Type | Convention | Example |
+|---|---|---|
+| Reusable React component | PascalCase | `Navbar.tsx` |
+| Page / full-page view | PascalCase + `Page` suffix | `AdminPage.tsx` |
+| Custom hook | camelCase + `use` prefix | `useGuildData.ts` |
+| Service / utility | camelCase | `apiService.ts` |
+| Static data | camelCase | `contactData.ts` |
+| Folder | lowercase, plural | `components/`, `pages/` |
+
+### Path Alias
+
+The project uses the `@/` alias pointing to `src/`:
+
+```ts
+// Use this
+import { GuildInfo } from '@/types';
+
+// Avoid this
+import { GuildInfo } from '../../../types';
+```
+
+---
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+This is an internal portal for guild Karuhun. If you are a guild member and want to contribute, see [CONTRIBUTING.md](./CONTRIBUTING.md) for the full workflow.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+---
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+*Maintained by guild Karuhun — Punishing: Gray Raven*

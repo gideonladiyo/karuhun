@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Skull, Calculator, Flame, Zap, ShieldAlert, Sparkles, ChevronRight, Sliders, Timer, ArrowUpRight, Clock, Swords } from 'lucide-react';
+import { Calculator, Flame, ChevronRight, Sliders, Timer, ArrowUpRight, Clock } from 'lucide-react';
 import { 
   ADVANCED_PPC_SCORES, 
   ULTIMATE_PPC_SCORES, 
@@ -7,7 +7,6 @@ import {
   getLiveOrStoredPpcBossesInfo,
   PPCBossInfo 
 } from '@/data/static/ppcScores';
-import { MainTab } from '@/pages/HomePage';
 
 interface PpcTacticalSuiteProps {
   onOpenPpcTool: (subTab: 'bosses' | 'calculator') => void;
@@ -22,14 +21,12 @@ export const PpcTacticalSuite: React.FC<PpcTacticalSuiteProps> = ({ onOpenPpcToo
   const [bossesData, setBossesData] = useState<PPCBossInfo[]>(() => {
     return getLiveOrStoredPpcBossesInfo().bosses.slice(0, 4);
   });
-  const [loadingBosses, setLoadingBosses] = useState<boolean>(true);
 
   useEffect(() => {
     getLiveOrStoredPpcBossesInfoAsync().then((res) => {
       if (res && res.bosses && res.bosses.length > 0) {
         setBossesData(res.bosses.slice(0, 4));
       }
-      setLoadingBosses(false);
     });
   }, []);
 
@@ -46,16 +43,6 @@ export const PpcTacticalSuite: React.FC<PpcTacticalSuiteProps> = ({ onOpenPpcToo
   const chaosScore = getScoreForSec(clearSec, 'chaos');
   const hellScore = getScoreForSec(clearSec, 'hell');
   const totalSimulatedScore = knightScore + chaosScore + hellScore;
-
-  const getWeaknessBadgeColor = (weakness: string) => {
-    const lower = weakness.toLowerCase();
-    if (lower.includes('fire')) return 'bg-orange-950/50 text-orange-400 border-orange-500/40';
-    if (lower.includes('light') || lower.includes('lightning')) return 'bg-amber-950/50 text-amber-300 border-amber-500/40';
-    if (lower.includes('dark')) return 'bg-purple-950/50 text-purple-300 border-purple-500/40';
-    if (lower.includes('ice') || lower.includes('frost')) return 'bg-sky-950/50 text-sky-300 border-sky-500/40';
-    if (lower.includes('phys')) return 'bg-zinc-800 text-zinc-300 border-zinc-600';
-    return 'bg-emerald-950/50 text-emerald-300 border-emerald-500/40';
-  };
 
   // Helper to shorten HP display (e.g. 19200000 -> 19.2M)
   const formatHp = (num?: number) => {

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getHuaxuImageUrl, GUILD_BRANCHES } from '@/services/imageUtils';
+import { getHuaxuImageUrl } from '@/services/imageUtils';
 import { 
   fetchCompositeAllianceLeaderboard, 
   sortAllianceMembers, 
   MemberCompetitiveAchievement 
 } from '@/services/rankingUtils';
-import { Trophy, Swords, Skull, Globe, Search, ArrowUpDown, ChevronRight, Award, Shield } from 'lucide-react';
+import { Trophy, Swords, Skull, Search, ChevronRight, Award } from 'lucide-react';
 
 interface CompetitiveLeaderboardProps {
   onSelectPlayer: (playerId: number, server: string) => void;
