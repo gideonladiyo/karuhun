@@ -203,7 +203,7 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
             <span>Number</span>
           </div>
           <div className="col-span-5">
-            <span>Member Name</span>
+            <span>Guild Name</span>
           </div>
           <div className="col-span-2 text-right">
             <span>Total Contribution</span>
@@ -280,7 +280,7 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
 
               // Special Alliance Highlight styling
               if (isAlliance) {
-                rowBgClass = 'bg-gradient-to-r from-amber-950/40 via-[#18181b] to-[#121215] border-l-4 border-l-amber-500 shadow-inner';
+                rowBgClass = 'bg-gradient-to-r from-amber-950/40 via-[#18181b] to-[#121215] border-l-amber-500 shadow-inner';
               }
 
               return (
@@ -332,19 +332,18 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
                       </div>
                     </div>
 
-                    {/* 2. MEMBER NAME / GUILD COLUMN */}
+                    {/* 2. GUILD NAME / GUILD COLUMN */}
                     <div className="md:col-span-5 flex items-center space-x-3 min-w-0">
                       {/* Guild Crest */}
-                      <div className={`w-10 h-10 rounded-xl bg-black border p-1 flex-shrink-0 relative overflow-hidden flex items-center justify-center ${
-                        isAlliance ? 'border-amber-500 shadow-sm shadow-amber-500/20' : 'border-[#27272a]'
-                      }`}>
+                      <div className={`w-10 h-10 p-1 flex-shrink-0 relative overflow-hidden flex items-center justify-center shadow-sm'
+                      `}>
                         <img
                           src={guild.icon ? getHuaxuImageUrl(guild.icon) : '/logo.png'}
                           alt={guild.name}
                           onError={(e) => {
                             (e.target as HTMLElement).style.display = 'none';
                           }}
-                          className="w-full h-full object-contain filter contrast-125"
+                          className="w-full h-full rounded-md object-contain filter contrast-125"
                         />
                       </div>
 

@@ -142,7 +142,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
           
           <div className="flex items-center space-x-5">
             {/* Construct Portrait with Rank Overlay */}
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-black border border-[#27272a] p-1 flex-shrink-0 overflow-hidden shadow-xl">
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl p-1 flex-shrink-0 overflow-hidden shadow-xl">
               <img
                 src={portraitSrc}
                 alt={charInfo.characterName}
@@ -193,25 +193,18 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
           </div>
 
           {/* Construct Stats Pills */}
-          <div className="grid grid-cols-3 gap-3 w-full md:w-auto">
-            <div className="bg-black/60 border border-[#27272a] rounded-2xl p-4 text-center min-w-[100px] flex flex-col justify-center items-center">
-              <span className="text-[10px] font-tech uppercase text-zinc-400 block font-bold">RANK</span>
-              <span className={`inline-block font-heading font-bold text-xs sm:text-sm px-2.5 py-0.5 rounded-md border mt-1 ${rankBadge.classNames}`}>
+          <div className="grid grid-cols-3 gap-3 w-full md:w-auto ">
+            <div className="rounded-2xl p-4 text-center min-w-[100px] flex flex-col justify-center items-center">
+              <span className="text-[14px] font-tech uppercase text-zinc-400 block font-bold">RANK</span>
+              <span className={`inline-block font-heading font-bold text-sm sm:text-base px-2.5 py-0.5 rounded-md border mt-1 ${rankBadge.classNames}`}>
                 {rankBadge.label}
               </span>
             </div>
 
-            <div className="bg-black/60 border border-[#27272a] rounded-2xl p-4 text-center min-w-[100px] flex flex-col justify-center items-center">
-              <span className="text-[10px] font-tech uppercase text-zinc-400 block font-bold">LEVEL</span>
+            <div className="rounded-2xl p-4 text-center min-w-[100px] flex flex-col justify-center items-center">
+              <span className="text-[14px] font-tech uppercase text-zinc-400 block font-bold">LEVEL</span>
               <span className="font-heading font-bold text-xl text-white">
                 {charInfo.level || 80} / 80
-              </span>
-            </div>
-
-            <div className="bg-black/60 border border-[#27272a] rounded-2xl p-4 text-center min-w-[100px] flex flex-col justify-center items-center">
-              <span className="text-[10px] font-tech uppercase text-zinc-400 block font-bold">AWAKENING</span>
-              <span className="font-heading font-bold text-xl text-white">
-                LVL {charInfo.awakeningLevel || 3}
               </span>
             </div>
           </div>
@@ -270,7 +263,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
 
                 {weapon ? (
                   <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 rounded-2xl bg-black border border-[#27272a] p-1 flex-shrink-0">
+                    <div className="w-16 h-16 rounded-2xl p-1 flex-shrink-0">
                       <img
                         src={getHuaxuImageUrl(weapon.icon)}
                         alt={weapon.name}
@@ -312,7 +305,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
 
                 {cub ? (
                   <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 rounded-2xl bg-black border border-[#27272a] p-1 flex-shrink-0">
+                    <div className="w-16 h-16 rounded-2xl p-1 flex-shrink-0">
                       <img
                         src={getHuaxuImageUrl(cub.icon)}
                         alt={cub.name}
@@ -344,7 +337,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                   {/* Top Weapon Header & Portrait Card */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-[#27272a] pb-6">
                     <div className="flex items-center space-x-4">
-                      <div className="w-20 h-20 rounded-2xl bg-black border-2 border-amber-500/60 p-1 flex-shrink-0 shadow-lg">
+                      <div className="w-20 h-20 rounded-2xl p-1 flex-shrink-0 shadow-lg">
                         <img
                           src={getHuaxuImageUrl(weapon.icon)}
                           alt={weapon.name}
@@ -365,7 +358,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                     </div>
 
                     {/* Character Portrait Right Box */}
-                    <div className="w-20 h-28 sm:w-24 sm:h-32 rounded-xl bg-black border border-[#27272a] overflow-hidden shadow-md flex-shrink-0">
+                    <div className="w-20 h-28 sm:w-24 sm:h-32 rounded-xl overflow-hidden shadow-md flex-shrink-0">
                       <img
                         src={portraitSrc}
                         alt={charInfo.characterName}
@@ -399,7 +392,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                           return (
                             <div key={idx} className="bg-[#09090b] p-4 rounded-2xl border border-[#27272a] flex items-center space-x-4">
                               {/* Resonance Asset Icon */}
-                              <div className="w-12 h-12 rounded-xl bg-black border border-[#27272a] p-1.5 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                              <div className="w-12 h-12 rounded-xl p-1.5 flex-shrink-0 flex items-center justify-center">
                                 {iconUrl ? (
                                   <img
                                     src={iconUrl}
@@ -457,11 +450,11 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                           {harmonization ? (
                             <div className="flex items-center space-x-4">
                               {/* Large Memory Image */}
-                              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#18181b] p-1 flex-shrink-0 border-2 border-white shadow-xl overflow-hidden">
+                              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl p-1 flex-shrink-0 shadow-xl">
                                 <img
                                   src={getHuaxuImageUrl(harmonization.iconBig || harmonization.icon)}
                                   alt={harmonization.name || 'Harmonization Memory'}
-                                  className="w-full h-full object-cover rounded-xl hover:scale-105 transition-transform"
+                                  className="w-full h-full object-cover rounded-xl scale-120 hover:scale-125 transition-transform"
                                 />
                               </div>
                               <div className="flex-1 min-w-0 space-y-1">
@@ -473,9 +466,6 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                                     {harmonization.quality || 6}★ Memory
                                   </span>
                                 </div>
-                                <p className="text-xs font-tech text-zinc-400 pt-0.5">
-                                  Suit Set #{harmonization.suit || 1641}
-                                </p>
                               </div>
                             </div>
                           ) : (
@@ -497,7 +487,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                           {harmonizationSkill ? (
                             <div className="flex items-center space-x-4">
                               {/* Skill Icon */}
-                              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#18181b] border border-[#27272a] p-1.5 flex-shrink-0 flex items-center justify-center overflow-hidden shadow-lg">
+                              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl p-1.5 flex-shrink-0 flex items-center justify-center shadow-lg">
                                 {harmonizationSkill.icon ? (
                                   <img
                                     src={getHuaxuImageUrl(harmonizationSkill.icon)}
@@ -572,7 +562,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                         className="bg-[#09090b] p-3.5 rounded-2xl border border-amber-600/50 hover:border-amber-400 transition-all flex items-start space-x-3 shadow-md"
                       >
                         {/* Memory Rectangular Image Container with Slot Badge */}
-                        <div className="relative w-16 h-24 rounded-xl bg-black border border-[#27272a] overflow-hidden flex-shrink-0">
+                        <div className="relative w-16 h-24 rounded-xl overflow-hidden flex-shrink-0">
                           {/* Slot Number Badge Top-Left */}
                           <div className="absolute top-0 left-0 bg-white/90 text-black font-heading font-black text-[11px] px-2 py-0.5 rounded-br-lg z-10">
                             {slotNum}
@@ -581,19 +571,14 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                           <img
                             src={memIcon}
                             alt={memName}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover scale-120"
                           />
-
-                          {/* 6-Star Rating Bottom */}
-                          <div className="absolute bottom-0 inset-x-0 bg-black/80 text-amber-400 text-[8px] font-bold text-center py-0.5 tracking-tighter">
-                            ★★★★★★
-                          </div>
                         </div>
 
                         {/* Memory Info & Slot 1 / Slot 2 Resonance Details (Icon Asset + Description) */}
                         <div className="space-y-1.5 flex-1 min-w-0">
                           <div>
-                            <h4 className="font-heading font-bold text-xs sm:text-sm text-white truncate">
+                            <h4 className="font-heading font-bold text-xm sm:text-base text-white truncate">
                               {memName}
                             </h4>
                             <p className="text-[11px] font-tech text-zinc-400">
@@ -602,10 +587,10 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                           </div>
 
                           {/* Slot 1 & Slot 2 Resonance Entries (Icon Asset + Description) */}
-                          <div className="space-y-1.5 pt-1 border-t border-[#27272a]">
+                          <div className="space-y-2 pt-1 border-t border-[#27272a]">
                             {/* Slot 1 */}
-                            <div className="flex items-center space-x-2 text-[11px] font-sans text-amber-300">
-                              <div className="w-5 h-5 rounded-md bg-black border border-amber-800/80 p-0.5 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                            <div className="flex items-center space-x-2 text-[14px] font-sans">
+                              <div className="w-5 h-5 rounded-md flex-shrink-0 flex items-center justify-center">
                                 {slot1IconUrl ? (
                                   <img src={slot1IconUrl} alt="Slot 1" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
                                 ) : (
@@ -616,8 +601,8 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                             </div>
 
                             {/* Slot 2 */}
-                            <div className="flex items-center space-x-2 text-[11px] font-sans text-amber-300">
-                              <div className="w-5 h-5 rounded-md bg-black border border-amber-800/80 p-0.5 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                            <div className="flex items-center space-x-2 text-[14px] font-sans">
+                              <div className="w-5 h-5 rounded-md flex-shrink-0 flex items-center justify-center overflow-hidden">
                                 {slot2IconUrl ? (
                                   <img src={slot2IconUrl} alt="Slot 2" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
                                 ) : (
@@ -645,7 +630,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                 <div className="space-y-6">
                   {/* CUB Header Card */}
                   <div className="flex items-center space-x-5 border-b border-[#27272a] pb-6">
-                    <div className="w-20 h-20 rounded-2xl bg-black border border-[#27272a] p-1 flex-shrink-0 overflow-hidden">
+                    <div className="w-20 h-20 p-1 flex-shrink-0 overflow-hidden">
                       <img
                         src={getHuaxuImageUrl(cub.icon)}
                         alt={cub.name}
@@ -687,12 +672,12 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
                         return (
                           <div key={idx} className="bg-[#09090b] p-3.5 rounded-2xl border border-[#27272a] flex items-center space-x-4">
                             {/* CUB Skill Icon Asset */}
-                            <div className="w-12 h-12 rounded-xl bg-black border border-[#27272a] p-1.5 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                            <div className="w-12 h-12 rounded-xl p-1.5 flex-shrink-0 flex items-center justify-center overflow-hidden">
                               {skillIconUrl ? (
                                 <img
                                   src={skillIconUrl}
                                   alt={skill.name}
-                                  className="w-full h-full object-contain filter contrast-125"
+                                  className="w-full h-full scale-130 object-contain filter contrast-125"
                                   onError={(e) => {
                                     (e.target as HTMLElement).style.display = 'none';
                                   }}

@@ -58,13 +58,13 @@ export const MemberTacticalCard: React.FC<MemberTacticalCardProps> = ({
       className="minimal-card p-3.5 sm:p-4 flex items-center space-x-3.5 hover:border-zinc-500 hover:bg-[#151519] transition-all duration-200 cursor-pointer group bg-[#121215] relative overflow-hidden"
     >
       {/* Avatar Container: Pure portrait and frame without extra background or border wrapper */}
-      <div className="relative w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 flex items-center justify-center">
+      <div className="relative w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 flex items-center justify-center group-hover:scale-105">
         {/* Custom Head Frame Image Layer (if exists) */}
         {hasCustomFrame && (
           <img
             src={getHuaxuImageUrl(member.frame)}
             alt="Avatar Frame"
-            className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10 scale-110"
+            className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10 scale-125"
             onError={(e) => {
               (e.target as HTMLElement).style.display = 'none';
             }}
@@ -75,7 +75,7 @@ export const MemberTacticalCard: React.FC<MemberTacticalCardProps> = ({
         <img
           src={getHuaxuImageUrl(member.portrait)}
           alt={member.name}
-          className="w-full h-full object-cover rounded-xl z-0 filter contrast-105 group-hover:scale-105 transition-transform"
+          className="w-full h-full object-cover rounded-xl z-0 filter contrast-105  transition-transform"
           onError={(e) => {
             (e.target as HTMLImageElement).src = '/logo.png';
           }}

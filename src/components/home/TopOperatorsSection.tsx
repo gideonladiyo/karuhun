@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Swords, Skull, ChevronRight, Shield, ArrowUpRight } from 'lucide-react';
+import { Trophy, Swords, Skull, ChevronRight, ArrowUpRight } from 'lucide-react';
 import { 
   fetchCompositeAllianceLeaderboard, 
   sortAllianceMembers, 
@@ -162,6 +162,8 @@ export const TopOperatorsSection: React.FC<TopOperatorsSectionProps> = ({
                   const rank = index + 1;
                   const isMvp = rank === 1;
 
+                  const hasCustomFrame = Boolean(operator.frame && operator.frame.trim() !== '');
+
                   // Medal styling
                   let medalBadgeClass = 'bg-[#18181b] text-zinc-300 border-zinc-700';
                   let rowBgClass = index % 2 === 0 ? 'bg-[#0d0d11]' : 'bg-[#121215]';
@@ -206,16 +208,26 @@ export const TopOperatorsSection: React.FC<TopOperatorsSectionProps> = ({
                           </div>
 
                           {/* AVATAR PORTRAIT */}
-                          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-black border p-0.5 flex-shrink-0 relative overflow-hidden flex items-center justify-center ${
-                            isMvp ? 'border-amber-400 ring-2 ring-amber-500/20' : 'border-[#27272a]'
-                          }`}>
+                          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl p-0.5 flex-shrink-0 relative flex items-center justify-center group-hover:scale-105'
+                          `}>
+                            {hasCustomFrame && (
+                              <img
+                                src={getHuaxuImageUrl(operator.frame)}
+                                alt="Avatar Frame"
+                                className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10 scale-[1.15]"
+                                onError={(e) => {
+                                  (e.target as HTMLElement).style.display = 'none';
+                                }}
+                              />
+                            )}
+
                             <img
                               src={getHuaxuImageUrl(operator.portrait)}
                               alt={operator.name}
                               onError={(e) => {
                                 (e.target as HTMLElement).style.display = 'none';
                               }}
-                              className="w-full h-full object-contain filter contrast-125 group-hover:scale-105 transition-transform"
+                              className="w-full h-full object-contain filter contrast-125  transition-transform"
                             />
                           </div>
 
@@ -230,13 +242,12 @@ export const TopOperatorsSection: React.FC<TopOperatorsSectionProps> = ({
 
                               {isMvp && (
                                 <span className="text-[8px] sm:text-[9px] font-tech font-black px-1.5 py-0.5 rounded bg-amber-400 text-black uppercase flex-shrink-0">
-                                  MVP #1
+                                  KARUHUN DALAO
                                 </span>
                               )}
                             </div>
 
                             <div className="text-[10px] sm:text-[11px] font-tech text-zinc-400 truncate flex items-center space-x-1 sm:space-x-1.5 mt-0.5">
-                              <Shield className="w-3 h-3 text-zinc-500 flex-shrink-0" />
                               <span className="truncate">{operator.guildName}</span>
                               <span className="text-zinc-600">•</span>
                               <span className="text-zinc-400 uppercase font-bold">{operator.server}</span>

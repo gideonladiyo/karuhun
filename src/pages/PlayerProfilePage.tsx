@@ -124,16 +124,16 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
       </div>
 
       {/* Commander Profile Banner */}
-      <div className="minimal-card p-6 sm:p-8 space-y-6 relative overflow-hidden">
+      <div className="minimal-card p-6 sm:p-8 space-y-6 relative">
         <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
           
           {/* Avatar & Frame */}
-          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-black border border-[#27272a] p-1 flex-shrink-0 overflow-hidden shadow-xl">
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl p-1 flex-shrink-0 shadow-xl">
             {player.frame && (
               <img
                 src={getHuaxuImageUrl(player.frame)}
                 alt="Frame"
-                className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none filter grayscale contrast-125"
+                className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none filter grayscale contrast-125 scale-110"
                 onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
               />
             )}
@@ -227,7 +227,7 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
                   className="minimal-card-interactive p-2.5 flex flex-col items-center justify-between text-center cursor-pointer group space-y-2 rounded-2xl border border-[#27272a] hover:border-white transition-all"
                 >
                   {/* Construct Square Portrait Container */}
-                  <div className="relative w-full aspect-square rounded-xl bg-black border border-[#27272a] overflow-hidden group-hover:border-white transition-colors">
+                  <div className="relative w-full aspect-square rounded-xl overflow-hidden group-hover:border-white transition-colors">
                     <img
                       src={getHuaxuImageUrl(char.fashionIcon || char.normalIcon)}
                       alt={char.characterName}
