@@ -706,25 +706,49 @@ export function getLiveOrStoredPpcBossesDetails(): { updatedAt?: string; bosses:
   return { bosses: FULL_PPC_BOSSES };
 }
 
+let ppcBossesCache: { data: { updatedAt?: string; bosses: PpcBossDetail[] }; timestamp: number } | null = null;
+let ppcBossesInFlightPromise: Promise<{ updatedAt?: string; bosses: PpcBossDetail[] }> | null = null;
+const PPC_CACHE_TTL_MS = 3 * 60 * 1000;
+
 export async function getLiveOrStoredPpcBossesDetailsAsync(): Promise<{ updatedAt?: string; bosses: PpcBossDetail[] }> {
-  if (isSupabaseConfigured() && supabase) {
-    try {
-      const { data, error } = await supabase
-        .from('guild_recap_snapshots')
-        .select('data')
-        .eq('id', 'latest_ppc_bosses')
-        .single();
-      if (!error && data && data.data && Array.isArray(data.data.bosses)) {
-        try {
-          localStorage.setItem(STORAGE_KEY_PPC_BOSSES, JSON.stringify(data.data));
-        } catch (e) {}
-        return { updatedAt: data.data.updatedAt, bosses: data.data.bosses };
-      }
-    } catch (e) {
-      console.warn('[PPCBosses] Supabase read exception:', e);
-    }
+  if (ppcBossesCache && Date.now() - ppcBossesCache.timestamp < PPC_CACHE_TTL_MS) {
+    return ppcBossesCache.data;
   }
-  return getLiveOrStoredPpcBossesDetails();
+
+  if (ppcBossesInFlightPromise) {
+    return ppcBossesInFlightPromise;
+  }
+
+  ppcBossesInFlightPromise = (async () => {
+    try {
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('guild_recap_snapshots')
+            .select('data')
+            .eq('id', 'latest_ppc_bosses')
+            .maybeSingle();
+          if (!error && data && data.data && Array.isArray(data.data.bosses)) {
+            try {
+              localStorage.setItem(STORAGE_KEY_PPC_BOSSES, JSON.stringify(data.data));
+            } catch (e) {}
+            const result = { updatedAt: data.data.updatedAt, bosses: data.data.bosses };
+            ppcBossesCache = { data: result, timestamp: Date.now() };
+            return result;
+          }
+        } catch (e) {
+          console.warn('[PPCBosses] Supabase read exception:', e);
+        }
+      }
+      const fallbackResult = getLiveOrStoredPpcBossesDetails();
+      ppcBossesCache = { data: fallbackResult, timestamp: Date.now() };
+      return fallbackResult;
+    } finally {
+      ppcBossesInFlightPromise = null;
+    }
+  })();
+
+  return ppcBossesInFlightPromise;
 }
 
 export function getLiveOrStoredPpcBossesInfo(): { updatedAt?: string; bosses: PPCBossInfo[] } {
