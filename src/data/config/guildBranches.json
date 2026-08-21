@@ -1,0 +1,38 @@
+[
+  {
+    "id": 3638,
+    "server": "ap",
+    "name": "KARUHUN 夜",
+    "tag": "Competitive",
+    "region": "Asia-Pacific (AP)",
+    "shortRegion": "AP",
+    "defaultMembers": 78
+  },
+  {
+    "id": 1164,
+    "server": "ap",
+    "name": "IZANAMI 夜",
+    "tag": "Sub-Competitive",
+    "region": "Asia-Pacific (AP)",
+    "shortRegion": "AP",
+    "defaultMembers": 76
+  },
+  {
+    "id": 7641,
+    "server": "ap",
+    "name": "ASTRELUME 夜",
+    "tag": "Casual",
+    "region": "Asia-Pacific (AP)",
+    "shortRegion": "AP",
+    "defaultMembers": 67
+  },
+  {
+    "id": 2013,
+    "server": "na",
+    "name": "KARUHUN 夜’",
+    "tag": "Casual",
+    "region": "North America (NA)",
+    "shortRegion": "NA",
+    "defaultMembers": 68
+  }
+]

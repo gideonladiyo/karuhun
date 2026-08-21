@@ -1,12 +1,6 @@
 // Types for Karuhun Alliance Guild & Character Database
 
-export interface GuildBranch {
-  id: number;
-  server: string;
-  name: string;
-  tag: string;
-  region: string;
-}
+export type MainTab = 'home' | 'hub' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact';
 
 export interface GuildInfo {
   id: number;
@@ -108,6 +102,8 @@ export interface PlayerCharacter {
   visible?: boolean;
 }
 
+export type NameplateInfo = string | { icon?: string; image?: string; url?: string; iconUrl?: string; path?: string } | null;
+
 export interface PlayerProfileData {
   player: {
     id: number;
@@ -119,7 +115,7 @@ export interface PlayerProfileData {
     likes?: number;
     guildId?: number;
     guildName?: string;
-    nameplate?: any;
+    nameplate?: NameplateInfo;
     guild?: { name: string };
   };
   characters: PlayerCharacter[];
@@ -285,20 +281,6 @@ export interface CharacterDetailResponse {
   };
 }
 
-export interface MemberCompetitiveAchievement {
-  playerId: number;
-  name: string;
-  level: number;
-  portrait: string;
-  frame?: string;
-  server: string;
-  guildName?: string;
-  warzoneScore?: number;
-  warzoneRank?: number;
-  warzoneZone?: string;
-  ppcScore?: number;
-  ppcRank?: number;
-}
 
 export interface PPCResponse {
   status: string;

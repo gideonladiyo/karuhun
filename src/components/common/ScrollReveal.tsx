@@ -22,7 +22,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node) return undefined;
 
     if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
@@ -40,9 +40,10 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
       observer.observe(node);
       return () => observer.disconnect();
-    } else {
-      setIsVisible(true);
     }
+
+    setIsVisible(true);
+    return undefined;
   }, [threshold]);
 
   // Easing curve: bouncy spring vs buttery smooth

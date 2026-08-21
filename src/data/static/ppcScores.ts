@@ -1,15 +1,6 @@
 // PPC Score Tables & Boss Database extracted from Google Sheets
 import { supabase, isSupabaseConfigured } from '@/services/supabase/client';
 
-export interface ScoreRow {
-  time: number; // 0 to 60 seconds
-  knight: number;
-  chaos: number;
-  hell: number;
-  test?: number;
-  elite?: number;
-}
-
 // Advanced PPC Score Table (adv.csv)
 export const ADVANCED_PPC_SCORES: Record<number, { knight: number; chaos: number; hell: number }> = {
   0: { knight: 62420, chaos: 112340, hell: 212180 },
@@ -574,22 +565,6 @@ export const getPpcStageScore = (
   }
 };
 
-export const getPpcTotalScore = (
-  type: 'ultimate' | 'advanced',
-  knightTime: number,
-  chaosTime: number,
-  hellTime: number
-): { knight: number; chaos: number; hell: number; total: number } => {
-  const knight = getPpcStageScore(type, 'knight', knightTime);
-  const chaos = getPpcStageScore(type, 'chaos', chaosTime);
-  const hell = getPpcStageScore(type, 'hell', hellTime);
-  return {
-    knight,
-    chaos,
-    hell,
-    total: knight + chaos + hell
-  };
-};
 
 export interface PPCBossInfo {
   name: string;

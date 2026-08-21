@@ -66,29 +66,34 @@ const STORAGE_KEY_AUTO_DATE = 'karuhun_recap_auto_snapshot_date';
  * Fetch live data for all 4 Karuhun Alliance Guilds from API
  */
 export async function fetchAllGuildMembersSnapshot(isAuto = false): Promise<BaselineDataset> {
-  const allMembers: GuildMemberSnapshot[] = [];
   const fetchedAt = new Date().toISOString();
 
-  for (const branch of GUILD_BRANCHES) {
-    try {
-      const res = await getGuildData(branch.server, branch.id, true);
-      if (res && res.data && res.data.members) {
-        const guildName = res.data.guild?.name || branch.name;
-        const membersList = res.data.members.map((m) => ({
-          guildId: branch.id,
-          guildName: guildName,
-          server: branch.server,
-          playerId: m.playerId,
-          name: m.name,
-          weeklyContribution: m.contributeWeek ?? 0,
-          snapshotTime: fetchedAt
-        }));
-        allMembers.push(...membersList);
-      }
-    } catch (err) {
-      console.warn(`[RecapService] Failed fetching live data for guild ${branch.id}:`, err);
+  const results = await Promise.allSettled(
+    GUILD_BRANCHES.map(branch => getGuildData(branch.server, branch.id, true))
+  );
+
+  const allMembers: GuildMemberSnapshot[] = [];
+  results.forEach((result, i) => {
+    const branch = GUILD_BRANCHES[i];
+    if (result.status === 'rejected') {
+      console.warn(`[RecapService] Failed fetching live data for guild ${branch.id}:`, result.reason);
+      return;
     }
-  }
+    const res = result.value;
+    if (res && res.data && res.data.members) {
+      const guildName = res.data.guild?.name || branch.name;
+      const membersList = res.data.members.map((m) => ({
+        guildId: branch.id,
+        guildName: guildName,
+        server: branch.server,
+        playerId: m.playerId,
+        name: m.name,
+        weeklyContribution: m.contributeWeek ?? 0,
+        snapshotTime: fetchedAt
+      }));
+      allMembers.push(...membersList);
+    }
+  });
 
   const dataset: BaselineDataset = {
     fetchedAt,
@@ -376,7 +381,6 @@ export async function checkAndTriggerAutoSnapshot(): Promise<{ triggered: boolea
 
   // Check if current time is 11:58 WIB or 11:59 WIB and hasn't run today
   if (hours === 11 && (minutes === 58 || minutes === 59) && lastAutoDate !== dateKey) {
-    console.log(`[AutoSnapshot] 11:58 WIB detected! Triggering automatic baseline snapshot for ${dateKey}...`);
     const dataset = await fetchAllGuildMembersSnapshot(true);
     await saveBaselineSnapshot(dataset);
     localStorage.setItem(STORAGE_KEY_AUTO_DATE, dateKey);

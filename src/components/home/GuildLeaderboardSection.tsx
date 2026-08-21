@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Trophy, Search, Shield, ChevronRight, Users, UserCheck, Sparkles, ChevronDown, ChevronUp, UnfoldVertical, FoldVertical } from 'lucide-react';
+import { Trophy, ChevronRight, Users, UserCheck, ChevronDown, ChevronUp, UnfoldVertical, FoldVertical } from 'lucide-react';
 import { getGuildsList, getAllianceLiveActivity } from '@/services/apiService';
 import { getHuaxuImageUrl, GUILD_BRANCHES } from '@/services/imageUtils';
 import { GuildListItem, AllianceActivitySummary } from '@/types';
@@ -12,7 +12,7 @@ interface GuildLeaderboardSectionProps {
 export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = ({ onNavigate }) => {
   const [selectedServer, setSelectedServer] = useState<'ap' | 'na'>('ap');
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm] = useState<string>('');
   const [guilds, setGuilds] = useState<GuildListItem[]>([]);
   const [liveActivity, setLiveActivity] = useState<AllianceActivitySummary | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -41,13 +41,11 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
     ) || guild.name.includes('夜') || guild.name.toLowerCase().includes('karuhun');
   };
 
-  // Get alliance tier tag
+  // Get alliance tier tag dynamically from branch config
   const getAllianceTier = (guildId: number): string => {
-    if (guildId === 3638) return 'Competitive';
-    if (guildId === 1164) return 'Sub-Competitive';
-    if (guildId === 7641) return 'Casual';
-    if (guildId === 2013) return 'Casual NA';
-    return 'Union';
+    const branch = GUILD_BRANCHES.find((b) => b.id === guildId);
+    if (!branch) return 'Union';
+    return branch.server === 'na' ? `${branch.tag} NA` : branch.tag;
   };
 
   // Filter guilds based on search term

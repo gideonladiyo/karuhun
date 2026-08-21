@@ -174,7 +174,7 @@ export const Hero3DCardStack: React.FC<Hero3DCardStackProps> = ({
     }
   };
 
-  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerUp = () => {
     if (isDraggingRef.current && dragAxisRef.current === 'x') {
       // Momentum throw physics for horizontal swipe
       const carried = Math.max(-120, Math.min(120, velocityRef.current * 0.16));
@@ -259,16 +259,6 @@ export const Hero3DCardStack: React.FC<Hero3DCardStackProps> = ({
 
             // Active front card detection
             const isFront = cosVal > 0.80;
-
-            const isCompetitive = branch.tag === 'Competitive';
-            const isSubCompetitive = branch.tag === 'Sub-Competitive';
-
-            const tagColorClass = isCompetitive
-              ? 'text-amber-400'
-              : isSubCompetitive
-              ? 'text-sky-400'
-              : 'text-zinc-400';
-
             const iconSrc = branchIcons[branch.id] || fallbackLogo;
 
             return (

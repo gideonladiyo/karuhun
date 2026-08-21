@@ -6,11 +6,9 @@ import {
   saveStoredReference,
   deleteStoredReference,
   toggleStoredReferencePublish,
-  extractYoutubeVideoId,
   detectVideoPlatform,
   extractVideoId,
   getPlatformThumbnail,
-  VideoPlatform
 } from '@/data/static/reffsData';
 import { supabase, isSupabaseConfigured } from '@/services/supabase/client';
 import { MarkdownRenderer } from '@/components/common/MarkdownRenderer';
@@ -21,7 +19,6 @@ import {
   loadBaselineSnapshot,
   loadBaselineSnapshotAsync,
   compareGuildMembersData,
-  checkAndTriggerAutoSnapshot,
   generateDiscordRecapText,
   getWibDateInfo,
   BaselineDataset,
@@ -33,10 +30,8 @@ import {
   getLiveOrStoredPpcBossesDetails,
   resetPpcBossesToDefault,
   PpcBossDetail,
-  GOOGLE_SPREADSHEET_PPC_URL
 } from '@/data/static/ppcScores';
 import {
-  Lock,
   Plus,
   Edit,
   Trash2,
@@ -47,21 +42,12 @@ import {
   RefreshCw,
   Mail,
   LogIn,
-  ArrowLeft,
-  Save,
   CheckCircle,
   Clock,
-  Sparkles,
-  Lightbulb,
   FileText,
   Download,
-  Upload,
   Copy,
   AlertTriangle,
-  Users,
-  Layers,
-  Calendar,
-  Zap,
   Skull,
   ExternalLink,
   RotateCcw,
@@ -86,7 +72,7 @@ export const AdminPage: React.FC = () => {
   const [authLoading, setAuthLoading] = useState<boolean>(false);
 
   const [references, setReferences] = useState<ReferenceItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -112,9 +98,9 @@ export const AdminPage: React.FC = () => {
   const [formTips, setTips] = useState<string[]>(['', '', '']);
 
   // Description tab state: 'edit' | 'preview'
-  const [descTab, setDescTab] = useState<'edit' | 'preview'>('edit');
+  const [, setDescTab] = useState<'edit' | 'preview'>('edit');
 
-  const [supabaseUserEmail, setSupabaseUserEmail] = useState<string | null>(null);
+  const [, setSupabaseUserEmail] = useState<string | null>(null);
 
   // --- RECAP SYSTEM STATES ---
   const [baselineData, setBaselineData] = useState<BaselineDataset>(() => loadBaselineSnapshot());
@@ -128,8 +114,7 @@ export const AdminPage: React.FC = () => {
   const [rawJsonInput, setRawJsonInput] = useState<string>('');
   
   // Realtime WIB Clock & Auto-Snapshot Status
-  const [currentWibTime, setCurrentWibTime] = useState<string>(() => getWibDateInfo().timeString);
-  const [autoSnapshotNotice, setAutoSnapshotNotice] = useState<string | null>(null);
+  const [, setCurrentWibTime] = useState<string>(() => getWibDateInfo().timeString);
 
   // --- PPC BOSSES SPREADSHEET SYSTEM STATES ---
   const [ppcBossesDetails, setPpcBossesDetails] = useState<{ updatedAt?: string; bosses: PpcBossDetail[] }>(() =>
@@ -223,6 +208,7 @@ export const AdminPage: React.FC = () => {
         authListener.subscription.unsubscribe();
       };
     }
+    return undefined;
   }, []);
 
   useEffect(() => {
@@ -384,19 +370,6 @@ export const AdminPage: React.FC = () => {
   };
 
   // --- RECAP SYSTEM HANDLERS ---
-  const handleTakeSnapshot = async () => {
-    setLoadingRecap(true);
-    try {
-      const snapshot = await fetchAllGuildMembersSnapshot(false);
-      setBaselineData(snapshot);
-      await saveBaselineSnapshot(snapshot);
-      alert(`✅ Snapshot Baseline Data (11:58 WIB) berhasil diambil & disimpan!\nTotal: ${snapshot.totalMembers} member dari 4 guild.`);
-    } catch (err) {
-      alert('⚠️ Gagal mengambil snapshot data live guild. Coba lagi.');
-    } finally {
-      setLoadingRecap(false);
-    }
-  };
 
   const handleTriggerComparison = async () => {
     setLoadingRecap(true);

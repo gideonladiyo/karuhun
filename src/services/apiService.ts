@@ -10,7 +10,7 @@ import {
 } from '@/types';
 
 import guildFallback from '@/data/fallbacks/guild_fallback.json';
-import profileFallback from '@/data/fallbacks/profile_fallback.json';
+import guildsListFallback from '@/data/fallbacks/guilds_list_fallback.json';
 import characterFallback from '@/data/fallbacks/character_fallback.json';
 import ppcFallback from '@/data/fallbacks/ppc_fallback.json';
 import warzoneFallback from '@/data/fallbacks/warzone_fallback.json';
@@ -155,59 +155,8 @@ export async function getGuildsList(server: string = 'ap'): Promise<GuildListIte
     console.warn(`[APIService] Fetching guilds list for ${server} failed, using fallback.`, err);
   }
 
-  // Fallback guilds list
-  const fallbackList: GuildListItem[] = [
-    {
-      server: 'ap',
-      guildId: 3638,
-      name: 'Karuhun 夜',
-      level: 10,
-      memberCount: 72,
-      maxMemberCount: 80,
-      contributionWeek: 422565,
-      leaderName: '夜’ Narasula_',
-      declaration: '— Top 1 Asia-Pacific Guild — ▼Recruitment Apply in DC▼ https://linktr.ee/karuhuncorps',
-      icon: 'image/uiguild/uiguildface24'
-    },
-    {
-      server: 'ap',
-      guildId: 1164,
-      name: 'Izanami 夜',
-      level: 10,
-      memberCount: 74,
-      maxMemberCount: 80,
-      contributionWeek: 312450,
-      leaderName: '夜’ Kiana',
-      declaration: '— Izanami Karuhun Division AP — Join Discord to apply!',
-      icon: 'image/uiguild/uiguildface13'
-    },
-    {
-      server: 'ap',
-      guildId: 7641,
-      name: 'Astrelume 夜',
-      level: 10,
-      memberCount: 70,
-      maxMemberCount: 80,
-      contributionWeek: 268920,
-      leaderName: '夜’ Solaria',
-      declaration: '— Astrelume Karuhun Division AP — Casual growth division.',
-      icon: 'image/uiguild/uiguildface08'
-    },
-    {
-      server: 'na',
-      guildId: 2013,
-      name: 'Karuhun 夜’',
-      level: 10,
-      memberCount: 79,
-      maxMemberCount: 80,
-      contributionWeek: 345120,
-      leaderName: '夜’ Zeis',
-      declaration: '— Karuhun North America Division — Top NA Guild!',
-      icon: 'image/uiguild/uiguildface15'
-    }
-  ];
-
-  const filtered = fallbackList.filter(g => g.server === server);
+  // Fallback guilds list from JSON fallback
+  const filtered = (guildsListFallback as GuildListItem[]).filter(g => g.server === server);
   setCachedData(cacheKey, filtered);
   return filtered;
 }
@@ -261,15 +210,8 @@ export async function getAllianceLiveActivity(): Promise<AllianceActivitySummary
   const cached = getCachedData<AllianceActivitySummary>(cacheKey);
   if (cached) return cached;
 
-  const branchConfigs = [
-    { id: 3638, server: 'ap' },
-    { id: 1164, server: 'ap' },
-    { id: 7641, server: 'ap' },
-    { id: 2013, server: 'na' }
-  ];
-
   const results = await Promise.allSettled(
-    branchConfigs.map(b => getGuildActivityStats(b.server, b.id))
+    GUILD_BRANCHES.map(b => getGuildActivityStats(b.server, b.id))
   );
 
   const branches: Record<number, GuildActivityStats> = {};
@@ -278,7 +220,7 @@ export async function getAllianceLiveActivity(): Promise<AllianceActivitySummary
   let totalInactive = 0;
 
   results.forEach((res, index) => {
-    const config = branchConfigs[index];
+    const config = GUILD_BRANCHES[index];
     if (res.status === 'fulfilled') {
       const stats = res.value;
       branches[config.id] = stats;

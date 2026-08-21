@@ -6,8 +6,8 @@ import {
   CONTRIBUTORS_LIST,
   ContributorItem
 } from '@/data/static/contactData';
-import larkshinPp from '../assets/contributor/larkshin_pp.webp';
-import karuhunAdminPp from '../assets/contributor/karuhun_admin_pp.png';
+import larkshinPp from '@/assets/contributors/larkshin_pp.webp';
+import karuhunAdminPp from '@/assets/contributors/karuhun_admin_pp.png';
 import {
   Mail,
   Heart,

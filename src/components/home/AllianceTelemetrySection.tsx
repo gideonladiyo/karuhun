@@ -3,7 +3,7 @@ import { Activity, Shield, Users, Trophy, BookOpen } from 'lucide-react';
 import { getAllianceLiveActivity } from '@/services/apiService';
 import { fetchLiveReferences, getStoredReferences } from '@/data/static/reffsData';
 import { AllianceActivitySummary } from '@/types';
-import { ALLIANCE_TELEMETRY_MODULES, TelemetryModule } from '@/data/telemetryData';
+import { ALLIANCE_TELEMETRY_MODULES } from '@/data/static/telemetryData';
 import { GUILD_BRANCHES } from '@/services/imageUtils';
 
 export const AllianceTelemetrySection: React.FC = () => {
@@ -158,9 +158,7 @@ export const AllianceTelemetrySection: React.FC = () => {
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
                         {GUILD_BRANCHES.map((branch) => {
                           const stats = activity?.branches?.[branch.id];
-                          // Fallback values if API is still loading
-                          const defaultMembers = branch.id === 3638 ? 78 : branch.id === 1164 ? 76 : branch.id === 7641 ? 67 : 68;
-                          const memberCount = stats?.totalMembers ?? defaultMembers;
+                          const memberCount = stats?.totalMembers ?? (branch.defaultMembers ?? 70);
                           const openSlots = Math.max(0, 80 - memberCount);
                           const isFull = openSlots === 0;
 

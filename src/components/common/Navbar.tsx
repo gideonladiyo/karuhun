@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Home, Shield, Video, Trophy, ExternalLink, Skull, Menu, X, Mail } from 'lucide-react';
-import { GUILD_BRANCHES } from '@/services/imageUtils';
+import { MAIN_DISCORD_LINK } from '@/data/static/contactData';
 const karuhunLogo = '/logo.png';
 
 export type MainTab = 'home' | 'hub' | 'reffs' | 'leaderboards' | 'ppc' | 'admin' | 'contact';
@@ -9,14 +9,12 @@ interface NavbarProps {
   activeTab: MainTab;
   onNavigate: (tab: MainTab, branchId?: number) => void;
   selectedBranchId: number;
-  onReplayIntro?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   onNavigate,
-  selectedBranchId,
-  onReplayIntro
+  selectedBranchId
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
@@ -140,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Right Actions & Mobile Hamburger */}
             <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
               <a
-                href="https://discord.gg/Cz9bzjcdV"
+                href={MAIN_DISCORD_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs transition-colors shadow-sm whitespace-nowrap focus-tactical"
@@ -226,7 +224,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <a
-              href="https://discord.gg/Cz9bzjcdV"
+              href={MAIN_DISCORD_LINK}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center space-x-2 p-3 mt-2 rounded-xl bg-white text-black font-heading font-bold text-xs shadow-sm hover:bg-zinc-200 transition-colors"

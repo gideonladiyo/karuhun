@@ -9,7 +9,7 @@ import {
 import { MarkdownRenderer } from '@/components/common/MarkdownRenderer';
 import { MultiPlatformVideoPlayer } from '@/components/reffs/MultiPlatformVideoPlayer';
 import { BackButton } from '@/components/common/BackButton';
-import { Video, Search, Play, ArrowLeft, ExternalLink, Lightbulb, Shield, Swords, Skull, Sparkles } from 'lucide-react';
+import { Video, Search, Play, ExternalLink, Lightbulb, Shield, Swords, Skull, Sparkles } from 'lucide-react';
 
 interface ReffsPageProps {
   initialRefId?: string;
