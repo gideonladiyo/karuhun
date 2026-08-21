@@ -137,7 +137,7 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
                   </div>
 
                   {/* Member Avatar */}
-                  <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-black p-1 flex-shrink-0 border border-[#27272a] group-hover:border-white transition-colors">
+                  <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl p-1 flex-shrink-0 group-hover:border-white transition-colors">
                     {member.frame && (
                       <img
                         src={getHuaxuImageUrl(member.frame)}
