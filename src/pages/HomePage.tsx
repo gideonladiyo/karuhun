@@ -30,18 +30,18 @@ export const HomePage: React.FC<HomePageProps> = ({
         <HeroSection onNavigate={onNavigate} />
       </ScrollReveal>
 
-      {/* SECTION 2: PPC TACTICAL SUITE (SPRING FADE-UP ON SCROLL) */}
-      <ScrollReveal variant="bouncy" direction="up" delayMs={100} threshold={0.05}>
-        <PpcTacticalSuite 
-          onOpenPpcTool={onOpenPpcTool} 
-        />
-      </ScrollReveal>
-
-      {/* SECTION 3: STRATEGY REFERENCES (SPRING FADE-UP ON SCROLL) */}
+      {/* SECTION 2: PGR STRATEGY REFERENCES (SPRING FADE-UP ON SCROLL) */}
       <ScrollReveal variant="bouncy" direction="up" delayMs={100} threshold={0.05}>
         <StrategyReferencesSection 
           onNavigate={onNavigate}
           onNavigateRefDetail={onNavigateRefDetail}
+        />
+      </ScrollReveal>
+
+      {/* SECTION 3: PPC TACTICAL SUITE (SPRING FADE-UP ON SCROLL) */}
+      <ScrollReveal variant="bouncy" direction="up" delayMs={100} threshold={0.05}>
+        <PpcTacticalSuite 
+          onOpenPpcTool={onOpenPpcTool} 
         />
       </ScrollReveal>
 
