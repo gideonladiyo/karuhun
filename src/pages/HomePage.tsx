@@ -30,31 +30,31 @@ export const HomePage: React.FC<HomePageProps> = ({
         <HeroSection onNavigate={onNavigate} />
       </ScrollReveal>
 
-      {/* SECTION 2: UNIFIED GUILD LEADERBOARD (SPRING FADE-UP ON SCROLL) */}
-      <ScrollReveal variant="bouncy" direction="up" delayMs={100} threshold={0.05}>
-        <GuildLeaderboardSection onNavigate={onNavigate} />
-      </ScrollReveal>
-
-      {/* SECTION 3: TOP COMPETITIVE OPERATORS (SPRING FADE-UP ON SCROLL) */}
-      <ScrollReveal variant="bouncy" direction="up" delayMs={100} threshold={0.05}>
-        <TopOperatorsSection 
-          onNavigate={onNavigate} 
-          onSelectPlayer={onSelectPlayer} 
-        />
-      </ScrollReveal>
-
-      {/* SECTION 4: PPC TACTICAL SUITE (SPRING FADE-UP ON SCROLL) */}
+      {/* SECTION 2: PPC TACTICAL SUITE (SPRING FADE-UP ON SCROLL) */}
       <ScrollReveal variant="bouncy" direction="up" delayMs={100} threshold={0.05}>
         <PpcTacticalSuite 
           onOpenPpcTool={onOpenPpcTool} 
         />
       </ScrollReveal>
 
-      {/* SECTION 5: STRATEGY REFERENCES (SPRING FADE-UP ON SCROLL) */}
+      {/* SECTION 3: STRATEGY REFERENCES (SPRING FADE-UP ON SCROLL) */}
       <ScrollReveal variant="bouncy" direction="up" delayMs={100} threshold={0.05}>
         <StrategyReferencesSection 
           onNavigate={onNavigate}
           onNavigateRefDetail={onNavigateRefDetail}
+        />
+      </ScrollReveal>
+
+      {/* SECTION 4: UNIFIED GUILD PODIUM (SPRING FADE-UP ON SCROLL) */}
+      <ScrollReveal variant="bouncy" direction="up" delayMs={100} threshold={0.05}>
+        <GuildLeaderboardSection onNavigate={onNavigate} />
+      </ScrollReveal>
+
+      {/* SECTION 5: TOP COMPETITIVE OPERATORS (SPRING FADE-UP ON SCROLL) */}
+      <ScrollReveal variant="bouncy" direction="up" delayMs={100} threshold={0.05}>
+        <TopOperatorsSection 
+          onNavigate={onNavigate} 
+          onSelectPlayer={onSelectPlayer} 
         />
       </ScrollReveal>
 
