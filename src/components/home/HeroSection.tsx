@@ -3,6 +3,8 @@ import { Trophy, Shield, ChevronRight } from 'lucide-react';
 import { GUILD_BRANCHES, GuildBranchConfig } from '@/services/imageUtils';
 import { MainTab } from '@/pages/HomePage';
 import { BranchLogoCarousel } from './BranchLogoCarousel';
+import { HeroCategoryGrid } from './HeroCategoryGrid';
+import { useHeroVariant } from '@/hooks/useHeroVariant';
 
 interface HeroSectionProps {
   onNavigate: (tab: MainTab, branchId?: number) => void;
@@ -10,6 +12,7 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
   const [selectedBranchIndex, setSelectedBranchIndex] = useState<number>(0);
+  const heroVariant = useHeroVariant();
 
   const activeBranch: GuildBranchConfig = GUILD_BRANCHES[selectedBranchIndex] || GUILD_BRANCHES[0];
 
@@ -38,38 +41,42 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
                 </p>
               </div>
 
-              {/* Action Buttons (Dual CTA Architecture) */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-                
-                {/* Primary CTA: Open Active Guild Branch */}
-                <button
-                  onClick={() => onNavigate('hub', activeBranch.id)}
-                  className="group relative flex items-center justify-between sm:justify-center space-x-3 px-5 py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs sm:text-sm transition-all active:scale-[0.98] shadow-lg shadow-white/5 focus-tactical"
-                >
-                  <div className="flex items-center space-x-2.5">
-                    <Shield className="w-4 h-4 text-black" />
-                    <span>OPEN GUILD DETAILS</span>
-                  </div>
-                  <div className="w-6 h-6 rounded-lg bg-black/10 flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
-                    <ChevronRight className="w-3.5 h-3.5 text-black" />
-                  </div>
-                </button>
-                
-                {/* Secondary CTA: Member Rankings */}
-                <button
-                  onClick={() => onNavigate('leaderboards')}
-                  className="group flex items-center justify-between sm:justify-center space-x-3 px-5 py-3.5 rounded-xl bg-[#18181b] hover:bg-[#202025] text-zinc-200 hover:text-white border border-[#27272a] hover:border-zinc-500 font-heading font-bold text-xs sm:text-sm transition-all active:scale-[0.98] focus-tactical"
-                >
-                  <div className="flex items-center space-x-2.5">
-                    <Trophy className="w-4 h-4 text-amber-400" />
-                    <span>VIEW RANKINGS</span>
-                  </div>
-                  <div className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
-                    <ChevronRight className="w-3.5 h-3.5 text-white" />
-                  </div>
-                </button>
+              {/* R4 Experiment: Category Grid ( ?hero=categories ) OR Control: Dual CTAs */}
+              {heroVariant === 'categories' ? (
+                <HeroCategoryGrid onNavigate={onNavigate} />
+              ) : (
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
 
-              </div>
+                  {/* Primary CTA: Open Active Guild Branch */}
+                  <button
+                    onClick={() => onNavigate('hub', activeBranch.id)}
+                    className="group relative flex items-center justify-between sm:justify-center space-x-3 px-5 py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs sm:text-sm transition-all active:scale-[0.98] shadow-lg shadow-white/5 focus-tactical"
+                  >
+                    <div className="flex items-center space-x-2.5">
+                      <Shield className="w-4 h-4 text-black" />
+                      <span>OPEN GUILD DETAILS</span>
+                    </div>
+                    <div className="w-6 h-6 rounded-lg bg-black/10 flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
+                      <ChevronRight className="w-3.5 h-3.5 text-black" />
+                    </div>
+                  </button>
+
+                  {/* Secondary CTA: Member Rankings */}
+                  <button
+                    onClick={() => onNavigate('leaderboards')}
+                    className="group flex items-center justify-between sm:justify-center space-x-3 px-5 py-3.5 rounded-xl bg-[#18181b] hover:bg-[#202025] text-zinc-200 hover:text-white border border-[#27272a] hover:border-zinc-500 font-heading font-bold text-xs sm:text-sm transition-all active:scale-[0.98] focus-tactical"
+                  >
+                    <div className="flex items-center space-x-2.5">
+                      <Trophy className="w-4 h-4 text-amber-400" />
+                      <span>VIEW RANKINGS</span>
+                    </div>
+                    <div className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
+                      <ChevronRight className="w-3.5 h-3.5 text-white" />
+                    </div>
+                  </button>
+
+                </div>
+              )}
 
             </div>
 

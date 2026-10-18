@@ -54,7 +54,7 @@ export const RecruitmentSection: React.FC<RecruitmentSectionProps> = ({ onNaviga
   const currentTier = tierDetails[selectedTier];
 
   return (
-    <section className="relative w-full mb-14 sm:mb-20 animate-fadeIn">
+    <section id="recruitment" className="relative w-full mb-14 sm:mb-20 scroll-mt-20 animate-fadeIn">
       
       {/* Section Header */}
       <div className="mb-6 sm:mb-8 pb-4 border-b border-[#27272a]">
