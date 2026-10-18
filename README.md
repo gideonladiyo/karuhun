@@ -96,7 +96,6 @@ karuhun/
 │   │   ├── ReffsPage.tsx
 │   │   ├── AdminPage.tsx
 │   │   ├── ContactPage.tsx
-│   │   ├── GuildIntroOverlay.tsx
 │   │   └── ppc/
 │   │       ├── PpcPage.tsx
 │   │       ├── BossesPage.tsx

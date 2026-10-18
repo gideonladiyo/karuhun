@@ -100,7 +100,6 @@ Legacy hash-based URLs (e.g. `/#/player/ap/12345`) are also supported for backwa
 
 ```
 App.tsx                         ← Root: global state + routing
-├── GuildIntroOverlay           ← Fullscreen intro (session-based, shown once)
 ├── Navbar                      ← Main tab navigation
 ├── [Page Content]              ← One of pages/ based on current state
 │   ├── [Section Components]   ← from components/home/, components/guild/, etc.

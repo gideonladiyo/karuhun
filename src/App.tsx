@@ -10,7 +10,6 @@ import { PpcPage } from '@/pages/ppc/PpcPage';
 import { ReffsPage } from '@/pages/ReffsPage';
 import { AdminPage } from '@/pages/AdminPage';
 import { ContactPage } from '@/pages/ContactPage';
-import { GuildIntroOverlay } from '@/pages/GuildIntroOverlay';
 import { NotFound } from '@/components/ui/not-found-2';
 
 import { getGuildData } from '@/services/apiService';
@@ -18,11 +17,6 @@ import { GUILD_BRANCHES } from '@/services/imageUtils';
 import { GuildInfo, GuildMember, PlayerCharacter } from '@/types';
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState<boolean>(() => {
-    const seen = sessionStorage.getItem('karuhun_intro_seen');
-    return !seen;
-  });
-
   const [activeTab, setActiveTab] = useState<MainTab>('home');
   const [ppcSubTab, setPpcSubTab] = useState<'bosses' | 'calculator'>('bosses');
   const [selectedBranchId, setSelectedBranchId] = useState<number>(() => GUILD_BRANCHES[0]?.id ?? 3638);
@@ -251,16 +245,6 @@ export default function App() {
         {/* Soft Vignette Overlay */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(9,9,11,0.4)_100%)]" />
       </div>
-
-      {/* Optional First Visit Video Intro Overlay */}
-      {showIntro && (
-        <GuildIntroOverlay
-          onEnter={() => {
-            sessionStorage.setItem('karuhun_intro_seen', 'true');
-            setShowIntro(false);
-          }}
-        />
-      )}
 
       {/* Main Top Navigation Header */}
       <Navbar
