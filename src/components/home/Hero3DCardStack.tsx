@@ -259,7 +259,7 @@ export const Hero3DCardStack: React.FC<Hero3DCardStackProps> = ({
 
             // Active front card detection
             const isFront = cosVal > 0.80;
-            const iconSrc = branchIcons[branch.id] || fallbackLogo;
+            const iconSrc = branch.logo || branchIcons[branch.id] || fallbackLogo;
 
             return (
               <div

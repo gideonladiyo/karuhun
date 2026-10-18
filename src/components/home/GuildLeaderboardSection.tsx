@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Trophy, ChevronRight, Users, UserCheck } from 'lucide-react';
 import { getGuildsList, getAllianceLiveActivity } from '@/services/apiService';
-import { getHuaxuImageUrl, GUILD_BRANCHES, GuildBranchConfig } from '@/services/imageUtils';
+import { GUILD_BRANCHES, GuildBranchConfig } from '@/services/imageUtils';
 import { GuildListItem, AllianceActivitySummary, GuildActivityStats } from '@/types';
 import { MainTab } from '@/pages/HomePage';
 
@@ -102,8 +102,8 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
   const renderCrest = (entry: PodiumEntry, ringClass: string, sizeClass: string) => (
     <div className={`${sizeClass} shrink-0 rounded-full border-[3px] flex items-center justify-center overflow-hidden bg-black/50 ${ringClass}`}>
       <img
-        src={entry.guild?.icon ? getHuaxuImageUrl(entry.guild.icon) : '/logo.png'}
-        alt={entry.guild?.name ?? entry.branch.name}
+        src={entry.branch.logo || '/logo.png'}
+        alt={entry.branch.name}
         loading="lazy"
         decoding="async"
         onError={(e) => {
@@ -111,7 +111,7 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
           if (el.src.endsWith('/logo.png')) return;
           el.src = '/logo.png';
         }}
-        className="w-full h-full object-cover filter contrast-125"
+        className="w-full h-full object-contain p-1.5 filter contrast-125"
       />
     </div>
   );
@@ -125,11 +125,6 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
           <h2 className="font-heading font-black text-2xl sm:text-4xl text-white tracking-tight flex items-center gap-3">
             <span>ALLIANCE PODIUM</span>
           </h2>
-          <p className="text-zinc-400 text-xs sm:text-sm font-sans mt-1 max-w-3xl">
-            Official Karuhun union branches only, ranked by their real standing on the
-            {' '}
-            {selectedServer === 'ap' ? 'Asia-Pacific' : 'North America'} simulated siege ladder.
-          </p>
         </div>
 
         {/* Server Switcher */}
@@ -198,48 +193,45 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
                   <div className="w-full flex flex-col items-center text-center space-y-3 px-2 pb-4">
                     <div className="relative">
                       {renderCrest(entry, `${style.ring} shadow-xl`, 'w-20 h-20 sm:w-24 sm:h-24')}
-                      <div className={`absolute -bottom-1.5 -right-1.5 w-8 h-8 rounded-full flex items-center justify-center text-sm font-heading font-black border-2 shadow-lg ${style.badge}`}>
+                      <div className={`absolute -bottom-2 -right-2 w-10 h-10 rounded-full flex items-center justify-center text-lg font-heading font-black border-2 shadow-lg ${style.badge}`}>
                         {position}
                       </div>
                     </div>
 
                     <div className="space-y-1.5">
-                      <div className="text-[9px] font-tech font-bold px-2 py-0.5 rounded bg-amber-500 text-black uppercase tracking-wider inline-block">
-                        KARUHUN 夜 ({tierOf(entry.branch)})
-                      </div>
-                      <h3 className="font-heading font-black text-base sm:text-lg text-white tracking-tight leading-tight">
+                      <h3 className="font-heading font-black text-base sm:text-xl text-white tracking-tight leading-tight">
                         {entry.guild?.name ?? entry.branch.name}
                       </h3>
-                      <div className="text-[11px] font-tech text-zinc-400">
+                      <div className="text-[14px] font-tech text-zinc-400">
                         Leader: <span className="text-zinc-300">{entry.guild?.leaderName || 'Unknown'}</span>
                       </div>
                     </div>
 
                     <div className="w-full space-y-1.5 pt-2 border-t border-[#27272a]/60">
-                      <div className="flex items-center justify-between text-[11px] font-tech">
+                      <div className="flex items-center justify-between text-[13px] font-tech">
                         <span className="text-zinc-500 uppercase tracking-wider">Server Rank</span>
                         <span className="font-heading font-black text-white tabular-nums">
                           {entry.globalRank !== null ? `#${entry.globalRank}` : '—'}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between text-[11px] font-tech">
+                      <div className="flex items-center justify-between text-[13px] font-tech">
                         <span className="text-zinc-500 uppercase tracking-wider">Weekly Pts</span>
                         <span className="font-heading font-black text-amber-400 tabular-nums">
                           {points !== null ? points.toLocaleString() : '—'}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between text-[11px] font-tech">
+                      <div className="flex items-center justify-between text-[13px] font-tech">
                         <span className="flex items-center space-x-1 text-zinc-500 uppercase tracking-wider">
-                          <Users className="w-3 h-3" />
+                          <Users className="w-3.5 h-3.5" />
                           <span>Members</span>
                         </span>
                         <span className="font-tech text-zinc-200 tabular-nums">
                           {memberCount}/{maxMembers}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between text-[11px] font-tech">
+                      <div className="flex items-center justify-between text-[13px] font-tech">
                         <span className="flex items-center space-x-1 text-zinc-500 uppercase tracking-wider">
-                          <UserCheck className="w-3 h-3" />
+                          <UserCheck className="w-3.5 h-3.5" />
                           <span>Active</span>
                         </span>
                         <span className="font-tech text-emerald-400 font-bold tabular-nums">
@@ -250,10 +242,10 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
 
                     <button
                       onClick={() => onNavigate('hub', entry.branch.id)}
-                      className="w-full px-3 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-xs font-heading font-bold transition-all flex items-center justify-center space-x-1 shadow-sm focus-tactical"
+                      className="w-full px-4 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-sm font-heading font-bold transition-all flex items-center justify-center space-x-1 shadow-sm focus-tactical"
                     >
                       <span>View Branch</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>
 
@@ -287,23 +279,23 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
                   {/* Big Circle Crest */}
                   <div className="relative shrink-0">
                     {renderCrest(entry, `${style.ring} shadow-xl`, 'w-24 h-24')}
-                    <div className={`absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center text-sm font-heading font-black border-2 shadow-lg ${style.badge}`}>
+                    <div className={`absolute -bottom-1.5 -right-1.5 w-10 h-10 rounded-full flex items-center justify-center text-lg font-heading font-black border-2 shadow-lg ${style.badge}`}>
                       {position}
                     </div>
                   </div>
 
                   {/* Guild Details */}
                   <div className="min-w-0 flex-1 space-y-1.5">
-                    <div className="text-[8px] font-tech font-bold px-1.5 py-0.5 rounded bg-amber-500 text-black uppercase tracking-wider inline-block">
+                    <div className="text-[9px] font-tech font-bold px-2 py-0.5 rounded bg-amber-500 text-black uppercase tracking-wider inline-block">
                       KARUHUN 夜 ({tierOf(entry.branch)})
                     </div>
-                    <h3 className="font-heading font-black text-sm text-white tracking-tight leading-tight truncate">
+                    <h3 className="font-heading font-black text-base text-white tracking-tight leading-tight truncate">
                       {entry.guild?.name ?? entry.branch.name}
                     </h3>
-                    <div className="text-[10px] font-tech text-zinc-400 truncate">
+                    <div className="text-[12px] font-tech text-zinc-400 truncate">
                       Leader: <span className="text-zinc-300">{entry.guild?.leaderName || 'Unknown'}</span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1 text-[10px] font-tech">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1 text-[12px] font-tech">
                       <span className="text-zinc-500">
                         Rank{' '}
                         <strong className="text-white tabular-nums">
@@ -317,11 +309,11 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
                         Pts
                       </span>
                       <span className="flex items-center space-x-1 text-zinc-400">
-                        <Users className="w-2.5 h-2.5" />
+                        <Users className="w-3 h-3" />
                         {memberCount}/{maxMembers}
                       </span>
                       <span className="flex items-center space-x-1 text-emerald-400 font-bold">
-                        <UserCheck className="w-2.5 h-2.5" />
+                        <UserCheck className="w-3 h-3" />
                         {entry.activity ? `${entry.activity.activePercentage}%` : '—'}
                       </span>
                     </div>
@@ -337,21 +329,6 @@ export const GuildLeaderboardSection: React.FC<GuildLeaderboardSectionProps> = (
                 </div>
               );
             })}
-          </div>
-
-          {/* Footer Summary */}
-          <div className="mt-6 px-5 py-3.5 bg-[#09090b] border border-[#27272a] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-tech text-zinc-500">
-            <div>
-              Tracking <strong className="text-zinc-300">{podium.length}</strong> official Karuhun branch
-              {podium.length === 1 ? '' : 'es'} on{' '}
-              <strong className="text-zinc-300">{selectedServer.toUpperCase()}</strong> server
-              {guilds.length > 0 && (
-                <span className="text-zinc-600"> &middot; ranked against {guilds.length} guilds total</span>
-              )}
-            </div>
-            <div className="text-zinc-600 uppercase tracking-wider">
-              {selectedServer === 'ap' ? 'Asia-Pacific Ladder' : 'North America Ladder'}
-            </div>
           </div>
         </>
       )}

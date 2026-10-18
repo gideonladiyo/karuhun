@@ -39,7 +39,7 @@ export const DivisionCarouselSelector: React.FC<DivisionCarouselSelectorProps> =
 
   const slides = GUILD_BRANCHES.map((branch) => ({
     ...branch,
-    src: branchIcons[branch.id] || fallbackLogo,
+    src: branch.logo || branchIcons[branch.id] || fallbackLogo,
     alt: branch.name,
     title: branch.name,
     subtitle: `${branch.region} • ID: ${String(branch.id).padStart(8, '0')}`
@@ -73,7 +73,7 @@ export const DivisionCarouselSelector: React.FC<DivisionCarouselSelectorProps> =
         className="py-1"
         renderCard={(_, index, isActive) => {
           const branch = GUILD_BRANCHES[index];
-          const iconSrc = branchIcons[branch.id] || fallbackLogo;
+          const iconSrc = branch.logo || branchIcons[branch.id] || fallbackLogo;
 
           return (
             <GuildBranchCard

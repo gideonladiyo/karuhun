@@ -29,7 +29,7 @@ export const GuildBranchCard: React.FC<GuildBranchCardProps> = ({
     ? 'text-sky-400'
     : 'text-zinc-400';
 
-  const finalIcon = iconUrl || fallbackLogo;
+  const finalIcon = branch.logo || iconUrl || fallbackLogo;
 
   return (
     <div

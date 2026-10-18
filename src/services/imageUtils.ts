@@ -8,6 +8,7 @@ export interface GuildBranchConfig {
   region: string;
   shortRegion: string;
   defaultMembers?: number;
+  logo?: string;
 }
 
 export const GUILD_BRANCHES: GuildBranchConfig[] = guildBranchesData;

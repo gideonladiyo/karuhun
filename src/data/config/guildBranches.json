@@ -6,7 +6,8 @@
     "tag": "Competitive",
     "region": "Asia-Pacific (AP)",
     "shortRegion": "AP",
-    "defaultMembers": 78
+    "defaultMembers": 78,
+    "logo": "/logo.png"
   },
   {
     "id": 1164,
@@ -15,7 +16,8 @@
     "tag": "Sub-Competitive",
     "region": "Asia-Pacific (AP)",
     "shortRegion": "AP",
-    "defaultMembers": 76
+    "defaultMembers": 76,
+    "logo": "/izanami.png"
   },
   {
     "id": 7641,
@@ -24,7 +26,8 @@
     "tag": "Casual",
     "region": "Asia-Pacific (AP)",
     "shortRegion": "AP",
-    "defaultMembers": 67
+    "defaultMembers": 67,
+    "logo": "/astrelume.png"
   },
   {
     "id": 2013,
@@ -33,6 +36,7 @@
     "tag": "Casual",
     "region": "North America (NA)",
     "shortRegion": "NA",
-    "defaultMembers": 68
+    "defaultMembers": 68,
+    "logo": "/logo.png"
   }
 ]
