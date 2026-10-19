@@ -16,28 +16,30 @@
 }
 
 /* Bespoke Minimalist Cards & Panels */
-.minimal-card {
-  background-color: #121215;
-  border: 1px solid #27272a;
-  border-radius: 1rem;
-  transition: border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
-}
+@layer components {
+  .minimal-card {
+    background-color: #121215;
+    border: 1px solid #27272a;
+    border-radius: 1rem;
+    transition: border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+  }
 
-.minimal-card:hover {
-  border-color: #52525b;
-}
+  .minimal-card:hover {
+    border-color: #52525b;
+  }
 
-.minimal-card-interactive {
-  background-color: #121215;
-  border: 1px solid #27272a;
-  border-radius: 1rem;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
+  .minimal-card-interactive {
+    background-color: #121215;
+    border: 1px solid #27272a;
+    border-radius: 1rem;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-.minimal-card-interactive:hover {
-  border-color: #ffffff;
-  background-color: #18181b;
-  transform: translateY(-2px);
+  .minimal-card-interactive:hover {
+    border-color: #ffffff;
+    background-color: #18181b;
+    transform: translateY(-2px);
+  }
 }
 
 /* Custom Scrollbar */
@@ -105,22 +107,23 @@
 .bracket-corner::after {
   content: '';
   position: absolute;
-  width: 6px;
-  height: 6px;
-  border-color: #3f3f46;
+  width: 1.75rem;
+  height: 1.75rem;
   pointer-events: none;
 }
 .bracket-corner::before {
-  top: -1px;
-  left: -1px;
+  top: 0;
+  left: 0;
   border-top: 1px solid #52525b;
   border-left: 1px solid #52525b;
+  border-top-left-radius: inherit;
 }
 .bracket-corner::after {
-  bottom: -1px;
-  right: -1px;
+  bottom: 0;
+  right: 0;
   border-bottom: 1px solid #52525b;
   border-right: 1px solid #52525b;
+  border-bottom-right-radius: inherit;
 }
 
 /* Accessible focus ring */

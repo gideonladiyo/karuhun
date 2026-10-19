@@ -23,7 +23,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
       <div className="p-1 sm:p-1.5 rounded-2xl sm:rounded-3xl bg-[#18181b]/50 border border-[#27272a] relative overflow-hidden">
         
         {/* Inner Core Content */}
-        <div className="relative rounded-[calc(1rem+0.25rem)] sm:rounded-[calc(1.5rem-0.25rem)] bg-[#0d0d11] p-6 sm:p-8 lg:p-10 border border-[#27272a]/80 bracket-corner flex flex-col justify-between overflow-hidden">
+        <div className="relative rounded-xl sm:rounded-2xl bg-[#0d0d11] p-6 sm:p-8 lg:p-10 border border-[#27272a]/80 bracket-corner flex flex-col justify-between overflow-hidden">
           
           {/* TOP AREA: 2 Columns (Left: Hero Text & Buttons, Right: Guild Card Switcher) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
