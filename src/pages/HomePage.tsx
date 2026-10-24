@@ -47,7 +47,10 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* SECTION 4: UNIFIED GUILD PODIUM (SPRING FADE-UP ON SCROLL) */}
       <ScrollReveal variant="bouncy" direction="up" delayMs={100} threshold={0.05}>
-        <GuildLeaderboardSection onNavigate={onNavigate} />
+        <GuildLeaderboardSection 
+          onNavigate={onNavigate}
+          onSelectPlayer={onSelectPlayer}
+        />
       </ScrollReveal>
 
       {/* SECTION 5: TOP COMPETITIVE OPERATORS (SPRING FADE-UP ON SCROLL) */}

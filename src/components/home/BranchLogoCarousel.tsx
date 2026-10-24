@@ -23,6 +23,7 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
   const count = GUILD_BRANCHES.length;
   const [activeIndex, setActiveIndex] = useState<number>(selectedIndex);
   const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   useEffect(() => {
     setActiveIndex(selectedIndex);
@@ -60,6 +61,25 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setIsPaused(true);
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartX !== null) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const deltaX = touchStartX - touchEndX;
+      if (deltaX > 40) {
+        handleNext();
+      } else if (deltaX < -40) {
+        handlePrev();
+      }
+      setTouchStartX(null);
+    }
+    setIsPaused(false);
+  };
+
   const relativeOffset = (index: number): number => {
     let rel = index - activeIndex;
     if (rel > count / 2) rel -= count;
@@ -78,11 +98,13 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
       onFocusCapture={() => setIsPaused(true)}
       onBlurCapture={() => setIsPaused(false)}
     >
-      {/* Landscape Slide Stage */}
+      {/* Slide Stage: Portrait on mobile to emphasize logo, Landscape on sm+ */}
       <div
         tabIndex={0}
         onKeyDown={handleKeyDown}
-        className="relative w-full h-[210px] sm:h-[240px] lg:h-[260px] flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 rounded-2xl"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        className="relative w-full h-[280px] sm:h-[240px] lg:h-[260px] flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 rounded-2xl touch-pan-y"
         aria-live="polite"
       >
         {GUILD_BRANCHES.map((branch, index) => {
@@ -105,12 +127,10 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
               aria-roledescription="slide"
               aria-label={`${index + 1} of ${count}: ${branch.name}`}
               aria-hidden={!isActive}
-              className={`absolute w-[78%] sm:w-[72%] lg:w-[68%] aspect-[16/9] rounded-2xl overflow-hidden transition-[transform,opacity,box-shadow,border-color] duration-500 ease-out ${
-                isActive ? 'cursor-pointer' : 'pointer-events-none'
-              } ${
+              className={`absolute w-[64%] max-w-[240px] sm:max-w-none sm:w-[72%] lg:w-[68%] aspect-[3/4] sm:aspect-[16/9] rounded-2xl overflow-hidden transition-[transform,opacity,box-shadow,border-color] duration-500 ease-out cursor-pointer ${
                 isActive
                   ? 'bg-gradient-to-br from-[#1e1a12] via-[#141418] to-[#09090b] border-2 border-amber-400 shadow-[0_0_35px_rgba(245,158,11,0.3)]'
-                  : 'bg-[#0d0d11]/95 border border-[#27272a]'
+                  : 'bg-[#0d0d11]/95 border border-[#27272a] hover:border-zinc-600'
               }`}
               style={{
                 transform: `translateX(${offsetPct}%) scale(${scale})`,
@@ -125,9 +145,12 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
                 }
               }}
             >
-              <div className="relative h-full w-full flex flex-col items-center justify-center gap-2 px-6 py-4">
+              <div className="relative h-full w-full flex flex-col items-center justify-between gap-1.5 p-3.5 sm:px-6 sm:py-4">
                 {/* Crest Plate */}
-                <div className="flex-1 w-full min-h-0 flex items-center justify-center">
+                <div className="flex-1 w-full min-h-0 flex items-center justify-center p-0.5 sm:p-2 relative">
+                  {isActive && (
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.14)_0%,transparent_75%)] pointer-events-none rounded-full blur-sm" />
+                  )}
                   <img
                     src={logoSrc}
                     alt={branch.name}
@@ -138,24 +161,24 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
                       if (el.src.endsWith('/logo.png')) return;
                       el.src = '/logo.png';
                     }}
-                    className={`w-full h-full object-contain p-3 transition-opacity duration-500 ${
-                      isActive ? 'opacity-100' : 'opacity-60'
+                    className={`w-full h-full object-contain p-1 sm:p-2.5 filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.65)] transition-all duration-500 ${
+                      isActive ? 'opacity-100 scale-100' : 'opacity-60 scale-95'
                     }`}
                   />
                 </div>
 
-                {/* Temporary Caption: PRD R3 fallback until name-bearing landscape assets land */}
-                <div className="shrink-0 flex flex-col items-center gap-0.5">
+                {/* Caption */}
+                <div className="shrink-0 flex flex-col items-center gap-0.5 pb-0.5">
                   <h3
-                    className={`font-heading font-black text-base sm:text-lg tracking-tight truncate max-w-full transition-colors duration-500 ${
+                    className={`font-heading font-black text-sm sm:text-base lg:text-lg tracking-tight truncate max-w-full transition-colors duration-500 ${
                       isActive ? 'text-white' : 'text-zinc-500'
                     }`}
                   >
                     {branch.name}
                   </h3>
                   {isActive && (
-                    <span className="text-[9px] font-tech uppercase tracking-widest text-zinc-600">
-                      Temporary caption
+                    <span className="text-[9px] font-tech uppercase tracking-widest text-amber-400/80 sm:text-zinc-500">
+                      {branch.tag ? `${branch.tag} • ${branch.shortRegion}` : 'Temporary caption'}
                     </span>
                   )}
                 </div>
