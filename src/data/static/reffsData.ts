@@ -18,6 +18,8 @@ export interface ReferenceItem {
   author?: string;
   dateAdded?: string;
   isPublished?: boolean; // Controls whether item is visible to normal users or draft
+  viewsCount?: number | string;
+  duration?: string;
 }
 
 export const CATEGORIES_CONFIG = {
