@@ -26,12 +26,6 @@ import {
   MemberComparisonItem
 } from '@/services/recapService';
 import {
-  fetchAndSavePpcBossesFromSpreadsheet,
-  getLiveOrStoredPpcBossesDetails,
-  resetPpcBossesToDefault,
-  PpcBossDetail,
-} from '@/data/static/ppcScores';
-import {
   Plus,
   Edit,
   Trash2,
@@ -47,11 +41,7 @@ import {
   FileText,
   Download,
   Copy,
-  AlertTriangle,
-  Skull,
-  ExternalLink,
-  RotateCcw,
-  Database
+  AlertTriangle
 } from 'lucide-react';
 
 export const AdminPage: React.FC = () => {
@@ -59,8 +49,8 @@ export const AdminPage: React.FC = () => {
     return sessionStorage.getItem('karuhun_admin_authenticated') === 'true';
   });
 
-  // Main Admin Tab: 'reffs' | 'recap' | 'ppc_bosses'
-  const [adminTab, setAdminTab] = useState<'reffs' | 'recap' | 'ppc_bosses'>('recap');
+  // Main Admin Tab: 'reffs' | 'recap'
+  const [adminTab, setAdminTab] = useState<'reffs' | 'recap'>('reffs');
 
   // Admin View Mode inside Reffs: 'roster' (table list) | 'editor' (full-page form)
   const [viewMode, setViewMode] = useState<'roster' | 'editor'>('roster');
@@ -116,36 +106,6 @@ export const AdminPage: React.FC = () => {
   // Realtime WIB Clock & Auto-Snapshot Status
   const [, setCurrentWibTime] = useState<string>(() => getWibDateInfo().timeString);
 
-  // --- PPC BOSSES SPREADSHEET SYSTEM STATES ---
-  const [ppcBossesDetails, setPpcBossesDetails] = useState<{ updatedAt?: string; bosses: PpcBossDetail[] }>(() =>
-    getLiveOrStoredPpcBossesDetails()
-  );
-  const [loadingPpcBossRefresh, setLoadingPpcBossRefresh] = useState<boolean>(false);
-  const [ppcBossSearchTerm, setPpcBossSearchTerm] = useState<string>('');
-  const [ppcRefreshNotice, setPpcRefreshNotice] = useState<string | null>(null);
-
-  const handleRefreshPpcBossesFromSpreadsheet = async () => {
-    setLoadingPpcBossRefresh(true);
-    setPpcRefreshNotice(null);
-    const res = await fetchAndSavePpcBossesFromSpreadsheet();
-    setLoadingPpcBossRefresh(false);
-    if (res.success) {
-      setPpcBossesDetails(getLiveOrStoredPpcBossesDetails());
-      setPpcRefreshNotice(`✅ Berhasil menyinkronkan ${res.count} data Boss PPC dari Google Spreadsheet!`);
-      setTimeout(() => setPpcRefreshNotice(null), 6000);
-    } else {
-      alert(`⚠️ Gagal mengambil data spreadsheet: ${res.error}`);
-    }
-  };
-
-  const handleResetPpcBosses = () => {
-    if (window.confirm('Reset data Boss PPC ke data bawaan (default)?')) {
-      resetPpcBossesToDefault();
-      setPpcBossesDetails(getLiveOrStoredPpcBossesDetails());
-      setPpcRefreshNotice('ℹ️ Data Boss PPC telah di-reset ke versi bawaan.');
-      setTimeout(() => setPpcRefreshNotice(null), 4000);
-    }
-  };
 
   const loadData = async () => {
     setLoading(true);
@@ -570,30 +530,6 @@ export const AdminPage: React.FC = () => {
         {/* Tab Navigation Switcher */}
         <div className="flex flex-wrap items-center gap-2 border-t border-[#27272a] pt-4">
           <button
-            onClick={() => setAdminTab('recap')}
-            className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-heading font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${
-              adminTab === 'recap'
-                ? 'bg-white text-black shadow-md'
-                : 'bg-[#09090b] text-zinc-400 hover:text-white border border-[#27272a]'
-            }`}
-          >
-            <Clock className="w-4 h-4" />
-            <span>REKAP KONTRIBUSI GUILD</span>
-          </button>
-
-          <button
-            onClick={() => setAdminTab('ppc_bosses')}
-            className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-heading font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${
-              adminTab === 'ppc_bosses'
-                ? 'bg-white text-black shadow-md'
-                : 'bg-[#09090b] text-zinc-400 hover:text-white border border-[#27272a]'
-            }`}
-          >
-            <Skull className="w-4 h-4 text-purple-400" />
-            <span>DATA BOSS PPC</span>
-          </button>
-
-          <button
             onClick={() => setAdminTab('reffs')}
             className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-heading font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${
               adminTab === 'reffs'
@@ -603,6 +539,18 @@ export const AdminPage: React.FC = () => {
           >
             <FileText className="w-4 h-4" />
             <span>REFERENCES VIDEO</span>
+          </button>
+
+          <button
+            onClick={() => setAdminTab('recap')}
+            className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-heading font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${
+              adminTab === 'recap'
+                ? 'bg-white text-black shadow-md'
+                : 'bg-[#09090b] text-zinc-400 hover:text-white border border-[#27272a]'
+            }`}
+          >
+            <Clock className="w-4 h-4" />
+            <span>REKAP KONTRIBUSI GUILD</span>
           </button>
         </div>
       </div>
@@ -868,134 +816,6 @@ export const AdminPage: React.FC = () => {
 
             </div>
           )}
-
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* SECTION 2: DATABASE BOSS PPC (SPREADSHEET) PANEL */}
-      {/* ========================================================================= */}
-      {adminTab === 'ppc_bosses' && (
-        <div className="space-y-6 animate-fadeIn">
-          
-          {/* Controls Banner */}
-          <div className="minimal-card p-6 space-y-6 border border-[#27272a]">
-            
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-[#27272a] pb-6">
-              <div className="space-y-1">
-                <div className="flex items-center space-x-2 text-purple-400 font-tech text-xs font-bold uppercase">
-                  <Database className="w-4 h-4" />
-                  <span>GOOGLE SPREADSHEET LIVE SYNC</span>
-                </div>
-                <h2 className="text-xl font-heading font-bold text-white uppercase">
-                  DATABASE BOSS PPC (PHANTOM PAIN CAGE)
-                </h2>
-                <p className="text-xs font-tech text-zinc-400">
-                  Data Boss PPC Terload: <strong className="text-white font-mono">{ppcBossesDetails.bosses.length} Boss</strong> | Terakhir Disinkronkan: <span className="text-zinc-200">{ppcBossesDetails.updatedAt ? new Date(ppcBossesDetails.updatedAt).toLocaleString('id-ID') : 'Versi Bawaan (Default)'}</span>
-                </p>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-3">
-                <button
-                  onClick={handleRefreshPpcBossesFromSpreadsheet}
-                  disabled={loadingPpcBossRefresh}
-                  className="flex items-center space-x-2 px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-heading font-bold text-xs uppercase shadow-md transition-all cursor-pointer"
-                  title="Tarik data boss PPC terbaru dari Google Spreadsheet"
-                >
-                  <RefreshCw className={`w-4 h-4 ${loadingPpcBossRefresh ? 'animate-spin' : ''}`} />
-                  <span>{loadingPpcBossRefresh ? 'MENYINKRONKAN...' : 'REFRESH DATA DARI SPREADSHEET'}</span>
-                </button>
-
-                <button
-                  onClick={handleResetPpcBosses}
-                  disabled={loadingPpcBossRefresh}
-                  className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#18181b] hover:bg-[#27272a] text-zinc-300 border border-[#27272a] font-heading font-bold text-xs uppercase transition-all cursor-pointer"
-                  title="Kembalikan ke data boss bawaan (default)"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  <span>RESET DEFAULT</span>
-                </button>
-
-                <a
-                  href="https://docs.google.com/spreadsheets/d/1z_L4MEGv5q89OFkuN2RNI1gjajddD3_NG169_f0RNrA/edit?gid=1378072876#gid=1378072876"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-[#18181b] hover:bg-[#27272a] text-zinc-300 border border-[#27272a] text-xs font-tech font-bold uppercase transition-all"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>BUKA SPREADSHEET</span>
-                </a>
-              </div>
-            </div>
-
-            {ppcRefreshNotice && (
-              <div className="p-3 bg-purple-950/90 border border-purple-800 text-purple-200 text-xs font-tech font-bold uppercase rounded-xl flex items-center space-x-2">
-                <CheckCircle className="w-4 h-4 text-purple-400" />
-                <span>{ppcRefreshNotice}</span>
-              </div>
-            )}
-
-            {/* Filter Search Input */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-              <div className="relative min-w-[240px]">
-                <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Cari Nama Boss / Weakness..."
-                  value={ppcBossSearchTerm}
-                  onChange={(e) => setPpcBossSearchTerm(e.target.value)}
-                  className="w-full bg-[#09090b] text-xs text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
-                />
-              </div>
-
-              <span className="text-xs font-tech text-zinc-400">
-                Menampilkan: <strong className="text-white">{ppcBossesDetails.bosses.filter(b => b.boss.toLowerCase().includes(ppcBossSearchTerm.toLowerCase()) || b.weakness.toLowerCase().includes(ppcBossSearchTerm.toLowerCase())).length}</strong> dari {ppcBossesDetails.bosses.length} Boss
-              </span>
-            </div>
-
-          </div>
-
-          {/* PPC Bosses Table Preview */}
-          <div className="minimal-card p-4 sm:p-6 space-y-4 border border-[#27272a]">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-sans">
-                <thead>
-                  <tr className="border-b border-[#27272a] text-zinc-400 font-tech uppercase">
-                    <th className="pb-3 px-3 font-bold">Thumbnail</th>
-                    <th className="pb-3 px-3 font-bold">Nama Boss</th>
-                    <th className="pb-3 px-3 font-bold text-right">HP Knight</th>
-                    <th className="pb-3 px-3 font-bold text-right">HP Chaos</th>
-                    <th className="pb-3 px-3 font-bold text-right">HP Hell</th>
-                    <th className="pb-3 px-3 font-bold text-center">Delay Timer</th>
-                    <th className="pb-3 px-3 font-bold">Elemental Weakness / Buff</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#27272a]">
-                  {ppcBossesDetails.bosses
-                    .filter(b => b.boss.toLowerCase().includes(ppcBossSearchTerm.toLowerCase()) || b.weakness.toLowerCase().includes(ppcBossSearchTerm.toLowerCase()))
-                    .map((b, idx) => (
-                      <tr key={`${b.slug}_${idx}`} className="hover:bg-[#121215] transition-colors">
-                        <td className="py-3 px-3">
-                          <div className="w-12 h-12 rounded-lg bg-black border border-[#27272a] overflow-hidden flex items-center justify-center">
-                            <img src={b.img_url} alt={b.boss} className="w-full h-full object-cover" />
-                          </div>
-                        </td>
-                        <td className="py-3 px-3 font-heading font-bold text-white">
-                          {b.boss}
-                          <span className="text-[10px] text-zinc-400 block font-mono font-normal">slug: {b.slug}</span>
-                        </td>
-                        <td className="py-3 px-3 font-mono text-right text-zinc-300">{b.knight || '-'}</td>
-                        <td className="py-3 px-3 font-mono text-right text-zinc-300">{b.chaos || '-'}</td>
-                        <td className="py-3 px-3 font-mono text-right text-white font-bold">{b.hell || '-'}</td>
-                        <td className="py-3 px-3 font-tech text-center text-amber-300 font-bold">{b.start_time || '-'}</td>
-                        <td className="py-3 px-3 font-tech text-zinc-300 max-w-xs">{b.weakness || '-'}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
 
         </div>
       )}

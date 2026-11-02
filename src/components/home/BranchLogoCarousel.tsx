@@ -104,7 +104,7 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
         onKeyDown={handleKeyDown}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        className="relative w-full h-[280px] sm:h-[240px] lg:h-[260px] flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 rounded-2xl touch-pan-y"
+        className="relative w-full h-[280px] sm:h-[300px] lg:h-[320px] flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 rounded-2xl touch-pan-y"
         aria-live="polite"
       >
         {GUILD_BRANCHES.map((branch, index) => {
@@ -127,7 +127,7 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
               aria-roledescription="slide"
               aria-label={`${index + 1} of ${count}: ${branch.name}`}
               aria-hidden={!isActive}
-              className={`absolute w-[64%] max-w-[240px] sm:max-w-none sm:w-[72%] lg:w-[68%] aspect-[3/4] sm:aspect-[16/9] rounded-2xl overflow-hidden transition-[transform,opacity,box-shadow,border-color] duration-500 ease-out cursor-pointer ${
+              className={`absolute w-[64%] max-w-[240px] sm:max-w-[400px] sm:w-[76%] lg:w-[72%] aspect-[3/4] sm:aspect-[16/10] rounded-2xl overflow-hidden transition-[transform,opacity,box-shadow,border-color] duration-500 ease-out cursor-pointer ${
                 isActive
                   ? 'bg-gradient-to-br from-[#1e1a12] via-[#141418] to-[#09090b] border-2 border-amber-400 shadow-[0_0_35px_rgba(245,158,11,0.3)]'
                   : 'bg-[#0d0d11]/95 border border-[#27272a] hover:border-zinc-600'
@@ -145,11 +145,11 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
                 }
               }}
             >
-              <div className="relative h-full w-full flex flex-col items-center justify-between gap-1.5 p-3.5 sm:px-6 sm:py-4">
+              <div className="relative h-full w-full flex flex-col items-center justify-between gap-1 sm:gap-2 p-3.5 sm:px-5 sm:pt-3.5 sm:pb-3">
                 {/* Crest Plate */}
-                <div className="flex-1 w-full min-h-0 flex items-center justify-center p-0.5 sm:p-2 relative">
+                <div className="flex-1 w-full min-h-0 flex items-center justify-center p-0.5 sm:p-0 relative">
                   {isActive && (
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.14)_0%,transparent_75%)] pointer-events-none rounded-full blur-sm" />
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.18)_0%,transparent_75%)] pointer-events-none rounded-full blur-md" />
                   )}
                   <img
                     src={logoSrc}
@@ -161,8 +161,8 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
                       if (el.src.endsWith('/logo.png')) return;
                       el.src = '/logo.png';
                     }}
-                    className={`w-full h-full object-contain p-1 sm:p-2.5 filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.65)] transition-all duration-500 ${
-                      isActive ? 'opacity-100 scale-100' : 'opacity-60 scale-95'
+                    className={`w-full h-full object-contain p-1 sm:p-0 filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.65)] transition-all duration-500 ${
+                      isActive ? 'opacity-100 scale-100 sm:scale-105' : 'opacity-60 scale-95'
                     }`}
                   />
                 </div>

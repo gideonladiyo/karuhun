@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Swords, Skull, Shield, ChevronRight, Sparkles } from 'lucide-react';
+import { BookOpen, Swords, Skull, Shield, ChevronRight } from 'lucide-react';
 import { 
   fetchLiveReferences, 
   getStoredReferences, 
@@ -150,16 +150,6 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
 
           {/* RIGHT 5 COLS: YouTube Style Recent Guides Stack */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-3.5">
-            
-            <div className="flex items-center justify-between pb-0.5 px-1">
-              <span className="font-heading font-bold text-xs uppercase tracking-wider text-zinc-300 flex items-center space-x-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>RECENT OPERATOR RUNS</span>
-              </span>
-              <span className="text-[10px] font-tech text-zinc-500">
-                {recentGuides.length} reference{recentGuides.length > 1 ? 's' : ''}
-              </span>
-            </div>
 
             {/* List of YouTube Cards (Kotak thumbnail di atas, Title/views di bawahnya, bg-transparent) */}
             <div className="space-y-6 flex-1">
