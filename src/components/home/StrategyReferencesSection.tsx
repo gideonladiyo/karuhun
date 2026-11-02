@@ -64,11 +64,11 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
         </div>
 
         {/* Controls: Filter Pills */}
-        <div className="flex flex-wrap items-center gap-2.5 self-stretch md:self-auto">
-          <div className="flex items-center space-x-1 bg-[#121215] p-1 rounded-xl border border-[#27272a]">
+        <div className="flex flex-wrap items-center gap-2.5 self-stretch md:self-auto w-full md:w-auto">
+          <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center space-x-1 bg-[#121215] p-1 rounded-xl border border-[#27272a]">
             <button
               onClick={() => setSelectedCategory('all')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all ${
+              className={`flex-1 sm:flex-initial justify-center whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all ${
                 selectedCategory === 'all'
                   ? 'bg-white text-black shadow-sm'
                   : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
@@ -78,35 +78,35 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
             </button>
             <button
               onClick={() => setSelectedCategory('warzone')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all flex items-center space-x-1 ${
+              className={`flex-1 sm:flex-initial justify-center whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all flex items-center space-x-1 ${
                 selectedCategory === 'warzone'
                   ? 'bg-white text-black shadow-sm'
                   : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
               }`}
             >
-              <Swords className="w-3 h-3" />
+              <Swords className="w-3 h-3 shrink-0" />
               <span>WARZONE</span>
             </button>
             <button
               onClick={() => setSelectedCategory('ppc')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all flex items-center space-x-1 ${
+              className={`flex-1 sm:flex-initial justify-center whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all flex items-center space-x-1 ${
                 selectedCategory === 'ppc'
                   ? 'bg-white text-black shadow-sm'
                   : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
               }`}
             >
-              <Skull className="w-3 h-3" />
+              <Skull className="w-3 h-3 shrink-0" />
               <span>PPC</span>
             </button>
             <button
               onClick={() => setSelectedCategory('guild_challenge')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all flex items-center space-x-1 ${
+              className={`flex-1 sm:flex-initial justify-center whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all flex items-center space-x-1 ${
                 selectedCategory === 'guild_challenge'
                   ? 'bg-white text-black shadow-sm'
                   : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
               }`}
             >
-              <Shield className="w-3 h-3" />
+              <Shield className="w-3 h-3 shrink-0" />
               <span>SIEGE</span>
             </button>
           </div>

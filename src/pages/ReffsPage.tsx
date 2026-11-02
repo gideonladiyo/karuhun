@@ -258,19 +258,19 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
           </div>
 
           {/* Category Tabs: ALL + Individual Categories */}
-          <div className="flex items-center bg-black p-1 rounded-xl border border-[#27272a]">
+          <div className="w-full md:w-auto overflow-x-auto no-scrollbar flex items-center bg-black p-1 rounded-xl border border-[#27272a]">
             <button
               onClick={() => {
                 setSelectedCategory('all');
                 setSelectedSubcategory('all');
               }}
-              className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
+              className={`flex items-center justify-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-3.5 py-2 rounded-lg text-xs font-heading font-bold transition-all whitespace-nowrap flex-1 md:flex-initial shrink-0 ${
                 selectedCategory === 'all'
                   ? 'bg-white text-black shadow-sm'
                   : 'text-zinc-400 hover:text-white'
               }`}
             >
-              <LayoutGrid className="w-3.5 h-3.5" />
+              <LayoutGrid className="w-3.5 h-3.5 shrink-0" />
               <span className="uppercase">ALL</span>
             </button>
             {(['guild_challenge', 'warzone', 'ppc'] as const).map((catKey) => {
@@ -283,13 +283,13 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
                     setSelectedCategory(catKey);
                     setSelectedSubcategory('all');
                   }}
-                  className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
+                  className={`flex items-center justify-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-3.5 py-2 rounded-lg text-xs font-heading font-bold transition-all whitespace-nowrap flex-1 md:flex-initial shrink-0 ${
                     isActive
                       ? 'bg-white text-black shadow-sm'
                       : 'text-zinc-400 hover:text-white'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className="w-3.5 h-3.5 shrink-0" />
                   <span className="uppercase">{CATEGORIES_CONFIG[catKey].label.split(' ')[0]}</span>
                 </button>
               );
@@ -299,10 +299,10 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
 
         {/* Subcategory Pills Filter (Shown when a specific category is selected) */}
         {selectedCategory !== 'all' && currentCategoryConfig && (
-          <div className="flex items-center space-x-2 overflow-x-auto pt-2 border-t border-[#27272a] pb-1">
+          <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar pt-2 border-t border-[#27272a] pb-1">
             <button
               onClick={() => setSelectedSubcategory('all')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-tech font-bold transition-all whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-tech font-bold transition-all whitespace-nowrap shrink-0 ${
                 selectedSubcategory === 'all'
                   ? 'bg-white text-black shadow-sm'
                   : 'bg-[#18181b] text-zinc-400 hover:text-white border border-[#27272a]'
@@ -316,7 +316,7 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
                 <button
                   key={sub}
                   onClick={() => setSelectedSubcategory(sub)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-tech font-bold transition-all whitespace-nowrap ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-tech font-bold transition-all whitespace-nowrap shrink-0 ${
                     isActive
                       ? 'bg-white text-black shadow-sm'
                       : 'bg-[#18181b] text-zinc-400 hover:text-white border border-[#27272a]'
@@ -350,15 +350,20 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({ initialRefId, onNavigateRe
           </div>
 
           {/* Platform Filter Tabs */}
-          <div className="flex items-center space-x-1.5 bg-[#09090b] p-1 rounded-xl border border-[#27272a]">
+          <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center space-x-1 sm:space-x-1.5 bg-[#09090b] p-1 rounded-xl border border-[#27272a]">
             {(['all', 'youtube', 'tiktok', 'bilibili'] as const).map((plat) => {
               const isActive = selectedPlatform === plat;
-              const label = plat === 'all' ? 'All Platforms' : plat === 'youtube' ? 'YouTube' : plat === 'tiktok' ? 'TikTok' : 'Bilibili';
+              const label = plat === 'all' ? (
+                <>
+                  <span className="sm:hidden">All</span>
+                  <span className="hidden sm:inline">All Platforms</span>
+                </>
+              ) : plat === 'youtube' ? 'YouTube' : plat === 'tiktok' ? 'TikTok' : 'Bilibili';
               return (
                 <button
                   key={plat}
                   onClick={() => setSelectedPlatform(plat)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-tech font-bold uppercase transition-all ${
+                  className={`flex-1 sm:flex-initial justify-center whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-tech font-bold uppercase transition-all ${
                     isActive
                       ? 'bg-white text-black shadow-sm'
                       : 'text-zinc-400 hover:text-white'
