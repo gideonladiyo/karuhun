@@ -15,6 +15,7 @@ import characterFallback from '@/data/fallbacks/character_fallback.json';
 import ppcFallback from '@/data/fallbacks/ppc_fallback.json';
 import warzoneFallback from '@/data/fallbacks/warzone_fallback.json';
 import { GUILD_BRANCHES, getHuaxuImageUrl } from './imageUtils';
+import { calculateRosterActivity } from '@/lib/memberActivity';
 
 const HUAXU_BASE_URL = import.meta.env.VITE_HUAXU_API_URL || 'https://api.huaxu.app';
 const HUAXU_API_KEY = import.meta.env.VITE_HUAXU_API_KEY || '';
@@ -204,16 +205,9 @@ export async function getGuildActivityStats(server: string, guildId: number): Pr
     leaderName: 'Commander'
   };
 
-  const now = Date.now();
-  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-
-  const activeMembers = members.filter((m) => {
-    if (!m.lastLoginTime) return false;
-    const lastLogin = new Date(m.lastLoginTime).getTime();
-    return (now - lastLogin) <= SEVEN_DAYS_MS;
-  }).length;
-
-  const totalMembers = members.length || guildInfo.memberCount || 0;
+  const activityStats = calculateRosterActivity(members);
+  const totalMembers = activityStats.totalMembers || guildInfo.memberCount || 0;
+  const activeMembers = activityStats.activeCount;
   const inactiveMembers = Math.max(0, totalMembers - activeMembers);
   const activePercentage = totalMembers > 0 ? Number(((activeMembers / totalMembers) * 100).toFixed(1)) : 0;
 
@@ -257,8 +251,8 @@ export async function getAllianceLiveActivity(): Promise<AllianceActivitySummary
       }
     });
 
-    const overallActivePercentage = totalMembers > 0 
-      ? Number(((totalActive / totalMembers) * 100).toFixed(1)) 
+    const overallActivePercentage = totalMembers > 0
+      ? Number(((totalActive / totalMembers) * 100).toFixed(1))
       : 0;
 
     const summary: AllianceActivitySummary = {
@@ -296,7 +290,6 @@ export async function getPlayerProfile(server: string, uid: number): Promise<Pla
         return { data: json.data as PlayerProfileData, error: null };
       }
 
-      // Capture dynamic error code & message from API response
       const errorCode = res.status !== 200 ? res.status : (json?.code || 404);
       const errorMessage = json?.message || (res.status === 404 ? 'Player not found' : 'Failed to get player');
 

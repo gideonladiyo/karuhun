@@ -21,6 +21,12 @@ export default function App() {
   const [ppcSubTab, setPpcSubTab] = useState<'bosses' | 'calculator'>('bosses');
   const [selectedBranchId, setSelectedBranchId] = useState<number>(() => GUILD_BRANCHES[0]?.id ?? 3638);
   const [activeRefId, setActiveRefId] = useState<string | undefined>(undefined);
+  const [refOrigin, setRefOrigin] = useState<'home' | 'reffs' | null>(() => {
+    if (typeof window !== 'undefined' && window.history.state?.refOrigin) {
+      return window.history.state.refOrigin as 'home' | 'reffs';
+    }
+    return null;
+  });
 
   const [currentGuild, setCurrentGuild] = useState<GuildInfo | null>(null);
   const [members, setMembers] = useState<GuildMember[]>([]);
@@ -81,6 +87,8 @@ export default function App() {
     } else if (parts.length === 0 || parts[0] === 'home') {
       setCurrentViewMode('mainTab');
       setActiveTab('home');
+      setActiveRefId(undefined);
+      setRefOrigin(null);
     } else if (parts[0] === 'admin' || parts[0] === 'dashboard') {
       setCurrentViewMode('mainTab');
       setActiveTab('admin');
@@ -98,8 +106,12 @@ export default function App() {
       setActiveTab('reffs');
       if (parts[1]) {
         setActiveRefId(parts[1]);
+        if (window.history.state?.refOrigin) {
+          setRefOrigin(window.history.state.refOrigin);
+        }
       } else {
         setActiveRefId(undefined);
+        setRefOrigin('reffs');
       }
     } else if (parts[0] === 'rankings' || parts[0] === 'leaderboards') {
       setCurrentViewMode('mainTab');
@@ -117,8 +129,8 @@ export default function App() {
     }
   };
 
-  const navigateToPath = (targetPath: string) => {
-    window.history.pushState({}, '', targetPath);
+  const navigateToPath = (targetPath: string, state: any = {}) => {
+    window.history.pushState(state, "", targetPath);
     syncRouteFromLocation();
   };
 
@@ -212,11 +224,32 @@ export default function App() {
   };
 
   const handleNavigateRefDetail = (refId?: string) => {
-    setActiveRefId(refId);
     if (refId) {
-      navigateToPath(`/reffs/${refId}`);
+      const origin: 'home' | 'reffs' = activeTab === 'home' ? 'home' : 'reffs';
+      setRefOrigin(origin);
+      setActiveRefId(refId);
+      navigateToPath(`/reffs/${refId}`, { refOrigin: origin });
     } else {
+      setActiveRefId(undefined);
+      setRefOrigin('reffs');
       navigateToPath(`/reffs`);
+    }
+  };
+
+  const handleBackFromRefDetail = () => {
+    const origin = refOrigin || (window.history.state?.refOrigin as 'home' | 'reffs' | undefined);
+    setActiveRefId(undefined);
+
+    if (window.history.state?.refOrigin && window.history.length > 1) {
+      window.history.back();
+    } else if (origin === 'home') {
+      setRefOrigin(null);
+      setActiveTab('home');
+      navigateToPath('/');
+    } else {
+      setRefOrigin(null);
+      setActiveTab('reffs');
+      navigateToPath('/reffs');
     }
   };
 
@@ -283,6 +316,8 @@ export default function App() {
               <ReffsPage
                 initialRefId={activeRefId}
                 onNavigateRefDetail={handleNavigateRefDetail}
+                onBack={handleBackFromRefDetail}
+                backLabel={refOrigin === 'home' ? 'BACK TO HOME' : 'BACK TO REFERENCES'}
               />
             )}
 

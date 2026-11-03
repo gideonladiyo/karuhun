@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { getHuaxuImageUrl } from '@/services/imageUtils';
-import { 
-  fetchCompositeAllianceLeaderboard, 
-  sortAllianceMembers, 
-  MemberCompetitiveAchievement 
+import {
+  fetchCompositeAllianceLeaderboard,
+  sortAllianceMembers,
+  MemberCompetitiveAchievement
 } from '@/services/rankingUtils';
 import { Trophy, Swords, Skull, Search, ChevronRight, Award } from 'lucide-react';
+import { PlayerAvatar } from '@/components/domain/PlayerAvatar';
+import { formatNumber } from '@/lib/format';
 
 interface CompetitiveLeaderboardProps {
   onSelectPlayer: (playerId: number, server: string) => void;
@@ -46,7 +47,6 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
-      
       {/* Header Banner */}
       <div className="minimal-card p-5 sm:p-8 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -137,21 +137,13 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
                   </div>
 
                   {/* Member Avatar */}
-                  <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl p-1 flex-shrink-0 group-hover:border-white transition-colors">
-                    {member.frame && (
-                      <img
-                        src={getHuaxuImageUrl(member.frame)}
-                        alt="Frame"
-                        className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none filter grayscale contrast-125"
-                        onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
-                      />
-                    )}
-                    <img
-                      src={getHuaxuImageUrl(member.portrait)}
-                      alt={member.name}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                  </div>
+                  <PlayerAvatar
+                    portrait={member.portrait}
+                    frame={member.frame}
+                    alt={member.name}
+                    size="lg"
+                    shape="rounded"
+                  />
 
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
@@ -170,7 +162,6 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
 
                 {/* Right - Competitive Achievement Cards */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  
                   {/* Warzone Achievement Card */}
                   {member.warzone ? (
                     <div className="bg-black border border-[#27272a] rounded-xl px-4 py-2.5 flex items-center space-x-3.5 shadow-sm min-w-[200px]">
@@ -181,7 +172,7 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
                           Top {member.warzone.rank} {member.warzone.division}
                         </span>
                         <span className="text-xs font-heading font-bold text-white block mt-0.5">
-                          {member.warzone.score.toLocaleString()} <span className="text-[10px] font-tech text-zinc-400 font-normal uppercase">pts</span>
+                          {formatNumber(member.warzone.score)} <span className="text-[10px] font-tech text-zinc-400 font-normal uppercase">pts</span>
                         </span>
                       </div>
                     </div>
@@ -201,7 +192,7 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
                           Top {member.ppc.rank} {member.ppc.level}
                         </span>
                         <span className="text-xs font-heading font-bold text-white block mt-0.5">
-                          {member.ppc.score.toLocaleString()} <span className="text-[10px] font-tech text-zinc-400 font-normal uppercase">pts</span>
+                          {formatNumber(member.ppc.score)} <span className="text-[10px] font-tech text-zinc-400 font-normal uppercase">pts</span>
                         </span>
                       </div>
                     </div>
@@ -214,14 +205,12 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
                   <div className="hidden sm:flex items-center text-zinc-400 group-hover:text-white group-hover:translate-x-1 transition-all">
                     <ChevronRight className="w-5 h-5" />
                   </div>
-
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
-
     </div>
   );
 };

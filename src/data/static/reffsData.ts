@@ -1,5 +1,6 @@
 // Competitive Gameplay References Database & CRUD Services with Supabase Integration
 import { supabase, isSupabaseConfigured } from '@/services/supabase/client';
+import { deleteReferenceThumbnail } from '@/services/supabase/storage';
 
 export type VideoPlatform = 'youtube' | 'tiktok' | 'bilibili' | 'other';
 
@@ -581,6 +582,7 @@ export async function saveStoredReference(item: ReferenceItem): Promise<SaveResu
 export async function deleteStoredReference(id: string): Promise<ReferenceItem[]> {
   addDeletedId(id);
   const current = getStoredReferences();
+  const targetItem = current.find((r) => r.id === id);
   const updatedList = current.filter((r) => r.id !== id);
 
   try {
@@ -591,7 +593,21 @@ export async function deleteStoredReference(id: string): Promise<ReferenceItem[]
 
   if (isSupabaseConfigured() && supabase) {
     try {
+      let thumbToDelete = targetItem?.thumbnailUrl;
+      if (!thumbToDelete) {
+        const { data: existingRow } = await supabase
+          .from('video_references')
+          .select('thumbnail_url')
+          .eq('id', id)
+          .maybeSingle();
+        thumbToDelete = existingRow?.thumbnail_url;
+      }
+
       await supabase.from('video_references').delete().eq('id', id);
+
+      if (thumbToDelete) {
+        await deleteReferenceThumbnail(thumbToDelete);
+      }
     } catch (err) {
       console.warn('Failed to sync delete to Supabase', err);
     }

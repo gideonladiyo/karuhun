@@ -11,6 +11,11 @@ import {
   getPlatformThumbnail,
 } from '@/data/static/reffsData';
 import { supabase, isSupabaseConfigured } from '@/services/supabase/client';
+import {
+  validateThumbnail,
+  uploadReferenceThumbnail,
+  deleteReferenceThumbnail,
+} from '@/services/supabase/storage';
 import { MarkdownRenderer } from '@/components/common/MarkdownRenderer';
 import { MultiPlatformVideoPlayer } from '@/components/reffs/MultiPlatformVideoPlayer';
 import {
@@ -41,7 +46,10 @@ import {
   FileText,
   Download,
   Copy,
-  AlertTriangle
+  AlertTriangle,
+  Upload,
+  X,
+  Image as ImageIcon,
 } from 'lucide-react';
 
 export const AdminPage: React.FC = () => {
@@ -82,6 +90,11 @@ export const AdminPage: React.FC = () => {
   const [formTitle, setTitle] = useState<string>('');
   const [formYoutubeUrl, setYoutubeUrl] = useState<string>('');
   const [formThumbnailUrl, setThumbnailUrl] = useState<string>('');
+  const [thumbFile, setThumbFile] = useState<File | null>(null);
+  const [thumbPreview, setThumbPreview] = useState<string | null>(null);
+  const [thumbError, setThumbError] = useState<string | null>(null);
+  const [isSavingRef, setIsSavingRef] = useState<boolean>(false);
+  const [showThumbUrlInput, setShowThumbUrlInput] = useState<boolean>(false);
   const [formDescription, setDescription] = useState<string>('');
   const [formAuthor, setAuthor] = useState<string>('Karuhun');
   const [formIsPublished, setIsPublished] = useState<boolean>(true);
@@ -235,6 +248,11 @@ export const AdminPage: React.FC = () => {
     setTitle('');
     setYoutubeUrl('');
     setThumbnailUrl('');
+    if (thumbPreview) URL.revokeObjectURL(thumbPreview);
+    setThumbFile(null);
+    setThumbPreview(null);
+    setThumbError(null);
+    setShowThumbUrlInput(false);
     setDescription('### Rotation & Strategy Guide\nWrite strategy details using **Markdown** formatting...');
     setAuthor('');
     setIsPublished(true);
@@ -264,6 +282,11 @@ export const AdminPage: React.FC = () => {
     setTitle(refItem.title);
     setYoutubeUrl(refItem.videoUrl || refItem.youtubeUrl || '');
     setThumbnailUrl(refItem.thumbnailUrl || '');
+    if (thumbPreview) URL.revokeObjectURL(thumbPreview);
+    setThumbFile(null);
+    setThumbPreview(null);
+    setThumbError(null);
+    setShowThumbUrlInput(false);
     setDescription(refItem.description);
     setAuthor(refItem.author || 'Karuhun Corps');
     setIsPublished(refItem.isPublished !== false);
@@ -273,6 +296,32 @@ export const AdminPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   };
 
+  const selectThumbnailFile = (file: File | null | undefined) => {
+    setThumbError(null);
+    if (!file) return;
+    const check = validateThumbnail(file);
+    if (!check.valid) {
+      setThumbError(check.error || 'Invalid thumbnail file.');
+      return;
+    }
+    if (thumbPreview) URL.revokeObjectURL(thumbPreview);
+    setThumbFile(file);
+    setThumbPreview(URL.createObjectURL(file));
+  };
+
+  const clearThumbnailSelection = () => {
+    if (thumbPreview) URL.revokeObjectURL(thumbPreview);
+    setThumbFile(null);
+    setThumbPreview(null);
+    setThumbError(null);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (thumbPreview) URL.revokeObjectURL(thumbPreview);
+    };
+  }, [thumbPreview]);
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaveError(null);
@@ -280,11 +329,31 @@ export const AdminPage: React.FC = () => {
 
     const detectedPlat = detectVideoPlatform(formYoutubeUrl);
     const vId = extractVideoId(formYoutubeUrl, detectedPlat) || 'cVxAQcUtZn0';
-    const thumbUrl = getPlatformThumbnail(detectedPlat, vId, formThumbnailUrl);
+    const targetRefId = editingRef
+      ? editingRef.id
+      : typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `ref-${Date.now()}`;
+    const previousThumbUrl = editingRef?.thumbnailUrl;
+
+    setIsSavingRef(true);
+    let resolvedCustomThumbUrl = formThumbnailUrl;
+
+    if (thumbFile) {
+      try {
+        resolvedCustomThumbUrl = await uploadReferenceThumbnail(thumbFile, targetRefId);
+      } catch (uploadErr: any) {
+        setIsSavingRef(false);
+        setSaveError(uploadErr?.message || 'Failed to upload custom thumbnail.');
+        return;
+      }
+    }
+
+    const thumbUrl = getPlatformThumbnail(detectedPlat, vId, resolvedCustomThumbUrl);
     const finalSubcategory = isCustomSubcategory ? customSubcategory.trim() : formSubcategory;
 
     const newRef: ReferenceItem = {
-      id: editingRef ? editingRef.id : `ref-${Date.now()}`,
+      id: targetRefId,
       category: formCategory,
       subcategory: finalSubcategory || 'General',
       title: formTitle,
@@ -301,11 +370,18 @@ export const AdminPage: React.FC = () => {
     };
 
     const res = await saveStoredReference(newRef);
+    setIsSavingRef(false);
     setReferences(res.list);
 
     if (!res.success && res.error) {
+      if (thumbFile && resolvedCustomThumbUrl) {
+        await deleteReferenceThumbnail(resolvedCustomThumbUrl);
+      }
       setSaveError(res.error);
     } else {
+      if (previousThumbUrl && previousThumbUrl !== thumbUrl) {
+        await deleteReferenceThumbnail(previousThumbUrl);
+      }
       setSaveSuccess('SUCCESS: Reference video directly saved to Supabase DB!');
       setTimeout(async () => {
         setViewMode('roster');
@@ -953,17 +1029,149 @@ export const AdminPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
-                    Custom Thumbnail URL <span className="text-zinc-500 font-normal">(Opsional - Otomatis terisi jika kosong)</span>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
+                      Custom Thumbnail <span className="text-zinc-500 font-normal">(Optional — auto-filled if empty)</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowThumbUrlInput(!showThumbUrlInput)}
+                      className="text-[11px] font-tech text-zinc-400 hover:text-white underline transition-colors"
+                    >
+                      {showThumbUrlInput ? 'Hide URL input' : 'or paste image URL'}
+                    </button>
+                  </div>
+
+                  {!isSupabaseConfigured() && (
+                    <div className="text-xs font-sans text-amber-400 bg-amber-950/30 border border-amber-500/30 rounded-xl px-3.5 py-2.5">
+                      Supabase is not configured. Direct file upload is disabled; use the URL input instead.
+                    </div>
+                  )}
+
+                  {/* File Dropzone / Picker */}
+                  <label
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (!isSupabaseConfigured()) return;
+                      const droppedFile = e.dataTransfer.files?.[0];
+                      selectThumbnailFile(droppedFile);
+                    }}
+                    className={`flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#09090b] border border-dashed rounded-xl p-4 transition-colors ${
+                      !isSupabaseConfigured()
+                        ? 'border-zinc-800 opacity-50 cursor-not-allowed'
+                        : thumbError
+                        ? 'border-red-500/60 hover:border-red-400 cursor-pointer'
+                        : 'border-[#27272a] hover:border-zinc-500 cursor-pointer'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3.5">
+                      <div className="w-10 h-10 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-center text-zinc-300 shrink-0">
+                        <Upload className="w-4 h-4" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <div className="text-xs font-sans font-semibold text-white">
+                          Click to upload or drag &amp; drop thumbnail image
+                        </div>
+                        <div className="text-[11px] font-tech text-zinc-500">
+                          Recommended 16:9 (e.g. 1280×720). JPG, JPEG, PNG or WebP, max 2 MB.
+                        </div>
+                      </div>
+                    </div>
+
+                    <span className="px-3.5 py-2 rounded-lg bg-[#18181b] border border-[#27272a] text-xs font-tech font-bold text-zinc-200 shrink-0">
+                      Choose File
+                    </span>
+
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                      disabled={!isSupabaseConfigured()}
+                      onChange={(e) => {
+                        const selected = e.target.files?.[0];
+                        selectThumbnailFile(selected);
+                        e.target.value = '';
+                      }}
+                      className="hidden"
+                    />
                   </label>
-                  <input
-                    type="text"
-                    placeholder="https://... (Biarkan kosong untuk auto-thumbnail YouTube / platform default)"
-                    value={formThumbnailUrl}
-                    onChange={(e) => setThumbnailUrl(e.target.value)}
-                    className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3 font-mono"
-                  />
+
+                  {/* Inline Validation Error */}
+                  {thumbError && (
+                    <div className="text-xs font-sans text-red-400 bg-red-950/30 border border-red-500/30 rounded-xl px-3.5 py-2 flex items-center space-x-2">
+                      <AlertTriangle className="w-4 h-4 shrink-0" />
+                      <span>{thumbError}</span>
+                    </div>
+                  )}
+
+                  {/* Active Preview (Selected Local File OR Existing Custom Thumbnail URL) */}
+                  {(thumbPreview || formThumbnailUrl) && (
+                    <div className="flex items-center justify-between gap-4 bg-[#09090b] border border-[#27272a] rounded-xl p-3">
+                      <div className="flex items-center space-x-3 min-w-0">
+                        <div className="w-28 aspect-video rounded-lg bg-black overflow-hidden border border-[#27272a] shrink-0">
+                          <img
+                            src={thumbPreview || formThumbnailUrl}
+                            alt="Thumbnail preview"
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/logo.png';
+                            }}
+                          />
+                        </div>
+                        <div className="min-w-0 space-y-0.5">
+                          <div className="text-xs font-sans font-semibold text-white truncate flex items-center space-x-1.5">
+                            <ImageIcon className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                            <span className="truncate">
+                              {thumbFile ? thumbFile.name : 'Current thumbnail URL'}
+                            </span>
+                          </div>
+                          <div className="text-[11px] font-tech text-zinc-400 truncate">
+                            {thumbFile
+                              ? `${(thumbFile.size / (1024 * 1024)).toFixed(2)} MB — Will upload to Supabase on Save`
+                              : formThumbnailUrl}
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (thumbFile) {
+                            clearThumbnailSelection();
+                          } else {
+                            setThumbnailUrl('');
+                          }
+                        }}
+                        className="p-2 rounded-lg bg-[#18181b] hover:bg-red-950/60 text-zinc-400 hover:text-red-300 border border-[#27272a] transition-colors shrink-0"
+                        title="Remove thumbnail"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Secondary Collapsed Option: Paste URL */}
+                  {showThumbUrlInput && (
+                    <div className="pt-1 space-y-1">
+                      <input
+                        type="text"
+                        placeholder="https://... (Leave empty for auto-thumbnail or when uploading a file above)"
+                        value={formThumbnailUrl}
+                        onChange={(e) => setThumbnailUrl(e.target.value)}
+                        className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl px-4 py-3 font-mono"
+                      />
+                      {thumbFile && formThumbnailUrl && (
+                        <p className="text-[11px] font-tech text-amber-400">
+                          Note: The uploaded file above will take priority over this URL when saving.
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -986,9 +1194,10 @@ export const AdminPage: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-8 py-3 rounded-xl bg-white text-black font-bold text-xs uppercase cursor-pointer"
+                    disabled={isSavingRef}
+                    className="px-8 py-3 rounded-xl bg-white text-black font-bold text-xs uppercase cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    SIMPAN REFERENCE
+                    {isSavingRef ? 'MENYIMPAN...' : 'SIMPAN REFERENCE'}
                   </button>
                 </div>
               </form>

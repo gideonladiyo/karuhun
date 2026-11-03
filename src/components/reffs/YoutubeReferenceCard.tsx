@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { ReferenceItem, getPlatformThumbnail, VideoPlatform } from '@/data/static/reffsData';
-import { Play, MoreVertical, ExternalLink, Copy, Check, Swords, Skull, Shield } from 'lucide-react';
+import { ReferenceItem, getPlatformThumbnail } from '@/data/static/reffsData';
+import { Play, ExternalLink, Copy, Check } from 'lucide-react';
+import { SafeImage } from '@/components/ui/safe-image';
+import { PlatformBadge } from '@/components/ui/platform-icon';
 
 export interface YoutubeReferenceCardProps {
   reference: ReferenceItem;
@@ -8,52 +10,6 @@ export interface YoutubeReferenceCardProps {
   variant?: 'grid' | 'featured' | 'compact';
   className?: string;
   showDescription?: boolean;
-}
-
-// Format views like Indonesian YouTube: "▷ 926 rb" or "▷ 14,2 rb"
-export function getReferenceViews(item: ReferenceItem): string {
-  let num = 0;
-  if (item.viewsCount) {
-    if (typeof item.viewsCount === 'number') num = item.viewsCount;
-    else {
-      const parsed = parseInt(String(item.viewsCount).replace(/\D/g, ''), 10);
-      num = isNaN(parsed) ? 14200 : parsed;
-    }
-  } else {
-    let hash = 0;
-    for (let i = 0; i < item.id.length; i++) {
-      hash = (hash << 5) - hash + item.id.charCodeAt(i);
-      hash |= 0;
-    }
-    const absHash = Math.abs(hash);
-    num = (6 + (absHash % 38)) * 1000 + (absHash % 9) * 100;
-  }
-
-  if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1).replace('.0', '').replace('.', ',')} jt`;
-  }
-  if (num >= 1000) {
-    return `${(num / 1000).toFixed(1).replace('.0', '').replace('.', ',')} rb`;
-  }
-  return `${num}`;
-}
-
-// Format duration with dot like Indonesian YouTube: "18.35"
-export function getReferenceDuration(item: ReferenceItem): string {
-  if (item.duration) return item.duration.replace(':', '.');
-  let hash = 0;
-  for (let i = 0; i < item.id.length; i++) {
-    hash = (hash << 5) - hash + item.id.charCodeAt(i);
-    hash |= 0;
-  }
-  const absHash = Math.abs(hash);
-  if (item.platform === 'tiktok') {
-    const sec = 35 + (absHash % 50);
-    return `00.${sec < 10 ? '0' : ''}${sec}`;
-  }
-  const minutes = 3 + (absHash % 16);
-  const seconds = (absHash % 59).toString().padStart(2, '0');
-  return `${minutes}.${seconds}`;
 }
 
 // Relative time formatter like Indonesian YouTube: "11 h lalu", "3 hr lalu"
@@ -89,38 +45,6 @@ export function cleanMarkdown(text: string): string {
     .trim();
 }
 
-// Platform badge helper
-const PlatformBadge: React.FC<{ platform?: VideoPlatform }> = ({ platform = 'youtube' }) => {
-  if (platform === 'tiktok') {
-    return (
-      <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 rounded bg-black/90 text-cyan-400 border border-cyan-500/40 text-[9px] font-tech font-bold uppercase shadow-sm">
-        <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
-          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 1 1-5.2-1.74 2.89 2.89 0 0 1 2.31-2.83V7.58a6.34 6.34 0 0 0-3.37 1 6.34 6.34 0 1 0 9.71 5.39V9.11a8.31 8.31 0 0 0 5.07 1.73v-3.75a4.85 4.85 0 0 1-1.3-.4z" />
-        </svg>
-        <span>TikTok</span>
-      </span>
-    );
-  }
-  if (platform === 'bilibili') {
-    return (
-      <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 rounded bg-pink-950/90 text-pink-300 border border-pink-500/40 text-[9px] font-tech font-bold uppercase shadow-sm">
-        <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
-          <path d="M17.813 4.653h.854c1.51 0 2.733 1.224 2.733 2.734v10.147a2.734 2.734 0 0 1-2.733 2.733H5.333A2.734 2.734 0 0 1 2.6 17.534V7.387a2.734 2.734 0 0 1 2.733-2.734h.854l-1.92-1.92a.667.667 0 1 1 .942-.943L7.747 4.33h8.506l2.538-2.54a.667.667 0 1 1 .942.943l-1.92 1.92zm-12.48 2.667a1.4 1.4 0 0 0-1.4 1.4v10.147a1.4 1.4 0 0 0 1.4 1.4h12.48a1.4 1.4 0 0 0 1.4-1.4V8.72a1.4 1.4 0 0 0-1.4-1.4H5.333zm2.667 4.267a1.067 1.067 0 1 1 0 2.133 1.067 1.067 0 0 1 0-2.133zm8 0a1.067 1.067 0 1 1 0 2.133 1.067 1.067 0 0 1 0-2.133z" />
-        </svg>
-        <span>Bilibili</span>
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 rounded bg-red-600/90 text-white border border-red-500/50 text-[9px] font-tech font-bold uppercase shadow-sm">
-      <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
-        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-      </svg>
-      <span>YouTube</span>
-    </span>
-  );
-};
-
 export const YoutubeReferenceCard: React.FC<YoutubeReferenceCardProps> = ({
   reference,
   onOpen,
@@ -128,26 +52,24 @@ export const YoutubeReferenceCard: React.FC<YoutubeReferenceCardProps> = ({
   className = '',
   showDescription = false,
 }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const platform = reference.platform || 'youtube';
   const rawThumbnail = getPlatformThumbnail(platform, reference.videoId, reference.thumbnailUrl);
-  const duration = getReferenceDuration(reference);
   const authorName = reference.author || 'Karuhun Tactical';
+  const cleanedDescription = cleanMarkdown(reference.description);
 
   const getCategoryDetails = (cat: string) => {
     if (cat === 'warzone') {
-      return { label: 'Warzone', color: 'text-amber-400 border-amber-500/30 bg-amber-500/10', icon: Swords };
+      return { label: 'Warzone', dotColor: 'bg-amber-400', textColor: 'text-amber-300' };
     }
     if (cat === 'ppc') {
-      return { label: 'PPC Cage', color: 'text-purple-400 border-purple-500/30 bg-purple-500/10', icon: Skull };
+      return { label: 'PPC Cage', dotColor: 'bg-purple-400', textColor: 'text-purple-300' };
     }
-    return { label: 'Guild Siege', color: 'text-blue-400 border-blue-500/30 bg-blue-500/10', icon: Shield };
+    return { label: 'Guild Siege', dotColor: 'bg-blue-400', textColor: 'text-blue-300' };
   };
 
   const catDetails = getCategoryDetails(reference.category);
-  const CatIcon = catDetails.icon;
 
   const handleCopyLink = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -157,7 +79,6 @@ export const YoutubeReferenceCard: React.FC<YoutubeReferenceCardProps> = ({
       setCopied(true);
       setTimeout(() => {
         setCopied(false);
-        setMenuOpen(false);
       }, 1500);
     }
   };
@@ -167,7 +88,6 @@ export const YoutubeReferenceCard: React.FC<YoutubeReferenceCardProps> = ({
     const url = reference.videoUrl || reference.youtubeUrl || '';
     if (url) {
       window.open(url, '_blank', 'noopener,noreferrer');
-      setMenuOpen(false);
     }
   };
 
@@ -180,106 +100,87 @@ export const YoutubeReferenceCard: React.FC<YoutubeReferenceCardProps> = ({
         onClick={() => onOpen(reference)}
         className={`group bg-transparent cursor-pointer flex flex-col w-full ${className}`}
       >
-        {/* Kotak Thumbnail di Atas (Clean Box with Duration Badge like YouTube) */}
-        <div className="relative w-full aspect-video rounded-2xl sm:rounded-3xl bg-black overflow-hidden border border-[#27272a]/70 group-hover:border-zinc-500 transition-all duration-300 shadow-md">
-          <img
+        {/* Thumbnail Container (Max 2 overlays: Featured + Platform) */}
+        <div className="relative w-full aspect-video rounded-xl bg-black overflow-hidden border border-[#27272a] group-hover:border-zinc-500 transition-colors duration-200">
+          <SafeImage
             src={rawThumbnail}
             alt={reference.title}
             loading="lazy"
             decoding="async"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/logo.png';
-            }}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300 ease-out"
           />
 
-          {/* Top Badge: Featured Spotlight & Category */}
           <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
-            <div className="flex items-center space-x-2">
-              <span className="text-[10px] font-tech font-black px-2.5 py-1 rounded bg-red-600 text-white uppercase shadow-lg tracking-wider flex items-center space-x-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                <span>FEATURED RUN</span>
-              </span>
-              <span className={`text-[10px] font-tech font-bold px-2 py-0.5 rounded border backdrop-blur-md bg-black/75 flex items-center space-x-1 ${catDetails.color}`}>
-                <CatIcon className="w-3 h-3" />
-                <span>{catDetails.label}</span>
-              </span>
-              <span className="text-[10px] font-tech font-bold px-2 py-0.5 rounded bg-black/75 backdrop-blur-md border border-white/10 text-zinc-300 uppercase hidden sm:inline-block">
-                {reference.subcategory}
-              </span>
-            </div>
+            <span className="text-xs font-tech font-bold px-2.5 py-0.5 rounded-full bg-red-600/95 text-white inline-flex items-center gap-1.5 shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-white" />
+              <span>Featured</span>
+            </span>
 
             <PlatformBadge platform={platform} />
           </div>
 
           {/* Center Play Button on Hover */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <div className="w-14 h-14 rounded-full bg-black/70 text-white flex items-center justify-center backdrop-blur-sm shadow-xl group-hover:scale-110 transition-transform">
-              <Play className="w-6 h-6 fill-white ml-0.5" />
+            <div className="w-12 h-12 rounded-full bg-black/75 text-white flex items-center justify-center backdrop-blur-sm shadow-lg">
+              <Play className="w-5 h-5 fill-white ml-0.5" />
             </div>
-          </div>
-
-          {/* Duration Badge di Pojok Bawah Kanan (Persis seperti "18.35" di Screenshot) */}
-          <div className="absolute bottom-2.5 right-2.5 bg-black/90 text-white text-xs font-tech font-bold px-1.5 py-0.5 rounded shadow tracking-wider">
-            {duration}
           </div>
         </div>
 
-        {/* Di Bawahnya: Title, View, Channel, dll (bg-transparent) */}
+        {/* Title, Metadata Line, and Desktop-Only Description Excerpt */}
         <div className="mt-3.5 flex items-start justify-between gap-3 bg-transparent relative">
-          {/* Title & Metadata */}
           <div className="min-w-0 flex-1 space-y-1">
-            <h3 className="font-heading font-black text-base sm:text-lg md:text-xl text-white group-hover:text-amber-300 transition-colors line-clamp-2 leading-tight">
+            <h3 className="font-heading font-extrabold text-base sm:text-lg md:text-xl text-white group-hover:text-amber-300 transition-colors line-clamp-2 leading-tight">
               {reference.title}
             </h3>
 
-            {/* Channel / Author */}
-            <div className="text-xs text-zinc-400 font-sans">
-              <span className="text-zinc-300 hover:text-white transition-colors font-medium">
-                {authorName}
+            {/* Metadata Line: Author · ● Category · Subcategory */}
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-zinc-400 font-sans">
+              <span className="text-zinc-300 font-medium">{authorName}</span>
+              <span className="text-zinc-600" aria-hidden="true">·</span>
+              <span className="inline-flex items-center gap-1.5 text-zinc-300">
+                <span className={`w-1.5 h-1.5 rounded-full ${catDetails.dotColor}`} />
+                <span>{catDetails.label}</span>
               </span>
+              {reference.subcategory && (
+                <>
+                  <span className="text-zinc-600" aria-hidden="true">·</span>
+                  <span className="text-zinc-400">{reference.subcategory}</span>
+                </>
+              )}
             </div>
 
-            {/* Description excerpt */}
-            <p className="text-zinc-400 text-xs font-sans line-clamp-2 leading-relaxed pt-1">
-              {cleanMarkdown(reference.description) || 'Optimal character synergy and rotation guide compiled by Karuhun tacticians.'}
-            </p>
+            {/* Description excerpt (Desktop Only) */}
+            {cleanedDescription && (
+              <p
+                title={cleanedDescription}
+                className="hidden md:block text-zinc-400 text-xs font-sans line-clamp-2 leading-relaxed pt-1"
+              >
+                {cleanedDescription}
+              </p>
+            )}
           </div>
 
-          {/* Menu Titik 3 di Kanan Atas Title (Persis seperti Screenshot) */}
-          <div className="relative flex-shrink-0">
+          {/* Direct Quick Actions (Copy Link + External Link) */}
+          <div className="flex items-center gap-1 flex-shrink-0 opacity-75 sm:opacity-0 sm:group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setMenuOpen(!menuOpen);
-              }}
-              className="text-zinc-400 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors"
-              title="More options"
+              type="button"
+              onClick={handleCopyLink}
+              className="text-zinc-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+              title={copied ? 'Link copied!' : 'Copy video link'}
+              aria-label="Copy video link"
             >
-              <MoreVertical className="w-4 h-4" />
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
-
-            {menuOpen && (
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="absolute right-0 top-8 z-30 w-44 bg-[#18181b] border border-[#27272a] rounded-xl shadow-2xl py-1 text-xs font-sans"
-              >
-                <button
-                  onClick={handleCopyLink}
-                  className="w-full text-left px-3.5 py-2 hover:bg-white/10 text-zinc-200 flex items-center space-x-2"
-                >
-                  {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copied ? 'Link Tersalin!' : 'Salin link video'}</span>
-                </button>
-                <button
-                  onClick={handleOpenExternal}
-                  className="w-full text-left px-3.5 py-2 hover:bg-white/10 text-zinc-200 flex items-center space-x-2"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Buka di tab baru</span>
-                </button>
-              </div>
-            )}
+            <button
+              type="button"
+              onClick={handleOpenExternal}
+              className="text-zinc-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+              title="Open in new tab"
+              aria-label="Open video in new tab"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       </div>
@@ -294,98 +195,72 @@ export const YoutubeReferenceCard: React.FC<YoutubeReferenceCardProps> = ({
       onClick={() => onOpen(reference)}
       className={`group bg-transparent cursor-pointer flex flex-col w-full ${className}`}
     >
-      {/* Kotak Thumbnail di Atas */}
-      <div className="relative w-full aspect-video rounded-xl sm:rounded-2xl bg-black overflow-hidden border border-[#27272a]/60 group-hover:border-zinc-500 transition-all duration-300 shadow-md">
-        <img
+      {/* Thumbnail Container (Max 1 overlay: PlatformBadge) */}
+      <div className="relative w-full aspect-video rounded-xl bg-black overflow-hidden border border-[#27272a] group-hover:border-zinc-500 transition-colors duration-200">
+        <SafeImage
           src={rawThumbnail}
           alt={reference.title}
           loading="lazy"
           decoding="async"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/logo.png';
-          }}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300 ease-out"
         />
 
-        {/* Top Badges: Category & Platform */}
-        <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none z-10">
-          <span className={`text-[9px] font-tech font-bold px-1.5 py-0.5 rounded border backdrop-blur-md bg-black/75 flex items-center space-x-1 ${catDetails.color}`}>
-            <CatIcon className="w-2.5 h-2.5" />
-            <span>{reference.subcategory || catDetails.label}</span>
-          </span>
-
+        <div className="absolute top-2.5 right-2.5 flex items-center justify-end pointer-events-none z-10">
           <PlatformBadge platform={platform} />
         </div>
 
         {/* Center Play Button on Hover */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <div className="w-11 h-11 rounded-full bg-black/75 text-white flex items-center justify-center backdrop-blur-sm shadow-xl group-hover:scale-110 transition-transform">
-            <Play className="w-5 h-5 fill-white ml-0.5" />
+          <div className="w-10 h-10 rounded-full bg-black/75 text-white flex items-center justify-center backdrop-blur-sm shadow-lg">
+            <Play className="w-4 h-4 fill-white ml-0.5" />
           </div>
-        </div>
-
-        {/* Duration Badge di Pojok Bawah Kanan (Persis seperti "18.35" di Screenshot) */}
-        <div className="absolute bottom-2 right-2 bg-black/90 text-white text-[11px] font-tech font-bold px-1.5 py-0.5 rounded shadow tracking-wider">
-          {duration}
         </div>
       </div>
 
-      {/* Di Bawahnya: Title, View, Channel, dll (bg-transparent) */}
-      <div className="mt-3 flex items-start justify-between gap-3 bg-transparent relative">
-        {/* Title & Metadata */}
-        <div className="min-w-0 flex-1 space-y-0.5">
+      {/* Title & Metadata Line */}
+      <div className="mt-2.5 flex items-start justify-between gap-2.5 bg-transparent relative">
+        <div className="min-w-0 flex-1 space-y-1">
           <h3 className="font-heading font-bold text-sm text-white group-hover:text-amber-300 transition-colors line-clamp-2 leading-snug">
             {reference.title}
           </h3>
 
-          {/* Channel / Author */}
-          <div className="text-xs text-zinc-400 font-sans">
-            <span className="text-zinc-400 hover:text-white transition-colors truncate max-w-[160px] inline-block">
-              {authorName}
+          {/* Metadata Line: Author · ● Subcategory/Category */}
+          <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs text-zinc-400 font-sans">
+            <span className="text-zinc-400 truncate max-w-[140px]">{authorName}</span>
+            <span className="text-zinc-600" aria-hidden="true">·</span>
+            <span className="inline-flex items-center gap-1 text-zinc-300">
+              <span className={`w-1.5 h-1.5 rounded-full ${catDetails.dotColor}`} />
+              <span>{reference.subcategory || catDetails.label}</span>
             </span>
           </div>
 
           {showDescription && reference.description && (
-            <p className="text-zinc-500 text-xs font-sans line-clamp-1 pt-1">
+            <p className="text-zinc-400 text-xs font-sans line-clamp-1 pt-0.5">
               {cleanMarkdown(reference.description)}
             </p>
           )}
         </div>
 
-        {/* Menu Titik 3 di Kanan Atas Title */}
-        <div className="relative flex-shrink-0">
+        {/* Direct Quick Actions */}
+        <div className="flex items-center gap-0.5 flex-shrink-0 opacity-75 sm:opacity-0 sm:group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setMenuOpen(!menuOpen);
-            }}
-            className="text-zinc-400 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors"
-            title="More options"
+            type="button"
+            onClick={handleCopyLink}
+            className="text-zinc-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+            title={copied ? 'Link copied!' : 'Copy video link'}
+            aria-label="Copy video link"
           >
-            <MoreVertical className="w-4 h-4" />
+            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
           </button>
-
-          {menuOpen && (
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="absolute right-0 top-7 z-30 w-44 bg-[#18181b] border border-[#27272a] rounded-xl shadow-2xl py-1 text-xs font-sans"
-            >
-              <button
-                onClick={handleCopyLink}
-                className="w-full text-left px-3.5 py-2 hover:bg-white/10 text-zinc-200 flex items-center space-x-2"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? 'Link Tersalin!' : 'Salin link video'}</span>
-              </button>
-              <button
-                onClick={handleOpenExternal}
-                className="w-full text-left px-3.5 py-2 hover:bg-white/10 text-zinc-200 flex items-center space-x-2"
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-                <span>Buka di tab baru</span>
-              </button>
-            </div>
-          )}
+          <button
+            type="button"
+            onClick={handleOpenExternal}
+            className="text-zinc-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+            title="Open in new tab"
+            aria-label="Open video in new tab"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
     </div>

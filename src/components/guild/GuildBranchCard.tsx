@@ -1,5 +1,7 @@
 import React from 'react';
 import { GuildBranchConfig } from '@/services/imageUtils';
+import { getDivisionTheme } from '@/lib/divisionTag';
+import { SafeImage } from '@/components/ui/safe-image';
 
 export interface GuildBranchCardProps {
   branch: GuildBranchConfig;
@@ -20,15 +22,7 @@ export const GuildBranchCard: React.FC<GuildBranchCardProps> = ({
   className = '',
   style,
 }) => {
-  const isCompetitive = branch.tag === 'Competitive';
-  const isSubCompetitive = branch.tag === 'Sub-Competitive';
-
-  const tagColorClass = isCompetitive
-    ? 'text-amber-400'
-    : isSubCompetitive
-    ? 'text-sky-400'
-    : 'text-zinc-400';
-
+  const theme = getDivisionTheme(branch.tag);
   const finalIcon = branch.logo || iconUrl || fallbackLogo;
 
   return (
@@ -43,7 +37,6 @@ export const GuildBranchCard: React.FC<GuildBranchCardProps> = ({
     >
       {/* Main Content Area (Left 3 Rows + Right Watermark Logo) */}
       <div className="flex items-center justify-between gap-3 flex-1">
-        
         {/* 3 ROWS OF TEXT */}
         <div className="space-y-0.5 sm:space-y-1 min-w-0 flex-1 z-20">
           {/* Row 1: Nama Guild */}
@@ -68,7 +61,7 @@ export const GuildBranchCard: React.FC<GuildBranchCardProps> = ({
 
         {/* RIGHT SIDE: Guild Logo Watermark from API */}
         <div className="relative z-10 w-14 h-14 sm:w-20 sm:h-20 flex-shrink-0 flex items-center justify-center pointer-events-none select-none rounded-xl sm:rounded-2xl overflow-hidden">
-          <img
+          <SafeImage
             src={finalIcon}
             alt={`${branch.name} Crest`}
             className={`w-full h-full object-contain filter contrast-125 transition-opacity duration-300 rounded-xl sm:rounded-2xl ${
@@ -79,16 +72,14 @@ export const GuildBranchCard: React.FC<GuildBranchCardProps> = ({
             <div className="absolute inset-0 bg-amber-500/15 rounded-xl sm:rounded-2xl blur-lg pointer-events-none" />
           )}
         </div>
-
       </div>
 
-      {/* BOTTOM SECTION: Line + Tag Label (Competitive / Sub-Competitive / Casual) */}
+      {/* BOTTOM SECTION: Line + Tag Label */}
       <div className="mt-2 pt-1.5 border-t border-[#27272a]/80 flex items-center justify-between z-20">
-        <h4 className={`font-heading font-bold text-[10px] sm:text-xs tracking-widest uppercase ${tagColorClass}`}>
+        <h4 className={`font-heading font-bold text-[10px] sm:text-xs tracking-widest uppercase ${theme.textClass}`}>
           {branch.tag} DIVISION
         </h4>
       </div>
-
     </div>
   );
 };

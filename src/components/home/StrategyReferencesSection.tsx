@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Swords, Skull, Shield, ChevronRight } from 'lucide-react';
-import { 
-  fetchLiveReferences, 
-  getStoredReferences, 
-  ReferenceItem 
+import { BookOpen, ChevronRight } from 'lucide-react';
+import {
+  fetchLiveReferences,
+  getStoredReferences,
+  ReferenceItem
 } from '@/data/static/reffsData';
 import { YoutubeReferenceCard } from '@/components/reffs/YoutubeReferenceCard';
 import { MainTab } from '@/pages/HomePage';
+import { SectionHeader } from '@/components/ui/section-header';
+import { SegmentedTabs, REFERENCE_CATEGORY_OPTIONS } from '@/components/ui/segmented-tabs';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
 
 interface StrategyReferencesSectionProps {
   onNavigate: (tab: MainTab, branchId?: number) => void;
@@ -41,85 +44,31 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
   });
 
   const featuredGuide = filteredReferences[0];
-  const recentGuides = filteredReferences.slice(1, 4);
+  const recentGuides = filteredReferences.slice(1, 3);
 
   return (
-    <section className="relative w-full mb-14 sm:mb-20 animate-fadeIn">
-      
-      {/* Section Top Header & Filters */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-8 pb-4 border-b border-[#27272a]">
-        <div>
-          <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-red-600/10 border border-red-500/20 text-red-400 text-[11px] font-tech font-bold uppercase tracking-wider mb-2">
-            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-            </svg>
-            <span>TACTICAL VIDEO THEATER</span>
-          </div>
-          <h2 className="font-heading font-black text-2xl sm:text-4xl text-white tracking-tight">
-            PGR REFERENCES
-          </h2>
-          <p className="text-zinc-400 text-xs sm:text-sm font-sans mt-1">
-            Curated combat rotations, high-score reference runs, and tactical gameplay guides compiled by union veterans and dalaos.
-          </p>
-        </div>
-
-        {/* Controls: Filter Pills */}
-        <div className="flex flex-wrap items-center gap-2.5 self-stretch md:self-auto w-full md:w-auto">
-          <div className="w-full sm:w-auto overflow-x-auto no-scrollbar flex items-center space-x-1 bg-[#121215] p-1 rounded-xl border border-[#27272a]">
-            <button
-              onClick={() => setSelectedCategory('all')}
-              className={`flex-1 sm:flex-initial justify-center whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all ${
-                selectedCategory === 'all'
-                  ? 'bg-white text-black shadow-sm'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
-              }`}
-            >
-              ALL
-            </button>
-            <button
-              onClick={() => setSelectedCategory('warzone')}
-              className={`flex-1 sm:flex-initial justify-center whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all flex items-center space-x-1 ${
-                selectedCategory === 'warzone'
-                  ? 'bg-white text-black shadow-sm'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
-              }`}
-            >
-              <Swords className="w-3 h-3 shrink-0" />
-              <span>WARZONE</span>
-            </button>
-            <button
-              onClick={() => setSelectedCategory('ppc')}
-              className={`flex-1 sm:flex-initial justify-center whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all flex items-center space-x-1 ${
-                selectedCategory === 'ppc'
-                  ? 'bg-white text-black shadow-sm'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
-              }`}
-            >
-              <Skull className="w-3 h-3 shrink-0" />
-              <span>PPC</span>
-            </button>
-            <button
-              onClick={() => setSelectedCategory('guild_challenge')}
-              className={`flex-1 sm:flex-initial justify-center whitespace-nowrap shrink-0 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-all flex items-center space-x-1 ${
-                selectedCategory === 'guild_challenge'
-                  ? 'bg-white text-black shadow-sm'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#18181b]'
-              }`}
-            >
-              <Shield className="w-3 h-3 shrink-0" />
-              <span>SIEGE</span>
-            </button>
-          </div>
-        </div>
-      </div>
+    <section className="relative w-full">
+      <SectionHeader
+        level="primary"
+        title="PGR References"
+        subtitle="Combat rotations and top-score runs from the union."
+        actions={
+          <SegmentedTabs
+            options={REFERENCE_CATEGORY_OPTIONS}
+            value={selectedCategory}
+            onChange={setSelectedCategory}
+            fullWidthOnMobile
+          />
+        }
+      />
 
       {/* Loading Skeleton */}
       {loading && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-7 h-96 rounded-3xl bg-[#121215] border border-[#27272a] animate-pulse" />
+          <div className="lg:col-span-7 h-96 rounded-xl bg-[#121215] border border-[#27272a] animate-pulse" />
           <div className="lg:col-span-5 space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 rounded-2xl bg-[#121215] border border-[#27272a] animate-pulse" />
+            {[1, 2].map((i) => (
+              <div key={i} className="h-44 rounded-xl bg-[#121215] border border-[#27272a] animate-pulse" />
             ))}
           </div>
         </div>
@@ -127,18 +76,24 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
 
       {/* Empty State */}
       {!loading && filteredReferences.length === 0 && (
-        <div className="py-16 text-center text-zinc-500 space-y-2 rounded-2xl bg-[#121215] border border-[#27272a]">
-          <BookOpen className="w-8 h-8 mx-auto text-zinc-600 opacity-50" />
-          <div className="font-heading font-bold text-sm text-zinc-300">No references yet</div>
-          <div className="text-xs font-sans">No reference guides found in this category.</div>
-        </div>
+        <Empty className="py-14 rounded-xl bg-[#121215] border border-[#27272a]">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <BookOpen className="w-5 h-5 text-zinc-400" />
+            </EmptyMedia>
+            <EmptyTitle className="font-heading font-bold text-sm text-zinc-200">
+              No references yet
+            </EmptyTitle>
+            <EmptyDescription className="text-xs text-zinc-400">
+              No reference guides found in this category.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
 
-      {/* Grid: 1 Large YouTube Featured Spotlight (Left 7 cols) + 3 Recent YouTube Guides (Right 5 cols) */}
+      {/* Grid: 1 Large Featured Spotlight (Left 7 cols) + 2 Recent Guides (Right 5 cols) */}
       {!loading && featuredGuide && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          
-          {/* LEFT 7 COLS: YouTube Style Featured Spotlight */}
           <div className="lg:col-span-7 flex flex-col">
             <YoutubeReferenceCard
               reference={featuredGuide}
@@ -148,12 +103,9 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
             />
           </div>
 
-          {/* RIGHT 5 COLS: YouTube Style Recent Guides Stack */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-3.5">
-
-            {/* List of YouTube Cards (Kotak thumbnail di atas, Title/views di bawahnya, bg-transparent) */}
+          <div className="lg:col-span-5 flex flex-col justify-between space-y-4">
             <div className="space-y-6 flex-1">
-              {recentGuides.slice(0, 2).map((guide) => (
+              {recentGuides.map((guide) => (
                 <YoutubeReferenceCard
                   key={guide.id}
                   reference={guide}
@@ -163,29 +115,26 @@ export const StrategyReferencesSection: React.FC<StrategyReferencesSectionProps>
               ))}
 
               {recentGuides.length === 0 && (
-                <div className="py-10 text-center text-zinc-500 bg-[#121215] rounded-2xl border border-[#27272a] text-xs font-tech">
+                <div className="py-10 text-center text-zinc-400 bg-[#121215] rounded-xl border border-[#27272a] text-xs font-sans">
                   No additional runs in this category yet.
                 </div>
               )}
             </div>
 
-            {/* Bottom Catalog Action Link */}
-            <div className="p-3.5 rounded-2xl bg-[#0d0d11] border border-[#27272a] flex items-center justify-between text-xs font-tech text-zinc-400 hover:border-zinc-500 transition-colors">
-              <span className="text-[11px] sm:text-xs">Explore all Warzone, PPC &amp; Siege references</span>
+            <div className="p-3.5 rounded-xl bg-[#121215] border border-[#27272a] flex items-center justify-between text-xs font-sans text-zinc-400 hover:border-zinc-500 transition-colors">
+              <span>Browse all Warzone, PPC &amp; Siege guides</span>
               <button
+                type="button"
                 onClick={() => onNavigate('reffs')}
-                className="text-red-400 hover:text-red-300 font-bold flex items-center space-x-1 ml-2 flex-shrink-0"
+                className="text-white hover:text-amber-300 font-semibold flex items-center space-x-1 ml-2 flex-shrink-0 transition-colors"
               >
-                <span>Full Library</span>
+                <span>View All</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
-
           </div>
-
         </div>
       )}
-
     </section>
   );
 };

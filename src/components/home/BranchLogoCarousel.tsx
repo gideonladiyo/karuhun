@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { GUILD_BRANCHES } from '@/services/imageUtils';
 import { MainTab } from '@/pages/HomePage';
+import { SafeImage } from '@/components/ui/safe-image';
 
 interface BranchLogoCarouselProps {
   selectedIndex: number;
@@ -38,7 +39,6 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
   const handlePrev = () => goTo(activeIndex - 1);
   const handleNext = () => goTo(activeIndex + 1);
 
-  // Optional auto-rotation: stops on hover, focus, and reduced-motion preference
   useEffect(() => {
     if (isPaused || prefersReducedMotion()) return;
     const interval = setInterval(() => {
@@ -98,13 +98,12 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
       onFocusCapture={() => setIsPaused(true)}
       onBlurCapture={() => setIsPaused(false)}
     >
-      {/* Slide Stage: Portrait on mobile to emphasize logo, Landscape on sm+ */}
       <div
         tabIndex={0}
         onKeyDown={handleKeyDown}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        className="relative w-full h-[280px] sm:h-[300px] lg:h-[320px] flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 rounded-2xl touch-pan-y"
+        className="relative w-full h-[270px] sm:h-[290px] lg:h-[310px] flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 rounded-xl touch-pan-y"
         aria-live="polite"
       >
         {GUILD_BRANCHES.map((branch, index) => {
@@ -127,9 +126,9 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
               aria-roledescription="slide"
               aria-label={`${index + 1} of ${count}: ${branch.name}`}
               aria-hidden={!isActive}
-              className={`absolute w-[64%] max-w-[240px] sm:max-w-[400px] sm:w-[76%] lg:w-[72%] aspect-[3/4] sm:aspect-[16/10] rounded-2xl overflow-hidden transition-[transform,opacity,box-shadow,border-color] duration-500 ease-out cursor-pointer ${
+              className={`absolute w-[64%] max-w-[240px] sm:max-w-[400px] sm:w-[76%] lg:w-[72%] aspect-[3/4] sm:aspect-[16/10] rounded-xl overflow-hidden transition-[transform,opacity,border-color] duration-300 ease-out cursor-pointer ${
                 isActive
-                  ? 'bg-gradient-to-br from-[#1e1a12] via-[#141418] to-[#09090b] border-2 border-amber-400 shadow-[0_0_35px_rgba(245,158,11,0.3)]'
+                  ? 'bg-[#18181b] border-2 border-amber-400/90 shadow-lg'
                   : 'bg-[#0d0d11]/95 border border-[#27272a] hover:border-zinc-600'
               }`}
               style={{
@@ -146,39 +145,29 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
               }}
             >
               <div className="relative h-full w-full flex flex-col items-center justify-between gap-1 sm:gap-2 p-3.5 sm:px-5 sm:pt-3.5 sm:pb-3">
-                {/* Crest Plate */}
                 <div className="flex-1 w-full min-h-0 flex items-center justify-center p-0.5 sm:p-0 relative">
-                  {isActive && (
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.18)_0%,transparent_75%)] pointer-events-none rounded-full blur-md" />
-                  )}
-                  <img
+                  <SafeImage
                     src={logoSrc}
                     alt={branch.name}
                     loading="lazy"
                     decoding="async"
-                    onError={(e) => {
-                      const el = e.target as HTMLImageElement;
-                      if (el.src.endsWith('/logo.png')) return;
-                      el.src = '/logo.png';
-                    }}
-                    className={`w-full h-full object-contain p-1 sm:p-0 filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.65)] transition-all duration-500 ${
-                      isActive ? 'opacity-100 scale-100 sm:scale-105' : 'opacity-60 scale-95'
+                    className={`w-full h-full object-contain p-1 sm:p-0 transition-all duration-300 ${
+                      isActive ? 'opacity-100 scale-100' : 'opacity-60 scale-95'
                     }`}
                   />
                 </div>
 
-                {/* Caption */}
                 <div className="shrink-0 flex flex-col items-center gap-0.5 pb-0.5">
                   <h3
-                    className={`font-heading font-black text-sm sm:text-base lg:text-lg tracking-tight truncate max-w-full transition-colors duration-500 ${
+                    className={`font-heading font-extrabold text-sm sm:text-base lg:text-lg tracking-tight truncate max-w-full transition-colors duration-300 ${
                       isActive ? 'text-white' : 'text-zinc-500'
                     }`}
                   >
                     {branch.name}
                   </h3>
                   {isActive && (
-                    <span className="text-[9px] font-tech uppercase tracking-widest text-amber-400/80 sm:text-zinc-500">
-                      {branch.tag ? `${branch.tag} • ${branch.shortRegion}` : 'Temporary caption'}
+                    <span className="text-xs font-tech text-zinc-400">
+                      {branch.tag ? `${branch.tag} · ${branch.shortRegion}` : branch.shortRegion}
                     </span>
                   )}
                 </div>
@@ -192,16 +181,18 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
       <div className="flex items-center justify-between w-full max-w-[420px] px-2 mt-3 pt-3 border-t border-[#27272a]/50">
         <div className="flex items-center space-x-1.5">
           <button
+            type="button"
             onClick={handlePrev}
             aria-label="Previous branch"
-            className="p-2 rounded-xl bg-[#18181b] hover:bg-white hover:text-black text-zinc-400 border border-[#27272a] hover:border-white transition-all shadow-md active:scale-90 focus-tactical flex items-center justify-center"
+            className="p-2 rounded-lg bg-[#18181b] hover:bg-zinc-200 hover:text-black text-zinc-400 border border-[#27272a] transition-colors focus-tactical flex items-center justify-center"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
           </button>
           <button
+            type="button"
             onClick={handleNext}
             aria-label="Next branch"
-            className="p-2 rounded-xl bg-[#18181b] hover:bg-white hover:text-black text-zinc-400 border border-[#27272a] hover:border-white transition-all shadow-md active:scale-90 focus-tactical flex items-center justify-center"
+            className="p-2 rounded-lg bg-[#18181b] hover:bg-zinc-200 hover:text-black text-zinc-400 border border-[#27272a] transition-colors focus-tactical flex items-center justify-center"
           >
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
@@ -211,19 +202,20 @@ export const BranchLogoCarousel: React.FC<BranchLogoCarouselProps> = ({
           {GUILD_BRANCHES.map((b, idx) => (
             <button
               key={b.id}
+              type="button"
               onClick={() => goTo(idx)}
               aria-label={`Go to ${b.name}`}
               aria-current={idx === activeIndex}
-              className={`transition-all duration-300 rounded-full focus-tactical ${
+              className={`transition-all duration-200 rounded-full focus-tactical ${
                 idx === activeIndex
-                  ? 'w-7 h-2 bg-amber-400 shadow-sm shadow-amber-400/50'
+                  ? 'w-6 h-2 bg-amber-400'
                   : 'w-2 h-2 bg-zinc-700 hover:bg-zinc-500'
               }`}
             />
           ))}
         </div>
 
-        <span className="text-[10px] font-tech text-zinc-400 uppercase tracking-wider font-bold">
+        <span className="text-xs font-tech text-zinc-400 font-semibold">
           0{activeIndex + 1} / 0{count}
         </span>
       </div>

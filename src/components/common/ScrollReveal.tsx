@@ -14,13 +14,23 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   className = '',
   delayMs = 0,
   direction = 'up',
-  variant = 'bouncy',
+  variant = 'smooth',
   threshold = 0.08
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(() => {
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      return true;
+    }
+    return false;
+  });
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setIsVisible(true);
+      return undefined;
+    }
+
     const node = ref.current;
     if (!node) return undefined;
 
@@ -32,9 +42,9 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
             observer.unobserve(entry.target);
           }
         },
-        { 
-          threshold, 
-          rootMargin: '0px 0px -50px 0px' 
+        {
+          threshold,
+          rootMargin: '0px 0px -30px 0px'
         }
       );
 
@@ -46,16 +56,9 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
     return undefined;
   }, [threshold]);
 
-  // Easing curve: bouncy spring vs buttery smooth
-  const easing =
-    variant === 'bouncy'
-      ? 'cubic-bezier(0.34, 1.25, 0.64, 1)' // subtle tactile spring bounce
-      : 'cubic-bezier(0.16, 1, 0.3, 1)'; // ultra-smooth linear dampening
-
-  // Initial transform state before reveal
-  let transformInitial = 'translate3d(0, 36px, 0)';
-  if (direction === 'down') transformInitial = 'translate3d(0, -36px, 0)';
-  else if (direction === 'scale') transformInitial = 'scale3d(0.95, 0.95, 1) translate3d(0, 24px, 0)';
+  let transformInitial = 'translate3d(0, 12px, 0)';
+  if (direction === 'down') transformInitial = 'translate3d(0, -12px, 0)';
+  else if (direction === 'scale') transformInitial = 'scale3d(0.98, 0.98, 1) translate3d(0, 8px, 0)';
   else if (direction === 'none') transformInitial = 'none';
 
   return (
@@ -63,8 +66,8 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
       ref={ref}
       style={{
         transitionProperty: 'transform, opacity',
-        transitionDuration: variant === 'bouncy' ? '800ms' : '700ms',
-        transitionTimingFunction: easing,
+        transitionDuration: variant === 'bouncy' ? '260ms' : '200ms',
+        transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
         transitionDelay: `${delayMs}ms`,
         transform: isVisible ? 'translate3d(0, 0, 0) scale3d(1, 1, 1)' : transformInitial,
         opacity: isVisible ? 1 : 0,

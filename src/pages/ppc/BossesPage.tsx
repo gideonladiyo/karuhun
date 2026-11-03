@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getLiveOrStoredPpcBossesInfo, getLiveOrStoredPpcBossesInfoAsync, PPCBossInfo } from '@/data/static/ppcScores';
 import { Skull, Search, Clock } from 'lucide-react';
+import { SegmentedTabs, SegmentedTabOption } from '@/components/ui/segmented-tabs';
+import { formatNumber } from '@/lib/format';
+import { SafeImage } from '@/components/ui/safe-image';
+
+const BOSS_DIFFICULTY_OPTIONS: SegmentedTabOption<'all' | 'ultimate' | 'advanced'>[] = [
+  { value: 'all', label: 'All Bosses' },
+  { value: 'ultimate', label: 'Ultimate' },
+  { value: 'advanced', label: 'Advanced' },
+];
 
 export const BossesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -30,7 +39,6 @@ export const BossesPage: React.FC = () => {
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
-      
       {/* Header Banner */}
       <div className="minimal-card p-5 sm:p-8 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -47,41 +55,17 @@ export const BossesPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Difficulty Filter Tabs */}
-          <div className="flex items-center bg-black p-1 rounded-xl border border-[#27272a]">
-            <button
-              onClick={() => setSelectedDifficulty('all')}
-              className={`px-3.5 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
-                selectedDifficulty === 'all' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
-              }`}
-            >
-              ALL BOSSES
-            </button>
-            <button
-              onClick={() => setSelectedDifficulty('ultimate')}
-              className={`px-3.5 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
-                selectedDifficulty === 'ultimate' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
-              }`}
-            >
-              ULTIMATE
-            </button>
-            <button
-              onClick={() => setSelectedDifficulty('advanced')}
-              className={`px-3.5 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
-                selectedDifficulty === 'advanced' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
-              }`}
-            >
-              ADVANCED
-            </button>
-          </div>
+          <SegmentedTabs
+            options={BOSS_DIFFICULTY_OPTIONS}
+            value={selectedDifficulty}
+            onChange={setSelectedDifficulty}
+          />
         </div>
       </div>
 
       {/* Search & Stats Bar */}
       <div className="minimal-card p-4 space-y-3">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          
-          {/* Search Input */}
           <div className="relative min-w-[260px]">
             <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
@@ -96,7 +80,6 @@ export const BossesPage: React.FC = () => {
           <div className="text-xs font-tech text-zinc-400">
             Showing <strong className="text-white">{filteredBosses.length}</strong> of {bossesData.bosses.length} Total Bosses
           </div>
-
         </div>
       </div>
 
@@ -109,10 +92,8 @@ export const BossesPage: React.FC = () => {
           >
             {/* Top Layout: Tall Left Image + Right Vertical Stat Column */}
             <div className="grid grid-cols-12 gap-4 items-stretch">
-              
-              {/* Left Column: Tall Boss Image */}
               <div className="col-span-5 relative rounded-2xl bg-black border border-[#27272a] overflow-hidden min-h-[160px] flex items-center justify-center">
-                <img
+                <SafeImage
                   src={boss.imageUrl}
                   alt={boss.name}
                   className="w-full h-full object-cover filter contrast-110"
@@ -124,7 +105,6 @@ export const BossesPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Right Column: Name & HP / Timer Stack */}
               <div className="col-span-7 flex flex-col justify-between space-y-2">
                 <div className="space-y-1">
                   <h3 className="font-heading font-bold text-base sm:text-lg text-white leading-tight">
@@ -140,19 +120,18 @@ export const BossesPage: React.FC = () => {
                 <div className="space-y-1.5 pt-2 border-t border-[#27272a]">
                   <div className="flex items-center justify-between text-xs font-tech">
                     <span className="text-zinc-400 font-bold">Knight HP:</span>
-                    <span className="text-white font-bold">{boss.hpKnight ? boss.hpKnight.toLocaleString() : '-'}</span>
+                    <span className="text-white font-bold">{formatNumber(boss.hpKnight)}</span>
                   </div>
                   <div className="flex items-center justify-between text-xs font-tech">
                     <span className="text-zinc-400 font-bold">Chaos HP:</span>
-                    <span className="text-white font-bold">{boss.hpChaos ? boss.hpChaos.toLocaleString() : '-'}</span>
+                    <span className="text-white font-bold">{formatNumber(boss.hpChaos)}</span>
                   </div>
                   <div className="flex items-center justify-between text-xs font-tech">
                     <span className="text-zinc-400 font-bold">Hell HP:</span>
-                    <span className="text-white font-bold">{boss.hpHell ? boss.hpHell.toLocaleString() : '-'}</span>
+                    <span className="text-white font-bold">{formatNumber(boss.hpHell)}</span>
                   </div>
                 </div>
               </div>
-
             </div>
 
             {/* Bottom Full-Width Element Box */}
@@ -164,11 +143,9 @@ export const BossesPage: React.FC = () => {
                 {boss.weakness}
               </p>
             </div>
-
           </div>
         ))}
       </div>
-
     </div>
   );
 };

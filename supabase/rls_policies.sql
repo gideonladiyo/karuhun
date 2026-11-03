@@ -80,3 +80,27 @@ DROP POLICY IF EXISTS "Admins insert reference_tips" ON public.reference_tips;
 CREATE POLICY "Public view reference tips" ON public.reference_tips FOR SELECT USING (true);
 CREATE POLICY "Admins insert reference_tips" ON public.reference_tips FOR INSERT TO authenticated WITH CHECK (true);
 CREATE POLICY "Admins manage reference tips" ON public.reference_tips FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- 9. Storage Bucket & Policies for Custom Reference Thumbnails (max 2MB, JPG/JPEG/PNG/WEBP)
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES ('reference-thumbnails', 'reference-thumbnails', true, 2097152,
+        ARRAY['image/jpeg','image/png','image/webp'])
+ON CONFLICT (id) DO UPDATE
+  SET public = EXCLUDED.public,
+      file_size_limit = EXCLUDED.file_size_limit,
+      allowed_mime_types = EXCLUDED.allowed_mime_types;
+
+DROP POLICY IF EXISTS "Public read reference thumbnails"   ON storage.objects;
+DROP POLICY IF EXISTS "Admins upload reference thumbnails" ON storage.objects;
+DROP POLICY IF EXISTS "Admins update reference thumbnails" ON storage.objects;
+DROP POLICY IF EXISTS "Admins delete reference thumbnails" ON storage.objects;
+
+CREATE POLICY "Public read reference thumbnails" ON storage.objects
+  FOR SELECT USING (bucket_id = 'reference-thumbnails');
+CREATE POLICY "Admins upload reference thumbnails" ON storage.objects
+  FOR INSERT TO authenticated WITH CHECK (bucket_id = 'reference-thumbnails');
+CREATE POLICY "Admins update reference thumbnails" ON storage.objects
+  FOR UPDATE TO authenticated USING (bucket_id = 'reference-thumbnails');
+CREATE POLICY "Admins delete reference thumbnails" ON storage.objects
+  FOR DELETE TO authenticated USING (bucket_id = 'reference-thumbnails');
+

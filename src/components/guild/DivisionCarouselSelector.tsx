@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GUILD_BRANCHES } from '@/services/imageUtils';
 import { getAllGuildBranchIcons } from '@/services/apiService';
 import { CoverflowCarousel } from '@/components/ui/coverflow-carousel';
-import { GuildBranchCard } from '@/components/common/GuildBranchCard';
+import { GuildBranchCard } from './GuildBranchCard';
 
 interface DivisionCarouselSelectorProps {
   selectedBranchId: number;
@@ -47,7 +47,6 @@ export const DivisionCarouselSelector: React.FC<DivisionCarouselSelectorProps> =
 
   return (
     <div className="w-full relative select-none">
-      
       {/* Header Banner - Extra Large Centered KARUHUN UNION */}
       <div className="flex flex-col items-center justify-center text-center mb-5 sm:mb-8">
         <h2 className="font-heading font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-widest uppercase">
@@ -85,7 +84,6 @@ export const DivisionCarouselSelector: React.FC<DivisionCarouselSelectorProps> =
           );
         }}
       />
-
     </div>
   );
 };
