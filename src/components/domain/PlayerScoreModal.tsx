@@ -1,10 +1,9 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { Modal } from '@/components/admin/AdminPrimitives';
-import { Button } from '@/components/ui/button';
 import { SafeImage } from '@/components/ui/safe-image';
 import { PlayerAvatar } from '@/components/domain/PlayerAvatar';
-import { MemberCompetitiveAchievement, getTotalScore } from '@/services/rankingUtils';
+import { MemberCompetitiveAchievement } from '@/services/rankingUtils';
 import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
 import { formatNumber } from '@/lib/format';
 
@@ -14,11 +13,11 @@ interface PlayerScoreModalProps {
   onOpenProfile: (playerId: number, server: string) => void;
 }
 
-const Stat: React.FC<{ label: string; value: string; sub?: string }> = ({ label, value, sub }) => (
-  <div className="min-w-0">
-    <div className="text-xs text-zinc-500">{label}</div>
-    <div className="text-lg font-semibold text-white tabular-nums truncate">{value}</div>
-    {sub && <div className="text-xs text-zinc-500 truncate">{sub}</div>}
+const Stat: React.FC<{ label: string; value: string; sub: string }> = ({ label, value, sub }) => (
+  <div className="min-w-0 rounded-xl border border-[#27272a] bg-[#121215] px-3.5 py-3">
+    <div className="text-xs sm:text-sm text-zinc-500">{label}</div>
+    <div className="text-xl sm:text-2xl font-semibold text-white tabular-nums truncate">{value}</div>
+    <div className="text-xs sm:text-sm text-zinc-500 truncate">{sub}</div>
   </div>
 );
 
@@ -30,26 +29,52 @@ export const PlayerScoreModal: React.FC<PlayerScoreModalProps> = ({ member, onCl
     <Modal
       open
       onClose={onClose}
-      maxWidthClass="max-w-2xl"
-      title={
-        <span className="flex items-center gap-3 min-w-0">
-          <PlayerAvatar portrait={member.portrait} frame={member.frame} alt={member.name} size="sm" />
-          <span className="truncate">{member.name}</span>
-        </span>
-      }
-      subtitle={`${member.guildName} · ${member.server.toUpperCase()} · ID ${member.id}`}
-      footer={
-        <div className="flex justify-end">
-          <Button type="button" variant="secondary" size="sm" onClick={() => onOpenProfile(member.id, member.server)}>
-            <span>Open profile</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </Button>
-        </div>
-      }
+      maxWidthClass="max-w-md"
+      maxHeightClass="max-h-[95dvh]"
+      title="Competitive Score"
     >
-      <div className="space-y-6">
-        <div className="grid grid-cols-3 gap-4 pb-5 border-b border-[#27272a]">
-          <Stat label="Total" value={formatNumber(getTotalScore(member))} />
+      <div className="space-y-4">
+        <button
+          type="button"
+          onClick={() => onOpenProfile(member.id, member.server)}
+          className="group relative w-full flex items-center gap-3.5 sm:gap-4 p-4 rounded-xl border border-[#27272a] hover:border-zinc-500 bg-gradient-to-r from-[#181820] via-[#121215] to-[#0d0d11] text-left overflow-hidden [isolation:isolate] transition-colors"
+        >
+          <PlayerAvatar
+            portrait={member.portrait}
+            frame={member.frame}
+            alt={member.name}
+            size="lg"
+            shape="circle"
+            className="z-10"
+          />
+          <div className="min-w-0 flex-1 z-10">
+            <div className="font-heading font-bold text-xl sm:text-2xl text-white tracking-tight truncate group-hover:text-amber-300 transition-colors">
+              {member.name}
+            </div>
+            <div className="text-sm sm:text-base text-zinc-400 truncate">
+              {member.guildName} · {member.server.toUpperCase()}
+            </div>
+            <div className="text-xs font-tech font-mono text-zinc-500 truncate">UID: {member.id}</div>
+          </div>
+          <ArrowUpRight className="w-4 h-4 shrink-0 self-start z-10 text-zinc-500 group-hover:text-white transition-colors" />
+
+          <div
+            className="absolute right-0 top-0 bottom-0 w-3/5 pointer-events-none overflow-hidden rounded-r-xl z-0"
+            style={{
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, transparent 15%, black 85%)',
+              maskImage: 'linear-gradient(to right, transparent 0%, transparent 15%, black 85%)',
+            }}
+          >
+            <SafeImage
+              src={getHuaxuImageUrl(member.portrait)}
+              alt=""
+              hideOnError
+              className="h-full w-full object-cover object-right scale-[1.05] opacity-30 filter contrast-125 saturate-125 transition-opacity duration-300 group-hover:opacity-45"
+            />
+          </div>
+        </button>
+
+        <div className="grid grid-cols-2 gap-3">
           <Stat
             label="Warzone"
             value={warzone ? formatNumber(warzone.score) : '—'}
@@ -62,55 +87,43 @@ export const PlayerScoreModal: React.FC<PlayerScoreModalProps> = ({ member, onCl
           />
         </div>
 
-        <section className="space-y-3">
-          <h4 className="text-sm font-semibold text-white">Warzone setup</h4>
-          {!warzone || warzone.zones.length === 0 ? (
-            <p className="text-sm text-zinc-500">No Warzone record this week.</p>
-          ) : (
-            <div className="divide-y divide-[#1f1f23]">
-              {warzone.zones.map((zone) => (
-                <div key={zone.id} className="py-3 first:pt-0 last:pb-0 space-y-2.5">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-sm text-zinc-200">{zone.name}</span>
-                    <span className="text-sm text-white font-semibold tabular-nums">{formatNumber(zone.score)}</span>
-                  </div>
-                  <ul className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    {zone.characters.map((c) => (
-                      <li key={c.id} className="flex items-center gap-2.5 min-w-0">
+        {warzone && warzone.zones.length > 0 && (
+          <ul className="divide-y divide-[#1f1f23] border-t border-[#27272a]">
+            {warzone.zones.map((zone) => (
+              <li key={zone.id} className="py-3 last:pb-0 space-y-2">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-sm sm:text-base text-zinc-300 truncate">{zone.name}</span>
+                  <span className="text-base sm:text-lg font-semibold text-white tabular-nums">
+                    {formatNumber(zone.score)}
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-3 sm:gap-4 px-2 sm:px-4">
+                  {zone.characters.map((c) => {
+                    const rank = getConstructRankLabel(c.rank).label;
+                    return (
+                      <div
+                        key={c.id}
+                        className="relative aspect-square"
+                        title={`${c.characterName}: ${c.frameName} · ${rank} · BP ${formatNumber(c.bp)}${
+                          c.cubName ? ` · ${c.cubName}` : ''
+                        }`}
+                      >
                         <SafeImage
                           src={getHuaxuImageUrl(c.icon)}
                           alt={c.characterName}
-                          className="w-10 h-10 rounded-lg bg-[#18181b] object-cover shrink-0"
+                          className="w-full h-full rounded-lg bg-[#18181b] object-cover"
                         />
-                        <div className="min-w-0 text-xs leading-tight">
-                          <div className="text-zinc-100 font-medium truncate">
-                            {c.characterName}: {c.frameName}
-                          </div>
-                          <div className="text-zinc-500 truncate">
-                            {getConstructRankLabel(c.rank).label} · BP {formatNumber(c.bp)}
-                          </div>
-                          {c.cubName && <div className="text-zinc-500 truncate">{c.cubName}</div>}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                        <span className="absolute bottom-1 left-1 px-1.5 rounded bg-black/75 text-[11px] font-semibold text-white leading-5">
+                          {rank}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className="space-y-2">
-          <h4 className="text-sm font-semibold text-white">PPC</h4>
-          {ppc ? (
-            <p className="text-sm text-zinc-400">
-              {ppc.level}, rank #{ppc.rank} with {formatNumber(ppc.score)} pts. The API doesn't publish PPC teams or
-              per-boss scores.
-            </p>
-          ) : (
-            <p className="text-sm text-zinc-500">Not in the PPC top 100 this week.</p>
-          )}
-        </section>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </Modal>
   );

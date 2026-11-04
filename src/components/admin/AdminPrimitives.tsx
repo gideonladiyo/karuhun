@@ -207,6 +207,7 @@ export interface ModalProps {
   subtitle?: React.ReactNode;
   footer?: React.ReactNode;
   maxWidthClass?: string;
+  maxHeightClass?: string;
   children: React.ReactNode;
 }
 
@@ -217,6 +218,7 @@ export const Modal: React.FC<ModalProps> = ({
   subtitle,
   footer,
   maxWidthClass = 'max-w-lg',
+  maxHeightClass = 'max-h-[85vh]',
   children,
 }) => {
   useEffect(() => {
@@ -243,7 +245,8 @@ export const Modal: React.FC<ModalProps> = ({
     >
       <div
         className={cn(
-          'minimal-card w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl',
+          'minimal-card w-full flex flex-col overflow-hidden shadow-2xl',
+          maxHeightClass,
           maxWidthClass
         )}
         onClick={(e) => e.stopPropagation()}

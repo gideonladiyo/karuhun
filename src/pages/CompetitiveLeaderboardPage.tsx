@@ -175,7 +175,6 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
             {/* Mobile list */}
             <ul className="md:hidden divide-y divide-[#1f1f23]">
               {rows.map((m, idx) => {
-                const primary = sortBy === 'total' ? getTotalScore(m) : m[sortBy]?.score;
                 return (
                   <li key={`${m.server}:${m.id}`}>
                     <button
@@ -189,13 +188,10 @@ export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ 
                       <PlayerAvatar portrait={m.portrait} frame={m.frame} alt={m.name} size="sm" />
                       <div className="min-w-0 flex-1">
                         <div className="text-sm text-white font-medium truncate">{m.name}</div>
-                        <div className="text-xs text-zinc-500 truncate">
-                          {m.guildName} · WZ {m.warzone ? formatNumber(m.warzone.score) : '—'} · PPC{' '}
-                          {m.ppc ? formatNumber(m.ppc.score) : '—'}
-                        </div>
+                        <div className="text-xs text-zinc-500 truncate">{m.guildName}</div>
                       </div>
                       <span className="text-sm text-white font-semibold tabular-nums">
-                        {primary ? formatNumber(primary) : '—'}
+                        {formatNumber(getTotalScore(m))}
                       </span>
                     </button>
                   </li>
