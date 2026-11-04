@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { GuildMember } from '@/types';
 import { MemberTacticalCard } from './MemberTacticalCard';
-import { Search, Users, ShieldAlert } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 
 interface GuildMembersRosterProps {
   members: GuildMember[];
@@ -13,15 +13,15 @@ interface GuildMembersRosterProps {
 interface RankSectionConfig {
   rankLevel: number;
   rankTitle: string;
-  roleLabel?: string;
+  /** Tailwind background class for the section dot. */
   accentColor: string;
 }
 
 const RANK_SECTIONS: RankSectionConfig[] = [
-  { rankLevel: 1, rankTitle: 'RANK 1', roleLabel: 'LEADER', accentColor: 'text-amber-400' },
-  { rankLevel: 2, rankTitle: 'RANK 2', roleLabel: 'VICE', accentColor: 'text-sky-400' },
-  { rankLevel: 3, rankTitle: 'RANK 3', accentColor: 'text-rose-400' },
-  { rankLevel: 4, rankTitle: 'RANK 4', accentColor: 'text-zinc-400' },
+  { rankLevel: 1, rankTitle: 'Leader', accentColor: 'bg-amber-400' },
+  { rankLevel: 2, rankTitle: 'Vice leader', accentColor: 'bg-sky-400' },
+  { rankLevel: 3, rankTitle: 'Senior', accentColor: 'bg-rose-400' },
+  { rankLevel: 4, rankTitle: 'Member', accentColor: 'bg-zinc-500' },
 ];
 
 export const GuildMembersRoster: React.FC<GuildMembersRosterProps> = ({
@@ -77,44 +77,43 @@ export const GuildMembersRoster: React.FC<GuildMembersRosterProps> = ({
 
   return (
     <div className="w-full space-y-8">
-      
+
       {/* Control Bar: Title + Search + Sort Filter */}
-      <div className="minimal-card p-5 sm:p-6 bg-[#121215] border border-[#27272a] space-y-4">
-        
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          
+      <div className="space-y-4">
+
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-5 border-b border-[#27272a]">
+
           {/* Section Heading & Counter */}
           <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <Users className="w-4 h-4 text-amber-400" />
-              <h2 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight">
-                GUILD MEMBERS
-              </h2>
-            </div>
-            <p className="text-xs font-tech text-zinc-400">
-              Showing <span className="text-white font-bold">{filteredMembers.length}</span> of <span className="text-white font-bold">{members.length}</span> Members
+            <h2 className="font-heading font-bold text-2xl sm:text-3xl text-white tracking-tight">Members</h2>
+            <p className="text-sm text-zinc-500">
+              {filteredMembers.length === members.length
+                ? `${members.length} commanders`
+                : `${filteredMembers.length} of ${members.length} commanders`}
             </p>
           </div>
 
           {/* Search & Sort Controls */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            
+
             {/* Search Input Box */}
             <div className="relative min-w-[240px] flex-1 sm:flex-initial">
               <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search Name / Player ID..."
+                placeholder="Search name or player ID"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full bg-[#09090b] text-xs sm:text-sm text-white placeholder:text-zinc-500 border border-[#27272a] focus:border-amber-400 rounded-xl pl-10 pr-4 py-2.5 outline-none font-sans transition-colors"
               />
               {searchTerm && (
                 <button
+                  type="button"
+                  aria-label="Clear search"
                   onClick={() => setSearchTerm('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-tech text-zinc-500 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
                 >
-                  CLEAR
+                  <X className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -124,12 +123,13 @@ export const GuildMembersRoster: React.FC<GuildMembersRosterProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="w-full sm:w-auto bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] focus:border-amber-400 rounded-xl px-4 py-2.5 outline-none cursor-pointer uppercase tracking-wider transition-colors"
+                aria-label="Sort members"
+                className="w-full sm:w-auto bg-[#09090b] text-xs sm:text-sm text-white border border-[#27272a] focus:border-amber-400 rounded-xl px-4 py-2.5 outline-none cursor-pointer transition-colors"
               >
-                <option value="level">Sort: Commander Level</option>
-                <option value="contrib">Sort: Weekly Contribution</option>
-                <option value="activity">Sort: Last Login (Active)</option>
-                <option value="name">Sort: Player Name (A-Z)</option>
+                <option value="level">Sort by level</option>
+                <option value="contrib">Sort by weekly contribution</option>
+                <option value="activity">Sort by last login</option>
+                <option value="name">Sort by name</option>
               </select>
             </div>
 
@@ -141,42 +141,41 @@ export const GuildMembersRoster: React.FC<GuildMembersRosterProps> = ({
 
       {/* Roster Sections Grouped by Rank */}
       {loading ? (
-        <div className="text-center py-20 bg-[#121215] rounded-3xl border border-[#27272a]">
-          <div className="inline-block animate-spin w-8 h-8 border-3 border-amber-400 border-t-transparent rounded-full mb-3" />
-          <p className="text-xs font-tech text-zinc-400">Loading Division Roster...</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4" aria-busy="true" aria-label="Loading members">
+          {Array.from({ length: 8 }, (_, i) => (
+            <div key={i} className="flex items-center gap-3.5 p-4 rounded-2xl border border-[#27272a] bg-[#121215]">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#18181b] animate-pulse" />
+              <div className="flex-1 space-y-2">
+                <div className="h-3.5 w-2/3 rounded bg-[#18181b] animate-pulse" />
+                <div className="h-3 w-1/2 rounded bg-[#18181b] animate-pulse" />
+              </div>
+            </div>
+          ))}
         </div>
       ) : groupedSections.length === 0 ? (
-        <div className="minimal-card p-12 text-center space-y-3 bg-[#121215] border border-[#27272a]">
-          <ShieldAlert className="w-10 h-10 text-zinc-500 mx-auto opacity-60" />
-          <h3 className="font-heading font-bold text-base text-white">No Members Found</h3>
-          <p className="text-xs font-tech text-zinc-400 max-w-sm mx-auto">
-            No member matched "{searchTerm}". Try clearing your search query.
+        <div className="py-14 text-center space-y-3 rounded-2xl border border-dashed border-[#27272a]">
+          <p className="text-sm text-zinc-400">
+            {searchTerm ? `No member matches "${searchTerm}".` : 'No members to show.'}
           </p>
-          <button
-            onClick={() => setSearchTerm('')}
-            className="px-4 py-2 rounded-xl bg-white text-black font-heading font-bold text-xs uppercase hover:bg-zinc-200 transition-colors"
-          >
-            Reset Filter
-          </button>
+          {searchTerm && (
+            <button
+              type="button"
+              onClick={() => setSearchTerm('')}
+              className="text-xs font-semibold text-white hover:text-amber-300 transition-colors"
+            >
+              Clear search
+            </button>
+          )}
         </div>
       ) : (
         <div className="space-y-10">
           {groupedSections.map((section) => (
             <div key={section.rankLevel} className="space-y-4">
-              
-              {/* Section Header: e.g. "RANK 1 • LEADER", "RANK 2 • VICE", or just "RANK 3", "RANK 4" */}
-              <div className="flex items-center space-x-3 pb-2 border-b border-[#27272a]/80">
-                <span className={`font-heading font-black text-lg sm:text-xl tracking-tight ${section.accentColor}`}>
-                  {section.rankTitle}
-                </span>
-                {section.roleLabel && (
-                  <>
-                    <span className="text-zinc-600 font-bold">•</span>
-                    <span className="font-heading font-bold text-sm sm:text-base text-zinc-200 tracking-wider uppercase">
-                      {section.roleLabel}
-                    </span>
-                  </>
-                )}
+
+              <div className="flex items-center gap-2.5">
+                <span className={`w-2 h-2 rounded-full ${section.accentColor}`} />
+                <h3 className="font-heading font-semibold text-base sm:text-lg text-white">{section.rankTitle}</h3>
+                <span className="text-sm text-zinc-500 tabular-nums">{section.members.length}</span>
               </div>
 
               {/* Member Cards Grid for this Rank */}

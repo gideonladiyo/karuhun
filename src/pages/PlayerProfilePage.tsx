@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PlayerProfileData, PlayerCharacter } from '@/types';
 import { getPlayerProfile } from '@/services/apiService';
 import { getHuaxuImageUrl, getNameplateUrl, getConstructRankLabel } from '@/services/imageUtils';
 import { BackButton } from '@/components/common/BackButton';
-import { Users, Shield } from 'lucide-react';
+import { Search, Shield, X } from 'lucide-react';
 import { NotFound } from '@/components/ui/not-found-2';
+import { PlayerAvatar } from '@/components/domain/PlayerAvatar';
+import { FadedPortrait } from '@/components/domain/FadedPortrait';
+import { SafeImage } from '@/components/ui/safe-image';
+import { formatNumber } from '@/lib/format';
+import { cn } from '@/lib/utils';
 
 interface PlayerProfilePageProps {
   uid: number;
@@ -14,17 +19,106 @@ interface PlayerProfilePageProps {
   onSelectCharacter: (character: PlayerCharacter) => void;
 }
 
+type SortKey = 'default' | 'rank' | 'level' | 'name';
+
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: 'default', label: 'Newest' },
+  { value: 'rank', label: 'Rank' },
+  { value: 'level', label: 'Level' },
+  { value: 'name', label: 'Name' },
+];
+
+const rankScore = (c: PlayerCharacter) => (c.quality || 0) * 10 + (c.stars || 0);
+
+const SORTERS: Record<SortKey, ((a: PlayerCharacter, b: PlayerCharacter) => number) | null> = {
+  default: null,
+  rank: (a, b) => rankScore(b) - rankScore(a) || b.level - a.level,
+  level: (a, b) => b.level - a.level || rankScore(b) - rankScore(a),
+  name: (a, b) => a.characterName.localeCompare(b.characterName),
+};
+
+const HeroStat: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => (
+  <div className="min-w-0 px-5 py-4 sm:px-6 bg-[#0f0f13]/90 backdrop-blur-sm">
+    <div className="text-xs text-zinc-500">{label}</div>
+    <div className="mt-0.5 text-xl sm:text-2xl font-heading font-semibold text-white tabular-nums truncate">{value}</div>
+  </div>
+);
+
+const ProfileSkeleton: React.FC = () => (
+  <div className="space-y-8" aria-busy="true" aria-label="Loading profile">
+    <div className="rounded-2xl border border-[#27272a] bg-[#121215] overflow-hidden">
+      <div className="flex items-center gap-5 p-6 sm:p-8">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#18181b] animate-pulse" />
+        <div className="flex-1 space-y-3">
+          <div className="h-7 w-48 rounded-md bg-[#18181b] animate-pulse" />
+          <div className="h-3.5 w-72 max-w-full rounded bg-[#18181b] animate-pulse" />
+          <div className="h-3.5 w-40 rounded bg-[#18181b] animate-pulse" />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-px border-t border-[#27272a] bg-[#27272a]">
+        {Array.from({ length: 4 }, (_, i) => (
+          <div key={i} className="px-6 py-4 space-y-2 bg-[#121215]">
+            <div className="h-3 w-16 rounded bg-[#18181b] animate-pulse" />
+            <div className="h-6 w-20 rounded bg-[#18181b] animate-pulse" />
+          </div>
+        ))}
+      </div>
+    </div>
+    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+      {Array.from({ length: 16 }, (_, i) => (
+        <div key={i} className="space-y-2">
+          <div className="aspect-square rounded-xl bg-[#121215] border border-[#27272a] animate-pulse" />
+          <div className="h-3 w-3/4 rounded bg-[#18181b] animate-pulse" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const ConstructTile: React.FC<{ char: PlayerCharacter; onSelect: () => void }> = ({ char, onSelect }) => {
+  const rank = getConstructRankLabel(char.quality, char.stars || 0);
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className="group text-left rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090b] active:scale-[0.98] transition-transform"
+    >
+      <div className="relative aspect-square rounded-xl overflow-hidden bg-[#18181b] border border-[#27272a] group-hover:border-zinc-400 transition-colors">
+        <SafeImage
+          src={getHuaxuImageUrl(char.fashionIcon || char.normalIcon)}
+          alt={char.characterName}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
+        <span className="absolute bottom-1 left-1 px-1.5 rounded bg-black/75 text-[11px] font-semibold text-white leading-5">
+          {rank.label}
+        </span>
+        <span className="absolute bottom-1.5 right-1.5 text-[10px] font-tech font-semibold text-zinc-200 tabular-nums">
+          Lv {char.level}
+        </span>
+      </div>
+      <div className="pt-2 px-0.5">
+        <div className="text-xs font-heading font-semibold text-white truncate group-hover:text-amber-300 transition-colors">
+          {char.characterName}
+        </div>
+        <div className="text-[11px] text-zinc-500 truncate">{char.frameName}</div>
+      </div>
+    </button>
+  );
+};
+
 export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
   uid,
   server,
   onBack,
   backLabel = 'BACK TO GUILD',
-  onSelectCharacter
+  onSelectCharacter,
 }) => {
   const [profileData, setProfileData] = useState<PlayerProfileData | null>(null);
   const [errorInfo, setErrorInfo] = useState<{ code: string | number; message: string } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [sortBy, setSortBy] = useState<SortKey>('default');
 
   const fetchProfile = () => {
     setLoading(true);
@@ -52,20 +146,27 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
     fetchProfile();
   }, [server, uid]);
 
+  const owned = useMemo(
+    () => (profileData?.characters ?? []).filter((c) => c.acquired !== false && c.visible !== false),
+    [profileData]
+  );
+
+  const visibleCharacters = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    const matches = query
+      ? owned.filter((c) =>
+          [c.characterName, c.frameName, c.frameCode].some((v) => v?.toLowerCase().includes(query))
+        )
+      : owned;
+    const sorter = SORTERS[sortBy];
+    return sorter ? [...matches].sort(sorter) : matches;
+  }, [owned, searchTerm, sortBy]);
+
   if (loading) {
     return (
       <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
-        <div className="flex items-center justify-between">
-          <BackButton label={backLabel} onClick={onBack} />
-          <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
-            SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{uid}</strong>
-          </span>
-        </div>
-        <div className="text-center py-24 bg-[#121215] rounded-3xl border border-[#27272a]">
-          <div className="inline-block animate-spin w-10 h-10 border-4 border-amber-400 border-t-transparent rounded-full mb-4" />
-          <p className="text-xs font-tech text-zinc-300">Retrieving Commander Profile from Huaxu API...</p>
-          <p className="text-[11px] font-tech text-zinc-500 mt-1">Target UID: {uid} • Server: {server.toUpperCase()}</p>
-        </div>
+        <BackButton label={backLabel} onClick={onBack} />
+        <ProfileSkeleton />
       </div>
     );
   }
@@ -73,21 +174,13 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
   if (!profileData || !profileData.player) {
     return (
       <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
-        {/* Top Back Navigation Bar */}
-        <div className="flex items-center justify-between">
-          <BackButton label={backLabel} onClick={onBack} />
-          <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
-            SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{uid}</strong>
-          </span>
-        </div>
-
-        {/* Dynamic Not Found / Error UI Component with API Error Code & Message */}
+        <BackButton label={backLabel} onClick={onBack} />
         <NotFound
           errorCode={errorInfo?.code ?? 404}
-          title="Commander Profile Unavailable"
-          message={errorInfo?.message ?? "Failed to get player"}
-          subMessage={`Target UID: ${uid} • Server: ${server.toUpperCase()} • Player telemetry might be private in-game or Huaxu API server is experiencing downtime.`}
-          primaryActionLabel="Try Again"
+          title="Profile unavailable"
+          message={errorInfo?.message ?? 'Failed to get player'}
+          subMessage={`UID ${uid} · ${server.toUpperCase()}. The profile may be private in-game, or the Huaxu API is down.`}
+          primaryActionLabel="Try again"
           onPrimaryAction={fetchProfile}
           secondaryActionLabel={backLabel}
           onSecondaryAction={onBack}
@@ -96,178 +189,146 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
     );
   }
 
-  const { player, characters = [] } = profileData;
+  const { player, characterRating } = profileData;
   const nameplateUrl = getNameplateUrl(player.nameplate);
-
-  const filteredCharacters = characters.filter(
-    (c) => {
-      // Exclude unowned or hidden constructs
-      if (c.acquired === false || c.visible === false) {
-        return false;
-      }
-      return (
-        c.characterName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.frameName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.frameCode?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-  );
+  const guildName = player.guildName || player.guild?.name;
+  const sssPlusCount = owned.filter((c) => (c.quality || 0) >= 6).length;
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
-      
-      {/* Top Back Navigation */}
-      <div className="flex items-center justify-between">
-        <BackButton label={backLabel} onClick={onBack} />
+    <div className="space-y-8 sm:space-y-10 animate-fadeIn pb-16 md:pb-0">
+      <BackButton label={backLabel} onClick={onBack} />
 
-        <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
-          SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{player.id}</strong> • LVL: <strong className="text-white">{player.level}</strong>
-        </span>
-      </div>
+      {/* Profile hero */}
+      <section className="relative overflow-hidden rounded-2xl border border-[#27272a] bg-gradient-to-r from-[#17171d] via-[#121215] to-[#0d0d11] [isolation:isolate]">
+        <FadedPortrait
+          src={getHuaxuImageUrl(player.portrait)}
+          eager
+          className="inset-y-0 right-0 w-full sm:w-3/5 -z-10"
+          imgClassName="opacity-25"
+        />
 
-      {/* Commander Profile Banner */}
-      <div className="minimal-card p-6 sm:p-8 space-y-6 relative">
-        <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
-          
-          {/* Avatar & Frame */}
-          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl p-1 flex-shrink-0 shadow-xl">
-            {player.frame && (
-              <img
-                src={getHuaxuImageUrl(player.frame)}
-                alt="Frame"
-                className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none filter grayscale contrast-125 scale-110"
-                onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
-              />
-            )}
-            <img
-              src={getHuaxuImageUrl(player.portrait)}
-              alt={player.name}
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          </div>
+        <div className="flex flex-col sm:flex-row items-center sm:items-center gap-5 sm:gap-6 p-6 sm:p-8">
+          <PlayerAvatar portrait={player.portrait} frame={player.frame} alt={player.name} size="xl" shape="circle" />
 
-          {/* Commander Information */}
-          <div className="space-y-2 text-center sm:text-left flex-1">
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-              <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white tracking-tight">
+          <div className="min-w-0 flex-1 space-y-2 text-center sm:text-left">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-2">
+              <h1 className="text-3xl sm:text-4xl font-heading font-bold text-white tracking-tight break-words">
                 {player.name}
               </h1>
               {nameplateUrl ? (
-                <img
-                  src={nameplateUrl}
-                  alt="Nameplate"
-                  className="h-7 sm:h-8 object-contain rounded-md max-w-[140px]"
-                  onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
-                />
-              ) : player.nameplate && typeof player.nameplate === 'string' && !player.nameplate.includes('/') ? (
-                <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-tech font-bold px-2.5 py-0.5 rounded-md uppercase">
-                  {player.nameplate}
-                </span>
+                <SafeImage src={nameplateUrl} alt="Nameplate" hideOnError className="h-7 sm:h-8 max-w-[160px] object-contain" />
               ) : null}
             </div>
 
-            <p className="text-xs font-sans text-zinc-400 italic max-w-2xl leading-relaxed">
-              "{player.sign || 'No commander signature set.'}"
-            </p>
+            {player.sign && (
+              <p className="text-sm text-zinc-400 italic max-w-xl [text-wrap:pretty]">“{player.sign}”</p>
+            )}
 
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-2 text-xs font-tech text-zinc-300">
-              <span className="bg-[#18181b] border border-[#27272a] px-3 py-1 rounded-xl flex items-center space-x-2">
-                <span>Player ID: <code className="text-white font-bold">{player.id}</code></span>
-                <span className="text-zinc-600">•</span>
-                <span className="bg-white text-black text-[10px] font-heading font-bold px-2 py-0.5 rounded-md uppercase shadow-sm">
-                  LVL {player.level}
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 pt-1 text-sm text-zinc-400">
+              {guildName && (
+                <span className="inline-flex items-center gap-1.5 text-zinc-200">
+                  <Shield className="w-3.5 h-3.5 text-amber-400" />
+                  {guildName}
                 </span>
-              </span>
-              {player.guild && (
-                <span className="bg-[#18181b] border border-[#27272a] px-3 py-1 rounded-xl flex items-center space-x-1.5">
-                  <Shield className="w-3.5 h-3.5 text-white" />
-                  <span>Guild: <strong className="text-white">{player.guild.name}</strong></span>
-                </span>
+              )}
+              {guildName && <span className="text-zinc-700">·</span>}
+              <span className="uppercase">{server}</span>
+              <span className="text-zinc-700">·</span>
+              <span className="font-mono text-xs text-zinc-500">UID {player.id}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-px border-t border-[#27272a]/80 bg-[#27272a]/80">
+          <HeroStat label="Commander level" value={player.level} />
+          <HeroStat label="Constructs" value={owned.length} />
+          <HeroStat label="SSS+ constructs" value={sssPlusCount} />
+          <HeroStat
+            label={characterRating ? 'Character rating' : 'Likes'}
+            value={characterRating ? formatNumber(characterRating) : formatNumber(player.likes ?? 0)}
+          />
+        </div>
+      </section>
+
+      {/* Constructs */}
+      <section className="space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <h2 className="font-heading font-bold text-xl text-white tracking-tight">Constructs</h2>
+            <p className="text-sm text-zinc-500">
+              {visibleCharacters.length === owned.length
+                ? `${owned.length} owned`
+                : `${visibleCharacters.length} of ${owned.length} shown`}
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-2.5">
+            <div className="flex p-1 rounded-xl bg-[#09090b] border border-[#27272a]" role="group" aria-label="Sort constructs">
+              {SORT_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  aria-pressed={sortBy === opt.value}
+                  onClick={() => setSortBy(opt.value)}
+                  className={cn(
+                    'flex-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors',
+                    sortBy === opt.value ? 'bg-white text-black' : 'text-zinc-400 hover:text-white'
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative sm:w-60">
+              <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search construct or frame"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-[#09090b] text-sm text-white placeholder:text-zinc-500 border border-[#27272a] rounded-xl pl-9 pr-9 py-2 outline-none focus:border-amber-400/70 transition-colors"
+              />
+              {searchTerm && (
+                <button
+                  type="button"
+                  aria-label="Clear search"
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               )}
             </div>
           </div>
-
-        </div>
-      </div>
-
-      {/* Compact Constructs Roster Grid */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
-          <div className="flex items-center space-x-2">
-            <Users className="w-4 h-4 text-white" />
-            <h2 className="font-heading font-bold text-lg text-white uppercase tracking-wider">
-              CONSTRUCTS ({filteredCharacters.length})
-            </h2>
-          </div>
-
-          {/* Search Filter */}
-          <div className="relative min-w-[220px]">
-            <input
-              type="text"
-              placeholder="Search Construct / Frame..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-[#09090b] text-xs text-white border border-[#27272a] rounded-xl pl-3 pr-4 py-2 focus:outline-none focus:border-white font-sans"
-            />
-          </div>
         </div>
 
-        {/* Compact Columns Grid (3 to 8 columns per row) */}
-        {filteredCharacters.length === 0 ? (
-          <div className="text-center py-16 bg-[#121215] rounded-2xl border border-[#27272a] text-zinc-400 font-tech text-sm">
-            No constructs match search criteria.
+        {visibleCharacters.length === 0 ? (
+          <div className="py-16 text-center rounded-2xl border border-dashed border-[#27272a] space-y-3">
+            <p className="text-sm text-zinc-400">
+              {owned.length === 0
+                ? profileData.privacySettings?.charactersHidden
+                  ? 'This player keeps their constructs private.'
+                  : 'This player has no public constructs.' : `No constructs match "${searchTerm}".`}
+            </p>
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm('')}
+                className="text-xs font-semibold text-white hover:text-amber-300 transition-colors"
+              >
+                Clear search
+              </button>
+            )}
           </div>
         ) : (
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-            {filteredCharacters.map((char) => {
-              const rankInfo = getConstructRankLabel(char.quality, char.stars || 0);
-
-              return (
-                <div
-                  key={char.id}
-                  onClick={() => onSelectCharacter(char)}
-                  className="minimal-card-interactive p-2.5 flex flex-col items-center justify-between text-center cursor-pointer group space-y-2 rounded-2xl border border-[#27272a] hover:border-white transition-all"
-                >
-                  {/* Construct Square Portrait Container */}
-                  <div className="relative w-full aspect-square rounded-xl overflow-hidden group-hover:border-white transition-colors">
-                    <img
-                      src={getHuaxuImageUrl(char.fashionIcon || char.normalIcon)}
-                      alt={char.characterName}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-
-                    {/* Rank Badge Overlay */}
-                    <div className="absolute top-1.5 left-1.5">
-                      <span className={`text-[9px] font-tech font-bold px-1.5 py-0.2 rounded uppercase border shadow-md ${rankInfo.classNames}`}>
-                        {rankInfo.label}
-                      </span>
-                    </div>
-
-                    {/* Level Badge Overlay */}
-                    <div className="absolute bottom-1.5 right-1.5">
-                      <span className="bg-black/90 text-white text-[9px] font-tech font-bold px-1.5 py-0.2 rounded border border-[#27272a]">
-                        LV{char.level}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Compact Text Labels */}
-                  <div className="space-y-0.5 w-full">
-                    <h3 className="font-heading font-bold text-xs text-white truncate w-full group-hover:text-zinc-200">
-                      {char.characterName}
-                    </h3>
-                    <p className="text-[10px] font-tech text-zinc-400 truncate w-full">
-                      {char.frameName}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-x-3 gap-y-5">
+            {visibleCharacters.map((char) => (
+              <ConstructTile key={char.id} char={char} onSelect={() => onSelectCharacter(char)} />
+            ))}
           </div>
         )}
-      </div>
-
+      </section>
     </div>
   );
 };
-

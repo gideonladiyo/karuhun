@@ -120,6 +120,7 @@ export interface PlayerProfileData {
   };
   characters: PlayerCharacter[];
   characterRating?: number;
+  privacySettings?: { characters?: boolean; charactersHidden?: boolean };
 }
 
 export interface WeaponResonance {
@@ -171,10 +172,11 @@ export interface WeaponData {
 }
 
 export interface MemoryData {
-  slot: number;
+  slot?: number;
   id: number;
   name: string;
   icon: string;
+  iconBig?: string;
   quality: number;
   level: number;
   breakthrough: number;
@@ -185,15 +187,21 @@ export interface MemoryData {
     name?: string;
     description?: string;
   };
-  resonances?: Array<{ name?: string; description?: string }>;
+  resonances?: Array<{ slot?: number; name?: string; description?: string; icon?: string; active?: boolean }>;
 }
 
+/** Memory set bonus as returned by the character detail endpoint. */
 export interface SuitBonus {
-  id: number;
+  id?: number;
   name: string;
-  count: number;
+  /** Short set label, e.g. "Support Boost I". */
   description: string;
   icon?: string;
+  iconBig?: string;
+  /** Number of equipped pieces of this set. */
+  level?: number;
+  count?: number;
+  skills?: Array<{ level: number; description: string; active?: boolean }>;
 }
 
 export interface CubSkill {
@@ -237,6 +245,9 @@ export interface CharacterDetailInfo {
   classIcon?: string;
   element: string;
   elements: Array<{ element: string; percentage: number }>;
+  specialties?: Array<{ name: string; description?: string }>;
+  weaponGroup?: { id?: number; name: string; icon?: string };
+  gradeIcon?: string;
   quality: number;
   stars?: number;
   affix?: {

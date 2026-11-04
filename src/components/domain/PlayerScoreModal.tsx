@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { Modal } from '@/components/admin/AdminPrimitives';
 import { SafeImage } from '@/components/ui/safe-image';
 import { PlayerAvatar } from '@/components/domain/PlayerAvatar';
+import { FadedPortrait } from '@/components/domain/FadedPortrait';
 import { MemberCompetitiveAchievement } from '@/services/rankingUtils';
 import { getHuaxuImageUrl, getConstructRankLabel } from '@/services/imageUtils';
 import { formatNumber } from '@/lib/format';
@@ -58,20 +59,11 @@ export const PlayerScoreModal: React.FC<PlayerScoreModalProps> = ({ member, onCl
           </div>
           <ArrowUpRight className="w-4 h-4 shrink-0 self-start z-10 text-zinc-500 group-hover:text-white transition-colors" />
 
-          <div
-            className="absolute right-0 top-0 bottom-0 w-3/5 pointer-events-none overflow-hidden rounded-r-xl z-0"
-            style={{
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, transparent 15%, black 85%)',
-              maskImage: 'linear-gradient(to right, transparent 0%, transparent 15%, black 85%)',
-            }}
-          >
-            <SafeImage
-              src={getHuaxuImageUrl(member.portrait)}
-              alt=""
-              hideOnError
-              className="h-full w-full object-cover object-right scale-[1.05] opacity-30 filter contrast-125 saturate-125 transition-opacity duration-300 group-hover:opacity-45"
-            />
-          </div>
+          <FadedPortrait
+            src={getHuaxuImageUrl(member.portrait)}
+            className="inset-y-0 right-0 w-3/5 rounded-r-xl z-0"
+            imgClassName="group-hover:opacity-45"
+          />
         </button>
 
         <div className="grid grid-cols-2 gap-3">
