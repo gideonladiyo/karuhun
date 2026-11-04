@@ -1,191 +1,173 @@
 import { getWarzoneLeaderboard, getPPCLeaderboard } from '@/services/apiService';
 import { GUILD_BRANCHES } from '@/services/imageUtils';
+import warzoneFallback from '@/data/fallbacks/warzone_fallback.json';
+import ppcFallback from '@/data/fallbacks/ppc_fallback.json';
+
+export interface WarzoneCharacter {
+  id: number;
+  characterName: string;
+  frameName: string;
+  icon: string;
+  bp: number;
+  rank: number;
+  cubName?: string;
+  cubIcon?: string;
+}
+
+export interface WarzoneZoneResult {
+  id: number;
+  name: string;
+  score: number;
+  characters: WarzoneCharacter[];
+}
 
 export interface MemberCompetitiveAchievement {
   id: number;
   name: string;
+  guildId: number;
   guildName: string;
   server: string;
   portrait: string;
   frame?: string;
-  warzone?: {
+  warzone: {
+    tier: number;
+    tierLabel: string;
     rank: number;
-    division: string;
-    divisionRank: number;
     score: number;
-    team?: any[];
+    zones: WarzoneZoneResult[];
   } | null;
-  ppc?: {
-    rank: number;
-    level: string;
+  ppc: {
     levelId: number;
+    level: string;
+    rank: number;
     score: number;
   } | null;
 }
 
-/**
- * Checks whether a player belongs to the Karuhun alliance
- */
-export const isAllianceMember = (name: string, guildName?: string): boolean => {
-  if (guildName) {
-    const cleanGuild = guildName.toLowerCase();
-    const matchesBranch = GUILD_BRANCHES.some((b) => {
-      const baseName = b.name.toLowerCase().replace(/[\s夜’']/g, '');
-      return cleanGuild.replace(/[\s夜’']/g, '').includes(baseName);
-    });
-    if (matchesBranch) return true;
-  }
-  return name.includes('夜') || name.startsWith('Karuhun');
-};
+export type RankingSort = 'total' | 'warzone' | 'ppc';
+
+const SERVERS = ['ap', 'na'] as const;
+const WZ_TIERS = Array.from({ length: 16 }, (_, i) => i + 1);
+const PPC_LEVELS = [3, 4]; // levels 1 & 2 are not served by the API
+
+const WZ_TIER_LABELS: Record<number, string> = { 16: 'Legend', 15: 'Hero' };
+const PPC_LEVEL_LABELS: Record<number, string> = { 4: 'Ultimate', 3: 'Advanced' };
+
+const branchByKey = new Map(GUILD_BRANCHES.map((b) => [`${b.server}:${b.id}`, b]));
+
+export const getWarzoneTierLabel = (tier: number) => WZ_TIER_LABELS[tier] ?? `Tier ${tier}`;
+
+export const getTotalScore = (m: MemberCompetitiveAchievement) =>
+  (m.warzone?.score ?? 0) + (m.ppc?.score ?? 0);
 
 /**
- * Computes composite score for leaderboard ranking
- */
-export const calculateAchievementScore = (m: MemberCompetitiveAchievement): number => {
-  let score = 0;
-  if (m.warzone) {
-    const divBonus = m.warzone.divisionRank === 16 ? 1000000 : 500000;
-    score += divBonus + (1000 - m.warzone.rank);
-  }
-  if (m.ppc) {
-    const lvlBonus = m.ppc.levelId === 4 ? 1000000 : 500000;
-    score += lvlBonus + (1000 - m.ppc.rank);
-  }
-  return score;
-};
-
-/**
- * Fetches and processes composite leaderboard data across WZ and PPC (AP & NA)
+ * Fetches every Warzone tier and PPC level on both servers, keeps only players
+ * whose guildId belongs to one of the configured guild branches.
  */
 export async function fetchCompositeAllianceLeaderboard(): Promise<MemberCompetitiveAchievement[]> {
-  const fetchPromises = [
-    getWarzoneLeaderboard('na', 16),
-    getWarzoneLeaderboard('na', 15),
-    getWarzoneLeaderboard('ap', 16),
-    getWarzoneLeaderboard('ap', 15),
-    getPPCLeaderboard('na', 4),
-    getPPCLeaderboard('na', 3),
-    getPPCLeaderboard('ap', 4),
-    getPPCLeaderboard('ap', 3),
-  ];
+  const wzJobs = SERVERS.flatMap((server) => WZ_TIERS.map((tier) => ({ server, tier })));
+  const ppcJobs = SERVERS.flatMap((server) => PPC_LEVELS.map((level) => ({ server, level })));
 
-  const results = await Promise.allSettled(fetchPromises);
-  const achievementsMap: Record<number, MemberCompetitiveAchievement> = {};
+  const [wzResults, ppcResults] = await Promise.all([
+    Promise.allSettled(wzJobs.map((j) => getWarzoneLeaderboard(j.server, j.tier))),
+    Promise.allSettled(ppcJobs.map((j) => getPPCLeaderboard(j.server, j.level))),
+  ]);
 
-  // 1. Process Warzone Leaderboard Responses (Indices 0 to 3)
-  results.slice(0, 4).forEach((res) => {
-    if (res.status !== 'fulfilled' || !res.value || !res.value.data) return;
-    const data = res.value.data as any;
+  const members = new Map<string, MemberCompetitiveAchievement>();
 
-    const wzRankings = (data.warzone && data.warzone.rankings) || (data.rankings && !data.ppc ? data.rankings : null);
-    if (!wzRankings || !Array.isArray(wzRankings)) return;
+  const upsert = (server: string, entry: any): MemberCompetitiveAchievement | null => {
+    const p = entry?.player;
+    if (!p?.id) return null;
+    const branch = branchByKey.get(`${server}:${p.guildId}`);
+    if (!branch) return null;
 
-    const srv = (data.warzone && data.warzone.server) || 'na';
-    const divRank = (data.warzone && data.warzone.challenge) || 16;
-    const divLabel = divRank === 16 ? 'Legend' : divRank === 15 ? 'Hero' : 'Leader';
+    const key = `${server}:${p.id}`;
+    let m = members.get(key);
+    if (!m) {
+      m = {
+        id: p.id,
+        name: p.name || '',
+        guildId: branch.id,
+        guildName: branch.name,
+        server,
+        portrait: p.portrait || 'image/roleplayersp/roleplayer01',
+        frame: p.frame,
+        warzone: null,
+        ppc: null,
+      };
+      members.set(key, m);
+    }
+    return m;
+  };
 
-    wzRankings.forEach((item: any) => {
-      const p = item.player || item;
-      const name = p.name || item.name || '';
-      const gname = p.guildName || item.guildName || '';
-      const pid = p.id || item.playerId || item.id;
+  wzResults.forEach((res, i) => {
+    if (res.status !== 'fulfilled') return;
+    const { server, tier } = wzJobs[i];
+    const data = res.value?.data;
+    // Ignore the bundled fallback snapshot and any mismatched response
+    if (!data?.warzone || data.warzone.updatedAt === warzoneFallback.data.warzone.updatedAt) return;
+    if (data.warzone.challenge !== tier || !Array.isArray(data.rankings)) return;
 
-      if (pid && isAllianceMember(name, gname)) {
-        if (!achievementsMap[pid]) {
-          achievementsMap[pid] = {
-            id: pid,
-            name,
-            guildName: gname || 'Karuhun 夜',
-            server: srv,
-            portrait: p.portrait || item.portrait || 'image/roleplayersp/roleplayer01',
-            frame: p.frame || item.frame,
-            warzone: null,
-            ppc: null
-          };
-        }
+    const zoneNames = new Map<number, string>(
+      (data.warzone.area?.zones || []).map((z: any) => [z.id, z.name])
+    );
 
-        if (!achievementsMap[pid].warzone || item.score > (achievementsMap[pid].warzone?.score || 0)) {
-          achievementsMap[pid].warzone = {
-            rank: item.rank || item.ranking || 1,
-            division: divLabel,
-            divisionRank: divRank,
-            score: item.score || 0,
-            team: item.zones?.[0]?.characters || item.team || []
-          };
-        }
-      }
+    data.rankings.forEach((entry: any) => {
+      const m = upsert(server, entry);
+      const score = Number(entry.score) || 0;
+      if (!m || (m.warzone && m.warzone.score >= score)) return;
+      m.warzone = {
+        tier,
+        tierLabel: getWarzoneTierLabel(tier),
+        rank: entry.rank,
+        score,
+        zones: (entry.zones || []).map((z: any) => ({
+          id: z.id,
+          name: zoneNames.get(z.id) || `Zone ${z.id}`,
+          score: Number(z.score) || 0,
+          characters: z.characters || [],
+        })),
+      };
     });
   });
 
-  // 2. Process PPC Leaderboard Responses (Indices 4 to 7)
-  results.slice(4, 8).forEach((res) => {
-    if (res.status !== 'fulfilled' || !res.value || !res.value.data) return;
-    const data = res.value.data as any;
+  ppcResults.forEach((res, i) => {
+    if (res.status !== 'fulfilled') return;
+    const { server, level } = ppcJobs[i];
+    const data = res.value?.data;
+    if (!data?.ppc || data.ppc.updatedAt === ppcFallback.data.ppc.updatedAt) return;
+    if (data.ppc.level?.id !== level || !Array.isArray(data.ranking)) return;
 
-    const ppcRankings = (data.ppc && (data.ppc.ranking || data.ppc.rankings)) || (data.ranking ? data.ranking : null);
-    if (!ppcRankings || !Array.isArray(ppcRankings)) return;
-
-    const srv = (data.ppc && data.ppc.server) || 'na';
-    const lvlId = (data.ppc && data.ppc.level?.id) || 4;
-    const lvlLabel = lvlId === 4 ? 'Ultimate' : 'Advanced';
-
-    ppcRankings.forEach((item: any) => {
-      const p = item.player || item;
-      const name = p.name || item.name || '';
-      const gname = p.guildName || item.guildName || '';
-      const pid = p.id || item.playerId || item.id;
-
-      if (pid && isAllianceMember(name, gname)) {
-        if (!achievementsMap[pid]) {
-          achievementsMap[pid] = {
-            id: pid,
-            name,
-            guildName: gname || 'Karuhun 夜',
-            server: srv,
-            portrait: p.portrait || item.portrait || 'image/roleplayersp/roleplayer01',
-            frame: p.frame || item.frame,
-            warzone: null,
-            ppc: null
-          };
-        }
-
-        if (!achievementsMap[pid].ppc || item.score > (achievementsMap[pid].ppc?.score || 0)) {
-          achievementsMap[pid].ppc = {
-            rank: item.rank || item.ranking || 1,
-            level: lvlLabel,
-            levelId: lvlId,
-            score: item.score || 0
-          };
-        }
-      }
+    data.ranking.forEach((entry: any) => {
+      const m = upsert(server, entry);
+      const score = Number(entry.score) || 0;
+      if (!m || (m.ppc && m.ppc.score >= score)) return;
+      m.ppc = {
+        levelId: level,
+        level: data.ppc.level?.name || PPC_LEVEL_LABELS[level],
+        rank: entry.rank,
+        score,
+      };
     });
   });
 
-  return Object.values(achievementsMap);
+  return [...members.values()];
 }
 
 /**
- * Sorts alliance members based on ranking mode
+ * Sorts by total (WZ + PPC), WZ score only, or PPC score only.
+ * In single-mode sorts, members without a score in that mode go last (ordered by total).
  */
 export function sortAllianceMembers(
   members: MemberCompetitiveAchievement[],
-  sortBy: 'composite' | 'warzone' | 'ppc' | 'rank' = 'composite',
-  serverFilter: 'all' | 'ap' | 'na' = 'all'
+  sortBy: RankingSort = 'total'
 ): MemberCompetitiveAchievement[] {
-  return members
-    .filter((m) => serverFilter === 'all' || m.server.toLowerCase() === serverFilter.toLowerCase())
-    .sort((a, b) => {
-      if (sortBy === 'warzone') {
-        const aW = a.warzone ? (a.warzone.divisionRank * 1000 - a.warzone.rank) : 0;
-        const bW = b.warzone ? (b.warzone.divisionRank * 1000 - b.warzone.rank) : 0;
-        return bW - aW;
-      }
-      if (sortBy === 'ppc') {
-        const aP = a.ppc ? (a.ppc.levelId * 1000 - a.ppc.rank) : 0;
-        const bP = b.ppc ? (b.ppc.levelId * 1000 - b.ppc.rank) : 0;
-        return bP - aP;
-      }
-      // Default: composite score
-      return calculateAchievementScore(b) - calculateAchievementScore(a);
-    });
+  return [...members].sort((a, b) => {
+    if (sortBy !== 'total') {
+      const aS = a[sortBy]?.score ?? -1;
+      const bS = b[sortBy]?.score ?? -1;
+      if (aS !== bS) return bS - aS;
+    }
+    return getTotalScore(b) - getTotalScore(a);
+  });
 }

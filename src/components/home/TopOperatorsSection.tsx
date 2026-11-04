@@ -3,7 +3,8 @@ import { Trophy, ChevronRight, ArrowUpRight } from 'lucide-react';
 import {
   fetchCompositeAllianceLeaderboard,
   sortAllianceMembers,
-  MemberCompetitiveAchievement
+  MemberCompetitiveAchievement,
+  RankingSort
 } from '@/services/rankingUtils';
 import { MainTab } from '@/pages/HomePage';
 import { SegmentedTabs, COMPETITIVE_MODE_OPTIONS } from '@/components/ui/segmented-tabs';
@@ -20,7 +21,7 @@ export const TopOperatorsSection: React.FC<TopOperatorsSectionProps> = ({
   onNavigate,
   onSelectPlayer
 }) => {
-  const [activeFilter, setActiveFilter] = useState<'composite' | 'warzone' | 'ppc'>('composite');
+  const [activeFilter, setActiveFilter] = useState<RankingSort>('total');
   const [members, setMembers] = useState<MemberCompetitiveAchievement[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -37,7 +38,7 @@ export const TopOperatorsSection: React.FC<TopOperatorsSectionProps> = ({
       });
   }, []);
 
-  const top5Operators = sortAllianceMembers(members, activeFilter, 'all').slice(0, 5);
+  const top5Operators = sortAllianceMembers(members, activeFilter).slice(0, 5);
 
   return (
     <section className="relative w-full">
@@ -50,7 +51,7 @@ export const TopOperatorsSection: React.FC<TopOperatorsSectionProps> = ({
             </h2>
 
             <p className="text-zinc-400 text-xs sm:text-sm font-sans leading-relaxed">
-              Leading Warzone Legend and Phantom Pain Cage Ultimate records across the Karuhun union.
+              Highest Warzone and PPC scores across the four Karuhun guilds.
             </p>
 
             <div className="space-y-2 pt-1">
@@ -225,7 +226,7 @@ export const TopOperatorsSection: React.FC<TopOperatorsSectionProps> = ({
               onClick={() => onNavigate('leaderboards')}
               className="text-white hover:text-amber-300 font-semibold flex items-center space-x-1 transition-colors"
             >
-              <span>See All (100+)</span>
+              <span>See All</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>

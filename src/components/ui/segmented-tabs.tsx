@@ -80,7 +80,7 @@ export const REFERENCE_CATEGORY_OPTIONS = [
 ] as const;
 
 export const COMPETITIVE_MODE_OPTIONS = [
-  { value: 'composite', label: 'All' },
+  { value: 'total', label: 'Total' },
   { value: 'warzone', label: 'Warzone', icon: Swords },
   { value: 'ppc', label: 'PPC', icon: Skull },
 ] as const;

@@ -1,216 +1,226 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Search } from 'lucide-react';
 import {
   fetchCompositeAllianceLeaderboard,
   sortAllianceMembers,
-  MemberCompetitiveAchievement
+  getTotalScore,
+  MemberCompetitiveAchievement,
+  RankingSort
 } from '@/services/rankingUtils';
-import { Trophy, Swords, Skull, Search, ChevronRight, Award } from 'lucide-react';
+import { GUILD_BRANCHES } from '@/services/imageUtils';
+import { SegmentedTabs, COMPETITIVE_MODE_OPTIONS } from '@/components/ui/segmented-tabs';
 import { PlayerAvatar } from '@/components/domain/PlayerAvatar';
 import { formatNumber } from '@/lib/format';
+import { cn } from '@/lib/utils';
+import { PlayerScoreModal } from '@/components/domain/PlayerScoreModal';
 
 interface CompetitiveLeaderboardProps {
   onSelectPlayer: (playerId: number, server: string) => void;
 }
 
+const GUILD_OPTIONS = [
+  { value: 'all', label: 'All guilds' },
+  ...GUILD_BRANCHES.map((b) => ({ value: String(b.id), label: `${b.name} · ${b.shortRegion}` })),
+];
+
+const scoreClass = (active: boolean) =>
+  cn('tabular-nums text-right', active ? 'text-white font-semibold' : 'text-zinc-400');
+
 export const CompetitiveLeaderboard: React.FC<CompetitiveLeaderboardProps> = ({ onSelectPlayer }) => {
-  const [selectedServer, setSelectedServer] = useState<'all' | 'na' | 'ap'>('all');
+  const [guildFilter, setGuildFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'rank' | 'warzone' | 'ppc'>('rank');
-  const [loading, setLoading] = useState<boolean>(true);
-  const [memberRankings, setMemberRankings] = useState<MemberCompetitiveAchievement[]>([]);
+  const [sortBy, setSortBy] = useState<RankingSort>('total');
+  const [loading, setLoading] = useState(true);
+  const [members, setMembers] = useState<MemberCompetitiveAchievement[]>([]);
+  const [selected, setSelected] = useState<MemberCompetitiveAchievement | null>(null);
 
   useEffect(() => {
-    setLoading(true);
     fetchCompositeAllianceLeaderboard()
-      .then((list) => {
-        setMemberRankings(list);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Failed to load composite leaderboard', err);
-        setLoading(false);
-      });
+      .then(setMembers)
+      .catch((err) => console.error('Failed to load rankings', err))
+      .finally(() => setLoading(false));
   }, []);
 
-  const filteredAndSortedMembers = sortAllianceMembers(
-    memberRankings.filter((m) => {
-      const matchesServer = selectedServer === 'all' || m.server.toLowerCase() === selectedServer.toLowerCase();
-      const matchesSearch =
-        m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        m.id.toString().includes(searchTerm) ||
-        m.guildName.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesServer && matchesSearch;
-    }),
-    sortBy === 'rank' ? 'composite' : sortBy,
-    'all'
-  );
+  const rows = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    return sortAllianceMembers(
+      members.filter(
+        (m) =>
+          (guildFilter === 'all' || String(m.guildId) === guildFilter) &&
+          (!q || m.name.toLowerCase().includes(q) || String(m.id).includes(q))
+      ),
+      sortBy
+    );
+  }, [members, guildFilter, searchTerm, sortBy]);
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
-      {/* Header Banner */}
-      <div className="minimal-card p-5 sm:p-8 space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a] text-zinc-300 text-xs font-tech font-bold uppercase tracking-wider">
-              <Trophy className="w-3.5 h-3.5 text-white" />
-              <span>Karuhun Guild Competitive Standings</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white">
-              GUILD MEMBER <span className="text-zinc-500 font-normal">COMPETITIVE LEADERBOARD</span>
-            </h1>
-            <p className="text-xs font-tech text-zinc-400">
-              Standing rank of Karuhun members on Warzone &amp; Phantom Pain Cage (PPC)
-            </p>
-          </div>
+    <div className="space-y-6 animate-fadeIn pb-16 md:pb-0">
+      <header className="flex flex-col gap-1 pt-2">
+        <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white tracking-tight">Rankings</h1>
+        <p className="text-sm text-zinc-400">
+          Current-week Warzone (all tiers) and PPC scores for members of the four Karuhun guilds, AP &amp; NA.
+        </p>
+      </header>
 
-          {/* Server & Search Controls */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <div className="relative min-w-[200px]">
-              <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search Commander / ID..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-white font-sans"
-              />
-            </div>
-
-            <select
-              value={selectedServer}
-              onChange={(e) => setSelectedServer(e.target.value as any)}
-              className="bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
-            >
-              <option value="all">Server: All (AP &amp; NA)</option>
-              <option value="na">Server NA</option>
-              <option value="ap">Server AP</option>
-            </select>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
-            >
-              <option value="rank">Sort: Highest Achievement</option>
-              <option value="warzone">Sort: Warzone Rank</option>
-              <option value="ppc">Sort: PPC Rank</option>
-            </select>
-          </div>
+      <div className="flex flex-col lg:flex-row lg:items-center gap-3">
+        <SegmentedTabs
+          options={COMPETITIVE_MODE_OPTIONS}
+          value={sortBy}
+          onChange={setSortBy}
+          ariaLabel="Sort by"
+          fullWidthOnMobile
+        />
+        <SegmentedTabs
+          options={GUILD_OPTIONS}
+          value={guildFilter}
+          onChange={setGuildFilter}
+          ariaLabel="Filter by guild"
+          className="max-w-full"
+        />
+        <div className="relative lg:ml-auto lg:w-60">
+          <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search name or ID"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-[#09090b] text-sm text-white border border-[#27272a] rounded-xl pl-9 pr-3 py-2 focus:outline-none focus:border-zinc-500"
+          />
         </div>
       </div>
 
-      {/* Member Competitive Leaderboard List */}
-      <div className="minimal-card p-4 sm:p-6 space-y-4">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="text-lg sm:text-xl font-heading font-bold text-white flex items-center space-x-2">
-            <Award className="w-5 h-5 text-white" />
-            <span>MEMBER RANKINGS HALL OF FAME</span>
-          </h2>
-          <span className="text-xs font-tech text-zinc-400">
-            {filteredAndSortedMembers.length} Members Listed
-          </span>
-        </div>
-
+      <div className="rounded-xl border border-[#27272a] bg-[#0d0d10] overflow-hidden">
         {loading ? (
-          <div className="text-center py-20">
-            <div className="inline-block animate-spin w-8 h-8 border-4 border-white border-t-transparent rounded-full mb-3" />
-            <p className="text-xs font-tech text-zinc-400">Aggregating Member Competitive Achievements...</p>
-          </div>
-        ) : filteredAndSortedMembers.length === 0 ? (
-          <div className="text-center py-16 text-zinc-400 font-tech text-sm">
-            No Karuhun members recorded on current leaderboard.
-          </div>
-        ) : (
-          <div className="space-y-3 sm:space-y-4">
-            {filteredAndSortedMembers.map((member, idx) => (
-              <div
-                key={member.id}
-                onClick={() => onSelectPlayer(member.id, member.server)}
-                className="minimal-card-interactive p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 cursor-pointer group"
-              >
-                {/* Left - Rank # & Member Info */}
-                <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-heading font-bold text-xs flex-shrink-0 ${
-                    idx === 0 ? 'bg-white text-black' : idx === 1 ? 'bg-zinc-200 text-black' : idx === 2 ? 'bg-zinc-700 text-white' : 'bg-[#09090b] text-zinc-400 border border-[#27272a]'
-                  }`}>
-                    #{idx + 1}
-                  </div>
-
-                  {/* Member Avatar */}
-                  <PlayerAvatar
-                    portrait={member.portrait}
-                    frame={member.frame}
-                    alt={member.name}
-                    size="lg"
-                    shape="rounded"
-                  />
-
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-heading font-bold text-base sm:text-lg text-white truncate group-hover:text-zinc-200 transition-colors">
-                        {member.name}
-                      </h3>
-                      <span className="bg-white text-black text-[10px] font-heading font-bold px-2.5 py-0.5 rounded-full uppercase">
-                        {member.guildName}
-                      </span>
-                    </div>
-                    <p className="text-xs font-tech text-zinc-400 mt-0.5">
-                      ID: {member.id} • {member.server.toUpperCase()}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right - Competitive Achievement Cards */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  {/* Warzone Achievement Card */}
-                  {member.warzone ? (
-                    <div className="bg-black border border-[#27272a] rounded-xl px-4 py-2.5 flex items-center space-x-3.5 shadow-sm min-w-[200px]">
-                      <Swords className="w-5 h-5 text-white flex-shrink-0" />
-                      <div>
-                        <span className="text-[10px] font-tech text-zinc-400 block uppercase font-bold tracking-wider">WARZONE ACHIEVEMENT</span>
-                        <span className="font-heading font-bold text-xs text-white block">
-                          Top {member.warzone.rank} {member.warzone.division}
-                        </span>
-                        <span className="text-xs font-heading font-bold text-white block mt-0.5">
-                          {formatNumber(member.warzone.score)} <span className="text-[10px] font-tech text-zinc-400 font-normal uppercase">pts</span>
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="bg-black/50 border border-[#27272a] rounded-xl px-4 py-2.5 text-xs font-tech text-zinc-500 min-w-[200px] text-center font-heading font-bold uppercase">
-                      Warzone Unranked
-                    </div>
-                  )}
-
-                  {/* PPC Achievement Card */}
-                  {member.ppc ? (
-                    <div className="bg-black border border-[#27272a] rounded-xl px-4 py-2.5 flex items-center space-x-3.5 shadow-sm min-w-[200px]">
-                      <Skull className="w-5 h-5 text-white flex-shrink-0" />
-                      <div>
-                        <span className="text-[10px] font-tech text-zinc-400 block uppercase font-bold tracking-wider">PPC ACHIEVEMENT</span>
-                        <span className="font-heading font-bold text-xs text-white block">
-                          Top {member.ppc.rank} {member.ppc.level}
-                        </span>
-                        <span className="text-xs font-heading font-bold text-white block mt-0.5">
-                          {formatNumber(member.ppc.score)} <span className="text-[10px] font-tech text-zinc-400 font-normal uppercase">pts</span>
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="bg-black/50 border border-[#27272a] rounded-xl px-4 py-2.5 text-xs font-tech text-zinc-500 min-w-[200px] text-center font-heading font-bold uppercase">
-                      PPC Unranked
-                    </div>
-                  )}
-
-                  <div className="hidden sm:flex items-center text-zinc-400 group-hover:text-white group-hover:translate-x-1 transition-all">
-                    <ChevronRight className="w-5 h-5" />
-                  </div>
-                </div>
+          <div className="divide-y divide-[#1f1f23]">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="h-16 px-4 flex items-center gap-4">
+                <div className="w-6 h-3 rounded bg-[#18181b] animate-pulse" />
+                <div className="w-10 h-10 rounded-lg bg-[#18181b] animate-pulse" />
+                <div className="h-3 w-40 rounded bg-[#18181b] animate-pulse" />
               </div>
             ))}
           </div>
+        ) : rows.length === 0 ? (
+          <p className="py-16 text-center text-sm text-zinc-500">No members found.</p>
+        ) : (
+          <>
+            {/* Desktop table */}
+            <table className="hidden md:table w-full text-sm">
+              <thead>
+                <tr className="text-xs text-zinc-500 border-b border-[#27272a]">
+                  <th className="w-12 py-3 pl-4 text-left font-medium">#</th>
+                  <th className="py-3 text-left font-medium">Player</th>
+                  <th className="py-3 text-left font-medium">Guild</th>
+                  <th className={cn('py-3 text-right font-medium', sortBy === 'warzone' && 'text-white')}>Warzone</th>
+                  <th className={cn('py-3 text-right font-medium', sortBy === 'ppc' && 'text-white')}>PPC</th>
+                  <th className={cn('py-3 pr-4 text-right font-medium', sortBy === 'total' && 'text-white')}>Total</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#1f1f23]">
+                {rows.map((m, idx) => (
+                  <tr
+                    key={`${m.server}:${m.id}`}
+                    tabIndex={0}
+                    onClick={() => setSelected(m)}
+                    onKeyDown={(e) => e.key === 'Enter' && setSelected(m)}
+                    className="cursor-pointer hover:bg-[#151519] focus:outline-none focus-visible:bg-[#151519] transition-colors"
+                  >
+                    <td className={cn('py-3 pl-4 tabular-nums', idx < 3 ? 'text-white font-semibold' : 'text-zinc-500')}>
+                      {idx + 1}
+                    </td>
+                    <td className="py-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <PlayerAvatar portrait={m.portrait} frame={m.frame} alt={m.name} size="sm" />
+                        <div className="min-w-0">
+                          <div className="text-white font-medium truncate">{m.name}</div>
+                          <div className="text-xs text-zinc-500 tabular-nums">{m.id}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-3 text-zinc-300">
+                      {m.guildName} <span className="text-zinc-500 text-xs uppercase">{m.server}</span>
+                    </td>
+                    <td className={cn('py-3', scoreClass(sortBy === 'warzone'))}>
+                      {m.warzone ? (
+                        <>
+                          <div>{formatNumber(m.warzone.score)}</div>
+                          <div className="text-xs text-zinc-500 font-normal">
+                            {m.warzone.tierLabel} #{m.warzone.rank}
+                          </div>
+                        </>
+                      ) : (
+                        <span className="text-zinc-600">—</span>
+                      )}
+                    </td>
+                    <td className={cn('py-3', scoreClass(sortBy === 'ppc'))}>
+                      {m.ppc ? (
+                        <>
+                          <div>{formatNumber(m.ppc.score)}</div>
+                          <div className="text-xs text-zinc-500 font-normal">
+                            {m.ppc.level} #{m.ppc.rank}
+                          </div>
+                        </>
+                      ) : (
+                        <span className="text-zinc-600">—</span>
+                      )}
+                    </td>
+                    <td className={cn('py-3 pr-4', scoreClass(sortBy === 'total'))}>
+                      {formatNumber(getTotalScore(m))}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Mobile list */}
+            <ul className="md:hidden divide-y divide-[#1f1f23]">
+              {rows.map((m, idx) => {
+                const primary = sortBy === 'total' ? getTotalScore(m) : m[sortBy]?.score;
+                return (
+                  <li key={`${m.server}:${m.id}`}>
+                    <button
+                      type="button"
+                      onClick={() => setSelected(m)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left active:bg-[#151519]"
+                    >
+                      <span className={cn('w-6 text-sm tabular-nums', idx < 3 ? 'text-white font-semibold' : 'text-zinc-500')}>
+                        {idx + 1}
+                      </span>
+                      <PlayerAvatar portrait={m.portrait} frame={m.frame} alt={m.name} size="sm" />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm text-white font-medium truncate">{m.name}</div>
+                        <div className="text-xs text-zinc-500 truncate">
+                          {m.guildName} · WZ {m.warzone ? formatNumber(m.warzone.score) : '—'} · PPC{' '}
+                          {m.ppc ? formatNumber(m.ppc.score) : '—'}
+                        </div>
+                      </div>
+                      <span className="text-sm text-white font-semibold tabular-nums">
+                        {primary ? formatNumber(primary) : '—'}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
         )}
       </div>
+
+      {!loading && (
+        <p className="text-xs text-zinc-500">
+          {rows.length} members. The API only lists the top 100 per Warzone tier and PPC level, so members outside
+          those boards don't appear.
+        </p>
+      )}
+
+      <PlayerScoreModal
+        member={selected}
+        onClose={() => setSelected(null)}
+        onOpenProfile={(id, server) => {
+          setSelected(null);
+          onSelectPlayer(id, server);
+        }}
+      />
     </div>
   );
 };
