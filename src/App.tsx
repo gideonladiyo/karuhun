@@ -16,17 +16,50 @@ import { getGuildData } from '@/services/apiService';
 import { GUILD_BRANCHES } from '@/services/imageUtils';
 import { GuildInfo, GuildMember, PlayerCharacter } from '@/types';
 
+const getBackLabel = (path: string): string => {
+  const parts = path.replace(/^\//, '').split('/').filter(Boolean);
+  switch (parts[0]) {
+    case undefined:
+    case 'home':
+      return 'BACK TO HOME';
+    case 'members':
+    case 'roster':
+    case 'guild':
+    case 'hub':
+      return 'BACK TO GUILD';
+    case 'reffs':
+    case 'ref':
+    case 'references':
+      return parts[1] ? 'BACK TO REFERENCE' : 'BACK TO REFERENCES';
+    case 'rankings':
+    case 'leaderboards':
+      return 'BACK TO RANKINGS';
+    case 'ppc':
+    case 'bosses':
+      return 'BACK TO PPC';
+    case 'calculator':
+      return 'BACK TO CALCULATOR';
+    case 'player':
+      return parts[3] === 'character' ? 'BACK TO CONSTRUCT' : 'BACK TO PROFILE';
+    case 'admin':
+    case 'dashboard':
+      return 'BACK TO ADMIN';
+    case 'contact':
+    case 'support':
+    case 'help':
+      return 'BACK TO CONTACT';
+    default:
+      return 'BACK';
+  }
+};
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<MainTab>('home');
   const [ppcSubTab, setPpcSubTab] = useState<'bosses' | 'calculator'>('bosses');
   const [selectedBranchId, setSelectedBranchId] = useState<number>(() => GUILD_BRANCHES[0]?.id ?? 3638);
   const [activeRefId, setActiveRefId] = useState<string | undefined>(undefined);
-  const [refOrigin, setRefOrigin] = useState<'home' | 'reffs' | null>(() => {
-    if (typeof window !== 'undefined' && window.history.state?.refOrigin) {
-      return window.history.state.refOrigin as 'home' | 'reffs';
-    }
-    return null;
-  });
+  // Path of the in-app page we came from (null when this entry is the first one in the session)
+  const [backFromPath, setBackFromPath] = useState<string | null>(null);
 
   const [currentGuild, setCurrentGuild] = useState<GuildInfo | null>(null);
   const [members, setMembers] = useState<GuildMember[]>([]);
@@ -60,6 +93,9 @@ export default function App() {
 
     const parts = rawPath.split('/').filter(Boolean);
 
+    const historyState = window.history.state;
+    setBackFromPath(historyState?.idx > 0 && typeof historyState?.from === 'string' ? historyState.from : null);
+
     if (parts[0] === 'player' && parts[1] && parts[2]) {
       const srv = parts[1];
       const uid = Number(parts[2]);
@@ -92,7 +128,6 @@ export default function App() {
       setCurrentViewMode('mainTab');
       setActiveTab('home');
       setActiveRefId(undefined);
-      setRefOrigin(null);
     } else if (parts[0] === 'admin' || parts[0] === 'dashboard') {
       setCurrentViewMode('mainTab');
       setActiveTab('admin');
@@ -108,15 +143,7 @@ export default function App() {
     } else if (parts[0] === 'reffs' || parts[0] === 'ref' || parts[0] === 'references') {
       setCurrentViewMode('mainTab');
       setActiveTab('reffs');
-      if (parts[1]) {
-        setActiveRefId(parts[1]);
-        if (window.history.state?.refOrigin) {
-          setRefOrigin(window.history.state.refOrigin);
-        }
-      } else {
-        setActiveRefId(undefined);
-        setRefOrigin('reffs');
-      }
+      setActiveRefId(parts[1] || undefined);
     } else if (parts[0] === 'rankings' || parts[0] === 'leaderboards') {
       setCurrentViewMode('mainTab');
       setActiveTab('leaderboards');
@@ -133,12 +160,31 @@ export default function App() {
     }
   };
 
-  const navigateToPath = (targetPath: string, state: any = {}) => {
-    window.history.pushState(state, "", targetPath);
+  // Every in-app history entry carries `idx` (depth within this session) and `from`
+  // (the path it was pushed from), so back buttons can return to the real previous page.
+  const navigateToPath = (targetPath: string, state: Record<string, unknown> = {}) => {
+    const currentIdx = typeof window.history.state?.idx === 'number' ? window.history.state.idx : 0;
+    window.history.pushState(
+      { ...state, idx: currentIdx + 1, from: window.location.pathname },
+      '',
+      targetPath
+    );
     syncRouteFromLocation();
   };
 
+  // Go to the previous in-app page; if the user landed here directly (no in-app history), go to the fallback path.
+  const goBack = (fallbackPath: string) => {
+    if (window.history.state?.idx > 0) {
+      window.history.back();
+    } else {
+      navigateToPath(fallbackPath);
+    }
+  };
+
   useEffect(() => {
+    if (typeof window.history.state?.idx !== 'number') {
+      window.history.replaceState({ ...(window.history.state || {}), idx: 0 }, '');
+    }
     syncRouteFromLocation();
     window.addEventListener('popstate', syncRouteFromLocation);
     window.addEventListener('hashchange', syncRouteFromLocation);
@@ -212,49 +258,17 @@ export default function App() {
     navigateToPath(`/player/${activePlayerServer}/${activePlayerUid}/character/${character.id}`);
   };
 
-  const handleBackToProfile = () => {
-    if (activePlayerUid) {
-      setCurrentViewMode('playerProfile');
-      navigateToPath(`/player/${activePlayerServer}/${activePlayerUid}`);
-    } else {
-      setCurrentViewMode('mainTab');
-      navigateToPath(`/guild/${selectedBranchId}`);
-    }
-  };
+  const playerProfileFallbackPath = `/guild/${selectedBranchId}`;
+  const characterFallbackPath = activePlayerUid
+    ? `/player/${activePlayerServer}/${activePlayerUid}`
+    : playerProfileFallbackPath;
+  const refDetailFallbackPath = '/reffs';
 
-  const handleBackToMainTab = () => {
-    setCurrentViewMode('mainTab');
-    navigateToPath(`/guild/${selectedBranchId}`);
-  };
+  const backLabel = (fallbackPath: string) => getBackLabel(backFromPath ?? fallbackPath);
 
   const handleNavigateRefDetail = (refId?: string) => {
-    if (refId) {
-      const origin: 'home' | 'reffs' = activeTab === 'home' ? 'home' : 'reffs';
-      setRefOrigin(origin);
-      setActiveRefId(refId);
-      navigateToPath(`/reffs/${refId}`, { refOrigin: origin });
-    } else {
-      setActiveRefId(undefined);
-      setRefOrigin('reffs');
-      navigateToPath(`/reffs`);
-    }
-  };
-
-  const handleBackFromRefDetail = () => {
-    const origin = refOrigin || (window.history.state?.refOrigin as 'home' | 'reffs' | undefined);
-    setActiveRefId(undefined);
-
-    if (window.history.state?.refOrigin && window.history.length > 1) {
-      window.history.back();
-    } else if (origin === 'home') {
-      setRefOrigin(null);
-      setActiveTab('home');
-      navigateToPath('/');
-    } else {
-      setRefOrigin(null);
-      setActiveTab('reffs');
-      navigateToPath('/reffs');
-    }
+    setActiveRefId(refId);
+    navigateToPath(refId ? `/reffs/${refId}` : '/reffs');
   };
 
   return (
@@ -320,8 +334,8 @@ export default function App() {
               <ReffsPage
                 initialRefId={activeRefId}
                 onNavigateRefDetail={handleNavigateRefDetail}
-                onBack={handleBackFromRefDetail}
-                backLabel={refOrigin === 'home' ? 'BACK TO HOME' : 'BACK TO REFERENCES'}
+                onBack={() => goBack(refDetailFallbackPath)}
+                backLabel={backLabel(refDetailFallbackPath)}
               />
             )}
 
@@ -353,7 +367,8 @@ export default function App() {
           <PlayerProfilePage
             uid={activePlayerUid}
             server={activePlayerServer}
-            onBack={handleBackToMainTab}
+            onBack={() => goBack(playerProfileFallbackPath)}
+            backLabel={backLabel(playerProfileFallbackPath)}
             onSelectCharacter={handleSelectCharacter}
           />
         )}
@@ -364,7 +379,8 @@ export default function App() {
             character={activeCharacter}
             server={activePlayerServer}
             uid={activePlayerUid}
-            onBack={handleBackToProfile}
+            onBack={() => goBack(characterFallbackPath)}
+            backLabel={backLabel(characterFallbackPath)}
           />
         )}
 
