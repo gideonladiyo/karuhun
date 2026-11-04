@@ -10,6 +10,7 @@ interface PlayerProfilePageProps {
   uid: number;
   server: string;
   onBack: () => void;
+  backLabel?: string;
   onSelectCharacter: (character: PlayerCharacter) => void;
 }
 
@@ -17,6 +18,7 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
   uid,
   server,
   onBack,
+  backLabel = 'BACK TO GUILD',
   onSelectCharacter
 }) => {
   const [profileData, setProfileData] = useState<PlayerProfileData | null>(null);
@@ -54,7 +56,7 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
     return (
       <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
         <div className="flex items-center justify-between">
-          <BackButton label="BACK TO GUILD" onClick={onBack} />
+          <BackButton label={backLabel} onClick={onBack} />
           <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
             SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{uid}</strong>
           </span>
@@ -73,7 +75,7 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
       <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
         {/* Top Back Navigation Bar */}
         <div className="flex items-center justify-between">
-          <BackButton label="BACK TO GUILD" onClick={onBack} />
+          <BackButton label={backLabel} onClick={onBack} />
           <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
             SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{uid}</strong>
           </span>
@@ -87,7 +89,7 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
           subMessage={`Target UID: ${uid} • Server: ${server.toUpperCase()} • Player telemetry might be private in-game or Huaxu API server is experiencing downtime.`}
           primaryActionLabel="Try Again"
           onPrimaryAction={fetchProfile}
-          secondaryActionLabel="Back to Guild"
+          secondaryActionLabel={backLabel}
           onSecondaryAction={onBack}
         />
       </div>
@@ -116,7 +118,7 @@ export const PlayerProfilePage: React.FC<PlayerProfilePageProps> = ({
       
       {/* Top Back Navigation */}
       <div className="flex items-center justify-between">
-        <BackButton label="BACK TO GUILD" onClick={onBack} />
+        <BackButton label={backLabel} onClick={onBack} />
 
         <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
           SERVER: <strong className="text-white uppercase">{server}</strong> • ID: <strong className="text-white">{player.id}</strong> • LVL: <strong className="text-white">{player.level}</strong>

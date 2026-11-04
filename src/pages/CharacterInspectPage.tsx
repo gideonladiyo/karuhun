@@ -10,13 +10,15 @@ interface CharacterInspectPageProps {
   server: string;
   uid: number;
   onBack: () => void;
+  backLabel?: string;
 }
 
 export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
   character,
   server,
   uid,
-  onBack
+  onBack,
+  backLabel = 'BACK TO PROFILE'
 }) => {
   const [detailData, setDetailData] = useState<CharacterDetailResponse['data'] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -129,7 +131,7 @@ export const CharacterInspectPage: React.FC<CharacterInspectPageProps> = ({
       
       {/* Back Button & Breadcrumbs */}
       <div className="flex items-center justify-between">
-        <BackButton label="BACK TO PROFILE" onClick={onBack} />
+        <BackButton label={backLabel} onClick={onBack} />
 
         <span className="text-xs font-tech text-zinc-400 uppercase tracking-wider">
           INSPECTING: <strong className="text-white font-bold">{charInfo.characterName}</strong> ({charInfo.frameName})
