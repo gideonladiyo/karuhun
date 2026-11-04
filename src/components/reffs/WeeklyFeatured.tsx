@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { CATEGORIES_CONFIG, ReferenceItem } from '@/data/static/reffsData';
+import { ReferenceItem } from '@/data/static/reffsData';
 import {
   fetchFeaturedIds,
   formatTimeLeft,
@@ -18,12 +18,6 @@ const FALLBACK_COUNT = 3;
 export const MODE_TAB_OPTIONS = REFERENCE_CATEGORY_OPTIONS.filter(
   (o): o is Extract<(typeof REFERENCE_CATEGORY_OPTIONS)[number], { value: Category }> => o.value !== 'all'
 );
-
-const subcategoryOrder = (item: ReferenceItem) => {
-  const list: string[] = CATEGORIES_CONFIG[item.category]?.subcategories ?? [];
-  const idx = list.findIndex((s) => s.toLowerCase() === item.subcategory.toLowerCase());
-  return idx === -1 ? list.length : idx;
-};
 
 export interface WeeklyFeaturedState {
   weekStart: string;
@@ -63,12 +57,13 @@ export function useWeeklyFeatured(references: ReferenceItem[]): WeeklyFeaturedSt
     };
   }, [weekStart]);
 
+  // `ids` already arrive in the order the superadmin set, so keep that order per mode.
   const byCategory = useMemo(() => {
-    const idSet = new Set(ids);
+    const byId = new Map(references.map((r) => [r.id, r]));
     const groups: Record<Category, ReferenceItem[]> = { warzone: [], ppc: [], guild_challenge: [] };
-    references
-      .filter((r) => idSet.has(r.id) && r.isPublished !== false)
-      .sort((a, b) => subcategoryOrder(a) - subcategoryOrder(b))
+    ids
+      .map((id) => byId.get(id))
+      .filter((r): r is ReferenceItem => !!r && r.isPublished !== false)
       .forEach((r) => groups[r.category]?.push(r));
     return groups;
   }, [ids, references]);

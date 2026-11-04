@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Eye, Plus, Star, Trash2, AlertTriangle } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight, Eye, Plus, Star, Trash2, AlertTriangle } from 'lucide-react';
 import {
   AdminReferenceItem,
   CATEGORIES_CONFIG,
@@ -13,6 +13,7 @@ import {
   getFeaturedWeekRange,
   getFeaturedWeekStart,
   removeFeatured,
+  reorderFeatured,
   setFeaturedSlot,
   shiftFeaturedWeek,
 } from '@/services/featuredReferences';
@@ -115,11 +116,21 @@ export const FeaturedTab: React.FC<FeaturedTabProps> = ({ onNotify }) => {
     const { refId } = draft[mode];
     if (!refId) return;
     setDraft((d) => ({ ...d, [mode]: { sub: '', refId: '' } }));
-    runMutation(() => setFeaturedSlot(weekStart, refId), 'Slot featured ditambahkan.');
+    // New slots go to the bottom; featuredIds is already sorted by position.
+    runMutation(() => setFeaturedSlot(weekStart, refId, null, featuredIds.length), 'Slot featured ditambahkan.');
   };
 
   const handleReplace = (oldId: string, newId: string) =>
     runMutation(() => setFeaturedSlot(weekStart, newId, oldId), 'Video featured diganti.');
+
+  /** Swap a slot with its neighbour inside the same mode, then save the mode's full order. */
+  const handleMove = (modeIds: string[], index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= modeIds.length) return;
+    const next = [...modeIds];
+    [next[index], next[target]] = [next[target], next[index]];
+    runMutation(() => reorderFeatured(weekStart, next), 'Urutan featured disimpan.');
+  };
 
   const handleRemove = (id: string) => runMutation(() => removeFeatured(weekStart, id), 'Slot featured dihapus.');
 
@@ -136,7 +147,7 @@ export const FeaturedTab: React.FC<FeaturedTabProps> = ({ onNotify }) => {
             <p className="text-xs text-zinc-400 max-w-2xl">
               Pilih satu video untuk setiap zona, elemen, atau boss yang aktif minggu itu. Featured berlaku
               Senin 12:00 WIB sampai Senin berikutnya 12:00 WIB, lalu otomatis berganti. Label slot diambil dari
-              subkategori video.
+              subkategori video. Atur urutan dengan tombol panah; slot paling atas jadi spotlight di halaman publik.
             </p>
           </div>
 
@@ -214,10 +225,11 @@ export const FeaturedTab: React.FC<FeaturedTabProps> = ({ onNotify }) => {
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
             {FEATURED_MODES.map((mode) => {
-              const order = orderedSubcategories(mode, allRefs);
-              const modeSlots = slots
-                .filter((s): s is { id: string; ref: AdminReferenceItem } => !!s.ref && s.ref.category === mode)
-                .sort((x, y) => order.indexOf(x.ref.subcategory) - order.indexOf(y.ref.subcategory));
+              // slots keep the saved order (position), so the first one is the public spotlight.
+              const modeSlots = slots.filter(
+                (s): s is { id: string; ref: AdminReferenceItem } => !!s.ref && s.ref.category === mode
+              );
+              const modeIds = modeSlots.map((s) => s.id);
               const usedSubs = modeSlots.map((s) => s.ref.subcategory);
               const availableSubs = orderedSubcategories(mode, published).filter(
                 (sub) => !usedSubs.some((u) => sameSub(u, sub))
@@ -242,18 +254,46 @@ export const FeaturedTab: React.FC<FeaturedTabProps> = ({ onNotify }) => {
                   )}
 
                   <div className="space-y-3">
-                    {modeSlots.map(({ id, ref }) => {
+                    {modeSlots.map(({ id, ref }, index) => {
                       const alternatives = published.filter(
                         (r) => r.category === mode && sameSub(r.subcategory, ref.subcategory)
                       );
                       return (
                         <div key={id} className="space-y-2 pb-3 border-b border-[#27272a] last:border-0 last:pb-0">
                           <div className="flex items-center justify-between gap-2">
-                            <span className="inline-flex items-center gap-1.5 text-xs font-tech font-bold text-zinc-200">
-                              <Star className="w-3 h-3 text-amber-400" />
-                              {ref.subcategory}
+                            <span className="inline-flex items-center gap-1.5 min-w-0 text-xs font-tech font-bold text-zinc-200">
+                              <span className="text-zinc-500 tabular-nums">#{index + 1}</span>
+                              <Star className="w-3 h-3 text-amber-400 flex-shrink-0" />
+                              <span className="truncate">{ref.subcategory}</span>
+                              {index === 0 && modeSlots.length > 1 && (
+                                <span className="text-[10px] font-normal text-amber-300/80">· spotlight</span>
+                              )}
                             </span>
-                            {ref.isPublished === false && <Badge tone="warning">Draft · tidak tampil</Badge>}
+                            <div className="flex items-center gap-1 flex-shrink-0">
+                              {ref.isPublished === false && <Badge tone="warning">Draft · tidak tampil</Badge>}
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                aria-label={`Naikkan ${ref.subcategory}`}
+                                disabled={busy || index === 0}
+                                onClick={() => handleMove(modeIds, index, -1)}
+                              >
+                                <ArrowUp className="w-3.5 h-3.5" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                aria-label={`Turunkan ${ref.subcategory}`}
+                                disabled={busy || index === modeSlots.length - 1}
+                                onClick={() => handleMove(modeIds, index, 1)}
+                              >
+                                <ArrowDown className="w-3.5 h-3.5" />
+                              </Button>
+                            </div>
                           </div>
                           <div className="flex items-center gap-3">
                             <Thumb item={ref} />

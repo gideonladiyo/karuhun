@@ -64,10 +64,13 @@ export interface FeaturedFetchResult {
 async function queryFeaturedIds(weekStart: string): Promise<FeaturedFetchResult> {
   if (!isSupabaseConfigured() || !supabase) return { ids: [] };
 
+  // Ordered by position (smallest first); ties fall back to the order they were added.
   const { data, error } = await supabase
     .from('featured_references')
     .select('reference_id')
-    .eq('week_start', weekStart);
+    .eq('week_start', weekStart)
+    .order('position', { ascending: true })
+    .order('created_at', { ascending: true });
 
   if (error) return { ids: [], error: error.message };
   return { ids: (data ?? []).map((row: { reference_id: string }) => row.reference_id) };
@@ -107,29 +110,62 @@ export async function fetchFeaturedIdsForAdmin(weekStart: string): Promise<Featu
 }
 
 /**
- * Put `nextId` into a slot for the week. When `previousId` is given, that reference
- * is removed first, so one slot always holds exactly one video.
+ * Put `nextId` into a slot for the week. When `previousId` is given, that slot's row is
+ * re-pointed to `nextId` so it keeps its position; otherwise a new slot is appended at `position`.
  */
 export async function setFeaturedSlot(
   weekStart: string,
   nextId: string,
-  previousId?: string | null
+  previousId?: string | null,
+  position = 0
 ): Promise<MutationResult> {
   if (!isSupabaseConfigured() || !supabase) {
     return { success: false, error: 'Supabase belum dikonfigurasi.' };
   }
 
   if (previousId && previousId !== nextId) {
-    const removed = await removeFeatured(weekStart, previousId);
-    if (!removed.success) return removed;
+    const { data, error } = await supabase
+      .from('featured_references')
+      .update({ reference_id: nextId })
+      .eq('week_start', weekStart)
+      .eq('reference_id', previousId)
+      .select('reference_id');
+
+    invalidateFeaturedCache();
+    if (error) return { success: false, error: error.message };
+    if (!data || data.length === 0) {
+      return { success: false, error: 'Slot tidak ditemukan atau tidak diizinkan (cek izin superadmin).' };
+    }
+    return { success: true };
   }
 
   const { error } = await supabase
     .from('featured_references')
-    .upsert({ week_start: weekStart, reference_id: nextId }, { onConflict: 'week_start,reference_id' });
+    .upsert({ week_start: weekStart, reference_id: nextId, position }, { onConflict: 'week_start,reference_id' });
 
   invalidateFeaturedCache();
   return error ? { success: false, error: error.message } : { success: true };
+}
+
+/** Save display order: `orderedIds[0]` gets position 0 (top / spotlight), and so on. */
+export async function reorderFeatured(weekStart: string, orderedIds: string[]): Promise<MutationResult> {
+  if (!isSupabaseConfigured() || !supabase) {
+    return { success: false, error: 'Supabase belum dikonfigurasi.' };
+  }
+
+  const results = await Promise.all(
+    orderedIds.map((id, position) =>
+      supabase!
+        .from('featured_references')
+        .update({ position })
+        .eq('week_start', weekStart)
+        .eq('reference_id', id)
+    )
+  );
+
+  invalidateFeaturedCache();
+  const failed = results.find((r) => r.error);
+  return failed?.error ? { success: false, error: failed.error.message } : { success: true };
 }
 
 export async function removeFeatured(weekStart: string, referenceId: string): Promise<MutationResult> {
