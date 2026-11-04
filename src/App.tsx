@@ -49,8 +49,12 @@ export default function App() {
   const syncRouteFromLocation = () => {
     let rawPath = window.location.pathname.replace(/^\//, '');
     
-    // Support legacy hash links if accessed directly
-    if (window.location.hash) {
+    // Support legacy hash links if accessed directly (ignore Supabase OAuth callback hashes)
+    if (
+      window.location.hash &&
+      !window.location.hash.includes('access_token=') &&
+      !window.location.hash.includes('error_description=')
+    ) {
       rawPath = window.location.hash.replace(/^#\/?/, '');
     }
 

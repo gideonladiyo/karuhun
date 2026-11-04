@@ -23,6 +23,14 @@ export interface ReferenceItem {
   duration?: string;
 }
 
+export interface AdminReferenceItem extends ReferenceItem {
+  ownerId: string | null;
+  ownerName?: string | null;
+  ownerEmail?: string | null;
+  deletedAt?: string | null;
+  deletedBy?: string | null;
+}
+
 export const CATEGORIES_CONFIG = {
   guild_challenge: {
     label: 'Guild Challenge',
@@ -90,35 +98,29 @@ export function extractVideoId(url: string, platform?: VideoPlatform): string {
   }
 
   if (plat === 'tiktok') {
-    // 1. Desktop format: https://www.tiktok.com/@user/video/7672787506282138896
     const matchVideo = url.match(/\/video\/(\d+)/i);
     if (matchVideo) return matchVideo[1];
 
-    // 2. Shortlinks: https://vm.tiktok.com/ZM... or https://vt.tiktok.com/...
     const matchShort = url.match(/(?:vm\.tiktok\.com|vt\.tiktok\.com|tiktok\.com\/t)\/([\w-]+)/i);
     if (matchShort) return matchShort[1];
 
-    // 3. Any numeric 15-22 digits
     const matchNum = url.match(/(\d{15,22})/);
     if (matchNum) return matchNum[1];
 
-    return url.trim();
+    return '';
   }
 
   if (plat === 'bilibili') {
-    // 1. BV id: https://www.bilibili.com/video/BV1xx411c7mD
     const matchBv = url.match(/(BV[a-zA-Z0-9]+)/i);
     if (matchBv) return matchBv[1];
 
-    // 2. AV id: https://www.bilibili.com/video/av170001
     const matchAv = url.match(/(av\d+)/i);
     if (matchAv) return matchAv[1];
 
-    // 3. Shortlink: https://b23.tv/mD1GlAc
     const matchB23 = url.match(/b23\.tv\/([\w]+)/i);
     if (matchB23) return matchB23[1];
 
-    return url.trim();
+    return '';
   }
 
   return url.trim();
@@ -157,7 +159,6 @@ export function getPlatformThumbnail(platform: VideoPlatform, videoId: string, c
   if (platform === 'youtube' && videoId && videoId.length === 11) {
     return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
   }
-  // TikTok & Bilibili fallback posters
   if (platform === 'tiktok') {
     return 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop';
   }
@@ -271,62 +272,46 @@ export const INITIAL_PROTOTYPE_REFERENCES: ReferenceItem[] = [
 ];
 
 const STORAGE_KEY = 'karuhun_reffs_db_v2';
-const STORAGE_DELETED_KEY = 'karuhun_reffs_deleted_ids_v2';
+const LEGACY_DELETED_KEY = 'karuhun_reffs_deleted_ids_v2';
 
-export function getDeletedIds(): string[] {
+// One-time cleanup of legacy localStorage soft-delete hack
+if (typeof window !== 'undefined') {
   try {
-    const saved = localStorage.getItem(STORAGE_DELETED_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (err) {}
-  return [];
-}
-
-export function addDeletedId(id: string) {
-  try {
-    const current = getDeletedIds();
-    if (!current.includes(id)) {
-      current.push(id);
-      localStorage.setItem(STORAGE_DELETED_KEY, JSON.stringify(current));
-    }
-  } catch (err) {}
+    localStorage.removeItem(LEGACY_DELETED_KEY);
+  } catch {
+    // ignore
+  }
 }
 
 /**
- * Get locally stored reference items with automatic migration
+ * Get locally cached reference items (offline/network error fallback only)
  */
 export function getStoredReferences(): ReferenceItem[] {
-  const deletedIds = getDeletedIds();
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed: ReferenceItem[] = JSON.parse(saved);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed
-          .filter((item) => !deletedIds.includes(item.id))
-          .map((item) => {
-            const rawUrl = item.videoUrl || item.youtubeUrl || '';
-            const detectedPlat = item.platform || detectVideoPlatform(rawUrl);
-            const resolvedVideoId = item.videoId || extractVideoId(rawUrl, detectedPlat);
-            return {
-              ...item,
-              platform: detectedPlat,
-              videoUrl: rawUrl,
-              youtubeUrl: rawUrl,
-              videoId: resolvedVideoId,
-              thumbnailUrl: item.thumbnailUrl || getPlatformThumbnail(detectedPlat, resolvedVideoId)
-            };
-          });
+        return parsed.map((item) => {
+          const rawUrl = item.videoUrl || item.youtubeUrl || '';
+          const detectedPlat = item.platform || detectVideoPlatform(rawUrl);
+          const resolvedVideoId = item.videoId || extractVideoId(rawUrl, detectedPlat);
+          return {
+            ...item,
+            platform: detectedPlat,
+            videoUrl: rawUrl,
+            youtubeUrl: rawUrl,
+            videoId: resolvedVideoId,
+            thumbnailUrl: item.thumbnailUrl || getPlatformThumbnail(detectedPlat, resolvedVideoId)
+          };
+        });
       }
     }
   } catch (err) {
     console.error('Failed to load references from localStorage', err);
   }
 
-  // Fallback to initial prototype items
-  return INITIAL_PROTOTYPE_REFERENCES.filter((item) => !deletedIds.includes(item.id));
+  return INITIAL_PROTOTYPE_REFERENCES;
 }
 
 const REFFS_CACHE_TTL_MS = 3 * 60 * 1000;
@@ -337,8 +322,62 @@ export function invalidateRefsCache() {
   refsCache = null;
 }
 
+function mapSupabaseRowToReference(item: any): ReferenceItem {
+  const rawUrl = item.youtube_url || '';
+  const detectedPlat = detectVideoPlatform(rawUrl);
+  const resolvedVideoId = item.youtube_video_id || extractVideoId(rawUrl, detectedPlat);
+
+  const tipsList = Array.isArray(item.reference_tips)
+    ? item.reference_tips
+        .sort((a: any, b: any) => (a.step_number || 0) - (b.step_number || 0))
+        .map((t: any) => t.tip_content)
+    : [];
+
+  const subcategoryObj = item.subcategories;
+  const category = (subcategoryObj?.category_id as 'guild_challenge' | 'warzone' | 'ppc') || 'warzone';
+  const subcategory = subcategoryObj?.name || 'General';
+
+  return {
+    id: item.id,
+    category,
+    subcategory,
+    title: item.title,
+    platform: detectedPlat,
+    videoUrl: rawUrl,
+    youtubeUrl: rawUrl,
+    videoId: resolvedVideoId,
+    thumbnailUrl: item.thumbnail_url || getPlatformThumbnail(detectedPlat, resolvedVideoId),
+    description: item.description || '',
+    tips: tipsList,
+    author: item.author_name || 'Karuhun Tactical',
+    dateAdded: item.created_at ? item.created_at.split('T')[0] : 'Latest',
+    isPublished: item.is_published !== false
+  };
+}
+
+const PUBLIC_SELECT_COLUMNS = `
+  id,
+  title,
+  youtube_url,
+  youtube_video_id,
+  thumbnail_url,
+  description,
+  author_name,
+  is_published,
+  created_at,
+  subcategories (
+    name,
+    category_id
+  ),
+  reference_tips (
+    step_number,
+    tip_content
+  )
+`;
+
 /**
- * Fetch live references from Supabase DB, fallback to local storage with in-flight deduplication
+ * Fetch live published references for public pages (/reffs & Home).
+ * Never selects owner_id or uploader profile data.
  */
 export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
   if (refsCache && Date.now() - refsCache.timestamp < REFFS_CACHE_TTL_MS) {
@@ -351,85 +390,46 @@ export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
 
   refsInFlightPromise = (async () => {
     try {
-      const localItems = getStoredReferences();
-      const deletedIds = getDeletedIds();
-
       if (isSupabaseConfigured() && supabase) {
         try {
-          const { data, error } = await supabase
+          // Try filtering with deleted_at IS NULL first; fall back if migration hasn't added deleted_at yet
+          let { data, error } = await supabase
             .from('video_references')
-            .select(`
-              id,
-              title,
-              youtube_url,
-              youtube_video_id,
-              thumbnail_url,
-              description,
-              author_name,
-              is_published,
-              created_at,
-              subcategories (
-                name,
-                category_id
-              ),
-              reference_tips (
-                step_number,
-                tip_content
-              )
-            `)
+            .select(PUBLIC_SELECT_COLUMNS)
+            .eq('is_published', true)
+            .is('deleted_at', null)
             .order('created_at', { ascending: false });
 
           if (error) {
-            console.warn('Supabase fetch error, using local fallback:', error.message);
-          } else if (data && data.length > 0) {
-            const supabaseMapped: ReferenceItem[] = data.map((item: any) => {
-              const rawUrl = item.youtube_url || '';
-              const detectedPlat = detectVideoPlatform(rawUrl);
-              const resolvedVideoId = item.youtube_video_id || extractVideoId(rawUrl, detectedPlat);
+            const retry = await supabase
+              .from('video_references')
+              .select(PUBLIC_SELECT_COLUMNS)
+              .eq('is_published', true)
+              .order('created_at', { ascending: false });
+            data = retry.data;
+            error = retry.error;
+          }
 
-              const tipsList = Array.isArray(item.reference_tips)
-                ? item.reference_tips
-                    .sort((a: any, b: any) => (a.step_number || 0) - (b.step_number || 0))
-                    .map((t: any) => t.tip_content)
-                : [];
-
-              const subcategoryObj = item.subcategories;
-              const category = (subcategoryObj?.category_id as 'guild_challenge' | 'warzone' | 'ppc') || 'warzone';
-              const subcategory = subcategoryObj?.name || 'General';
-
-              return {
-                id: item.id,
-                category,
-                subcategory,
-                title: item.title,
-                platform: detectedPlat,
-                videoUrl: rawUrl,
-                youtubeUrl: rawUrl,
-                videoId: resolvedVideoId,
-                thumbnailUrl: item.thumbnail_url || getPlatformThumbnail(detectedPlat, resolvedVideoId),
-                description: item.description || '',
-                tips: tipsList,
-                author: item.author_name || 'Karuhun Corps',
-                dateAdded: item.created_at ? item.created_at.split('T')[0] : 'Latest',
-                isPublished: item.is_published !== false
-              };
-            });
-
-            const filteredSupabase = supabaseMapped.filter((item) => !deletedIds.includes(item.id));
-
+          if (!error && Array.isArray(data)) {
+            const mapped = data.map(mapSupabaseRowToReference);
             try {
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredSupabase));
-            } catch (e) {}
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(mapped));
+            } catch {
+              // ignore storage quota errors
+            }
+            refsCache = { data: mapped, timestamp: Date.now() };
+            return mapped;
+          }
 
-            refsCache = { data: filteredSupabase, timestamp: Date.now() };
-            return filteredSupabase;
+          if (error) {
+            console.warn('Supabase public fetch error, using local fallback:', error.message);
           }
         } catch (err) {
           console.warn('Supabase live fetch error, falling back to local cache', err);
         }
       }
 
-      const fallbackData = localItems.filter((item) => !deletedIds.includes(item.id));
+      const fallbackData = getStoredReferences();
       refsCache = { data: fallbackData, timestamp: Date.now() };
       return fallbackData;
     } finally {
@@ -438,6 +438,173 @@ export async function fetchLiveReferences(): Promise<ReferenceItem[]> {
   })();
 
   return refsInFlightPromise;
+}
+
+/**
+ * Fetch active (non-deleted) references for Admin Roster.
+ * Includes owner_id and optional owner profile display name (visible to superadmin).
+ */
+export async function fetchAdminReferences(): Promise<AdminReferenceItem[]> {
+  if (!isSupabaseConfigured() || !supabase) {
+    return getStoredReferences().map((r) => ({ ...r, ownerId: null }));
+  }
+
+  const adminSelectWithOwner = `
+    id,
+    title,
+    youtube_url,
+    youtube_video_id,
+    thumbnail_url,
+    description,
+    author_name,
+    is_published,
+    owner_id,
+    deleted_at,
+    deleted_by,
+    created_at,
+    subcategories (
+      name,
+      category_id
+    ),
+    reference_tips (
+      step_number,
+      tip_content
+    ),
+    owner:profiles!video_references_owner_profile_fkey (
+      display_name,
+      email
+    )
+  `;
+
+  let { data, error } = await supabase
+    .from('video_references')
+    .select(adminSelectWithOwner)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false });
+
+  // Fallback if migration hasn't been executed yet (no owner_id / deleted_at / profiles FK)
+  if (error) {
+    const basicAdminSelect = `
+      id,
+      title,
+      youtube_url,
+      youtube_video_id,
+      thumbnail_url,
+      description,
+      author_name,
+      is_published,
+      owner_id,
+      deleted_at,
+      created_at,
+      subcategories (
+        name,
+        category_id
+      ),
+      reference_tips (
+        step_number,
+        tip_content
+      )
+    `;
+    const retry = await supabase
+      .from('video_references')
+      .select(basicAdminSelect)
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false });
+
+    if (retry.error) {
+      const legacyRetry = await supabase
+        .from('video_references')
+        .select(PUBLIC_SELECT_COLUMNS)
+        .order('created_at', { ascending: false });
+      data = legacyRetry.data as any;
+    } else {
+      data = retry.data as any;
+    }
+  }
+
+  if (!Array.isArray(data)) return [];
+
+  return data.map((row: any) => {
+    const base = mapSupabaseRowToReference(row);
+    const ownerObj = Array.isArray(row.owner) ? row.owner[0] : row.owner;
+    return {
+      ...base,
+      ownerId: row.owner_id ?? null,
+      ownerName: ownerObj?.display_name ?? null,
+      ownerEmail: ownerObj?.email ?? null,
+      deletedAt: row.deleted_at ?? null,
+      deletedBy: row.deleted_by ?? null,
+    };
+  });
+}
+
+/**
+ * Fetch soft-deleted references for Superadmin Trash view.
+ */
+export async function fetchTrashedReferences(): Promise<AdminReferenceItem[]> {
+  if (!isSupabaseConfigured() || !supabase) return [];
+
+  const trashSelect = `
+    id,
+    title,
+    youtube_url,
+    youtube_video_id,
+    thumbnail_url,
+    description,
+    author_name,
+    is_published,
+    owner_id,
+    deleted_at,
+    deleted_by,
+    created_at,
+    subcategories (
+      name,
+      category_id
+    ),
+    reference_tips (
+      step_number,
+      tip_content
+    ),
+    owner:profiles!video_references_owner_profile_fkey (
+      display_name,
+      email
+    )
+  `;
+
+  let { data, error } = await supabase
+    .from('video_references')
+    .select(trashSelect)
+    .not('deleted_at', 'is', null)
+    .order('deleted_at', { ascending: false });
+
+  if (error) {
+    const fallback = await supabase
+      .from('video_references')
+      .select(`
+        id, title, youtube_url, youtube_video_id, thumbnail_url,
+        description, author_name, is_published, owner_id, deleted_at, deleted_by, created_at,
+        subcategories ( name, category_id ),
+        reference_tips ( step_number, tip_content )
+      `)
+      .not('deleted_at', 'is', null)
+      .order('deleted_at', { ascending: false });
+    data = fallback.data as any;
+  }
+
+  if (!Array.isArray(data)) return [];
+
+  return data.map((row: any) => {
+    const base = mapSupabaseRowToReference(row);
+    const ownerObj = Array.isArray(row.owner) ? row.owner[0] : row.owner;
+    return {
+      ...base,
+      ownerId: row.owner_id ?? null,
+      ownerName: ownerObj?.display_name ?? null,
+      ownerEmail: ownerObj?.email ?? null,
+      deletedAt: row.deleted_at ?? null,
+      deletedBy: row.deleted_by ?? null,
+    };
+  });
 }
 
 /**
@@ -475,181 +642,276 @@ async function getOrCreateSubcategoryId(category: string, subcategory: string): 
   return null;
 }
 
-export interface SaveResult {
+export interface MutationResult {
   success: boolean;
   error?: string;
-  list: ReferenceItem[];
+}
+
+async function syncReferenceTips(referenceId: string, tips: string[]): Promise<string | undefined> {
+  if (!supabase) return undefined;
+  const cleanTips = tips.map((t) => t.trim()).filter(Boolean);
+
+  const { error: delError } = await supabase
+    .from('reference_tips')
+    .delete()
+    .eq('reference_id', referenceId);
+
+  if (delError) {
+    return `Gagal memperbarui tips: ${delError.message}`;
+  }
+
+  if (cleanTips.length > 0) {
+    const tipsPayload = cleanTips.map((t, idx) => ({
+      reference_id: referenceId,
+      step_number: idx + 1,
+      tip_content: t,
+    }));
+    const { error: insError } = await supabase.from('reference_tips').insert(tipsPayload);
+    if (insError) {
+      return `Gagal menyimpan tips: ${insError.message}`;
+    }
+  }
+
+  return undefined;
 }
 
 /**
- * Save / Update a reference item (Syncs directly to Supabase DB + LocalStorage fallback)
+ * Create a new reference item in Supabase (owner_id = current authenticated user).
  */
-export async function saveStoredReference(item: ReferenceItem): Promise<SaveResult> {
-  const isValidUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.id);
-  const targetId = isValidUuid
-    ? item.id
-    : (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `00000000-0000-4000-a000-${Date.now().toString().padStart(12, '0')}`);
-  
-  const rawUrl = item.videoUrl || item.youtubeUrl || '';
-  const detectedPlat = item.platform || detectVideoPlatform(rawUrl);
-  const resolvedVideoId = item.videoId || extractVideoId(rawUrl, detectedPlat);
-
-  const updatedItem: ReferenceItem = {
-    ...item,
-    id: targetId,
-    platform: detectedPlat,
-    videoUrl: rawUrl,
-    youtubeUrl: rawUrl,
-    videoId: resolvedVideoId,
-    thumbnailUrl: item.thumbnailUrl || getPlatformThumbnail(detectedPlat, resolvedVideoId)
-  };
-
-  const current = getStoredReferences();
-  const existingIdx = current.findIndex((r) => r.id === updatedItem.id || r.id === item.id);
-  
-  let updatedList: ReferenceItem[];
-  if (existingIdx >= 0) {
-    updatedList = [...current];
-    updatedList[existingIdx] = { ...updatedItem };
-  } else {
-    updatedList = [updatedItem, ...current];
+export async function createReference(
+  item: ReferenceItem,
+  ownerId: string
+): Promise<MutationResult> {
+  if (!isSupabaseConfigured() || !supabase) {
+    return { success: false, error: 'Supabase belum dikonfigurasi.' };
   }
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
-  } catch (err) {
-    console.error('Failed to save reference to localStorage', err);
+    const subcategoryId = await getOrCreateSubcategoryId(item.category, item.subcategory);
+    const payload: Record<string, unknown> = {
+      id: item.id,
+      title: item.title.trim(),
+      youtube_url: item.videoUrl.trim(),
+      youtube_video_id: item.videoId,
+      thumbnail_url: item.thumbnailUrl,
+      description: item.description,
+      author_name: (item.author || '').trim(),
+      is_published: item.isPublished !== false,
+      owner_id: ownerId,
+    };
+
+    if (subcategoryId) {
+      payload.subcategory_id = subcategoryId;
+    }
+
+    const { error } = await supabase.from('video_references').insert(payload);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    const tipsError = await syncReferenceTips(item.id, item.tips || []);
+    invalidateRefsCache();
+
+    if (tipsError) {
+      return { success: false, error: tipsError };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Gagal menyimpan referensi.' };
+  }
+}
+
+/**
+ * Update an existing reference item in Supabase.
+ * Enforces via `.select('id')` that RLS actually allowed the row update.
+ */
+export async function updateReference(item: ReferenceItem): Promise<MutationResult> {
+  if (!isSupabaseConfigured() || !supabase) {
+    return { success: false, error: 'Supabase belum dikonfigurasi.' };
   }
 
-  let supabaseErrorMessage: string | undefined = undefined;
+  try {
+    const subcategoryId = await getOrCreateSubcategoryId(item.category, item.subcategory);
+    const payload: Record<string, unknown> = {
+      title: item.title.trim(),
+      youtube_url: item.videoUrl.trim(),
+      youtube_video_id: item.videoId,
+      thumbnail_url: item.thumbnailUrl,
+      description: item.description,
+      author_name: (item.author || '').trim(),
+      is_published: item.isPublished !== false,
+    };
 
-  // Direct Supabase DB Save
-  if (isSupabaseConfigured() && supabase) {
-    try {
-      const subcategoryId = await getOrCreateSubcategoryId(updatedItem.category, updatedItem.subcategory);
+    if (subcategoryId) {
+      payload.subcategory_id = subcategoryId;
+    }
 
-      const payload: any = {
-        id: updatedItem.id,
-        title: updatedItem.title,
-        youtube_url: updatedItem.videoUrl,
-        youtube_video_id: updatedItem.videoId,
-        thumbnail_url: updatedItem.thumbnailUrl,
-        description: updatedItem.description,
-        author_name: updatedItem.author || 'Karuhun Corps',
-        is_published: updatedItem.isPublished !== false
+    const { data, error } = await supabase
+      .from('video_references')
+      .update(payload)
+      .eq('id', item.id)
+      .select('id');
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    if (!data || data.length === 0) {
+      return {
+        success: false,
+        error: 'Anda tidak memiliki izin untuk mengubah referensi ini.',
       };
-
-      if (subcategoryId) {
-        payload.subcategory_id = subcategoryId;
-      }
-
-      const { error } = await supabase
-        .from('video_references')
-        .upsert(payload);
-
-      if (error) {
-        console.error('[Supabase Error] Direct video_references upsert failed:', error);
-        supabaseErrorMessage = `Supabase Error [Code: ${error.code || 'UNKNOWN'}]: ${error.message}`;
-      } else {
-        if (updatedItem.tips && updatedItem.tips.length > 0) {
-          await supabase.from('reference_tips').delete().eq('reference_id', updatedItem.id);
-          const tipsPayload = updatedItem.tips.map((t, idx) => ({
-            reference_id: updatedItem.id,
-            step_number: idx + 1,
-            tip_content: t
-          }));
-          await supabase.from('reference_tips').insert(tipsPayload);
-        }
-      }
-    } catch (err: any) {
-      console.error('[Supabase Exception] Failed to save directly to Supabase:', err);
-      supabaseErrorMessage = `Supabase Exception: ${err?.message || String(err)}`;
     }
+
+    const tipsError = await syncReferenceTips(item.id, item.tips || []);
+    invalidateRefsCache();
+
+    if (tipsError) {
+      return { success: false, error: tipsError };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Gagal memperbarui referensi.' };
   }
-
-  invalidateRefsCache();
-
-  return {
-    success: !supabaseErrorMessage,
-    error: supabaseErrorMessage,
-    list: updatedList
-  };
 }
 
 /**
- * Delete a reference item by ID
+ * Toggle publication status (Published / Draft) in Supabase live DB
  */
-export async function deleteStoredReference(id: string): Promise<ReferenceItem[]> {
-  addDeletedId(id);
-  const current = getStoredReferences();
-  const targetItem = current.find((r) => r.id === id);
-  const updatedList = current.filter((r) => r.id !== id);
+export async function toggleReferencePublish(
+  id: string,
+  nextPublished: boolean
+): Promise<MutationResult> {
+  if (!isSupabaseConfigured() || !supabase) {
+    return { success: false, error: 'Supabase belum dikonfigurasi.' };
+  }
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
-  } catch (err) {
-    console.error('Failed to delete reference from localStorage', err);
-  }
+    const { data, error } = await supabase
+      .from('video_references')
+      .update({ is_published: nextPublished })
+      .eq('id', id)
+      .select('id');
 
-  if (isSupabaseConfigured() && supabase) {
-    try {
-      let thumbToDelete = targetItem?.thumbnailUrl;
-      if (!thumbToDelete) {
-        const { data: existingRow } = await supabase
-          .from('video_references')
-          .select('thumbnail_url')
-          .eq('id', id)
-          .maybeSingle();
-        thumbToDelete = existingRow?.thumbnail_url;
-      }
-
-      await supabase.from('video_references').delete().eq('id', id);
-
-      if (thumbToDelete) {
-        await deleteReferenceThumbnail(thumbToDelete);
-      }
-    } catch (err) {
-      console.warn('Failed to sync delete to Supabase', err);
+    if (error) return { success: false, error: error.message };
+    if (!data || data.length === 0) {
+      return { success: false, error: 'Anda tidak memiliki izin untuk mengubah status referensi ini.' };
     }
-  }
 
-  invalidateRefsCache();
-  return updatedList;
+    invalidateRefsCache();
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Gagal mengubah status referensi.' };
+  }
 }
 
 /**
- * Toggle publication status (Published / Draft) in Supabase live DB + LocalStorage
+ * Soft-delete a reference item (sets deleted_at and deleted_by).
+ * Does NOT delete the thumbnail or tips so superadmin can restore it.
  */
-export async function toggleStoredReferencePublish(id: string, explicitStatus?: boolean): Promise<ReferenceItem[]> {
-  const current = getStoredReferences();
-  const targetItem = current.find((r) => r.id === id);
-  const targetNewStatus = explicitStatus !== undefined ? explicitStatus : targetItem ? (targetItem.isPublished === false ? true : false) : false;
-
-  if (isSupabaseConfigured() && supabase) {
-    try {
-      await supabase
-        .from('video_references')
-        .update({ is_published: targetNewStatus })
-        .eq('id', id);
-    } catch (err) {
-      console.warn('Failed to sync toggle publish to Supabase', err);
-    }
+export async function softDeleteReference(
+  id: string,
+  userId: string
+): Promise<MutationResult> {
+  if (!isSupabaseConfigured() || !supabase) {
+    return { success: false, error: 'Supabase belum dikonfigurasi.' };
   }
-
-  const updatedList = current.map((r) => {
-    if (r.id === id) {
-      return { ...r, isPublished: targetNewStatus };
-    }
-    return r;
-  });
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
-  } catch (err) {
-    console.error('Failed to update localStorage after toggle publish', err);
+    const { data, error } = await supabase
+      .from('video_references')
+      .update({
+        deleted_at: new Date().toISOString(),
+        deleted_by: userId,
+      })
+      .eq('id', id)
+      .select('id');
+
+    if (error) return { success: false, error: error.message };
+    if (!data || data.length === 0) {
+      return { success: false, error: 'Anda tidak memiliki izin untuk menghapus referensi ini.' };
+    }
+
+    invalidateRefsCache();
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Gagal memindahkan referensi ke Trash.' };
+  }
+}
+
+/**
+ * Restore a soft-deleted reference from Trash (superadmin only).
+ */
+export async function restoreReference(id: string): Promise<MutationResult> {
+  if (!isSupabaseConfigured() || !supabase) {
+    return { success: false, error: 'Supabase belum dikonfigurasi.' };
   }
 
-  invalidateRefsCache();
+  try {
+    const { data, error } = await supabase
+      .from('video_references')
+      .update({
+        deleted_at: null,
+        deleted_by: null,
+      })
+      .eq('id', id)
+      .select('id');
 
-  return updatedList;
+    if (error) return { success: false, error: error.message };
+    if (!data || data.length === 0) {
+      return { success: false, error: 'Gagal memulihkan referensi. Pastikan akun Anda Superadmin.' };
+    }
+
+    invalidateRefsCache();
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Gagal memulihkan referensi.' };
+  }
+}
+
+/**
+ * Permanently delete a reference item from DB and remove its custom thumbnail from Storage (superadmin only).
+ */
+export async function purgeReference(
+  id: string,
+  thumbnailUrl?: string
+): Promise<MutationResult> {
+  if (!isSupabaseConfigured() || !supabase) {
+    return { success: false, error: 'Supabase belum dikonfigurasi.' };
+  }
+
+  try {
+    let thumbToDelete = thumbnailUrl;
+    if (!thumbToDelete) {
+      const { data: existingRow } = await supabase
+        .from('video_references')
+        .select('thumbnail_url')
+        .eq('id', id)
+        .maybeSingle();
+      thumbToDelete = existingRow?.thumbnail_url;
+    }
+
+    const { data, error } = await supabase
+      .from('video_references')
+      .delete()
+      .eq('id', id)
+      .select('id');
+
+    if (error) return { success: false, error: error.message };
+    if (!data || data.length === 0) {
+      return { success: false, error: 'Hanya Superadmin yang dapat menghapus permanen.' };
+    }
+
+    if (thumbToDelete) {
+      await deleteReferenceThumbnail(thumbToDelete);
+    }
+
+    invalidateRefsCache();
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Gagal menghapus referensi secara permanen.' };
+  }
 }
