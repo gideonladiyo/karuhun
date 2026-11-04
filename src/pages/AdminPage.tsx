@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { FileText, Clock, Trash2, LogOut } from 'lucide-react';
+import { FileText, Clock, Trash2, LogOut, Star } from 'lucide-react';
 import { AuthProvider, useAuth } from '@/services/supabase/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { SectionHeader } from '@/components/ui/section-header';
@@ -12,9 +12,10 @@ import {
 import { AuthCard } from '@/pages/admin/AuthCard';
 import { ReferencesTab } from '@/pages/admin/references/ReferencesTab';
 import { TrashTab } from '@/pages/admin/references/TrashTab';
+import { FeaturedTab } from '@/pages/admin/references/FeaturedTab';
 import { RecapTab } from '@/pages/admin/recap/RecapTab';
 
-type AdminTab = 'reffs' | 'recap' | 'trash';
+type AdminTab = 'reffs' | 'featured' | 'recap' | 'trash';
 
 const AdminShell: React.FC = () => {
   const { session, profile, role, isSuperadmin, loading, signOut } = useAuth();
@@ -39,14 +40,18 @@ const AdminShell: React.FC = () => {
 
   const tabOptions: SegmentedTabOption<AdminTab>[] = [
     { value: 'reffs', label: 'Referensi Video', icon: FileText },
+    ...(isSuperadmin
+      ? ([{ value: 'featured', label: 'Featured Mingguan', icon: Star }] as const)
+      : []),
     { value: 'recap', label: 'Rekap Kontribusi', icon: Clock },
     ...(isSuperadmin
       ? ([{ value: 'trash', label: 'Trash', icon: Trash2 }] as const)
       : []),
   ];
 
+  const superadminOnlyTabs: AdminTab[] = ['featured', 'trash'];
   const resolvedTab: AdminTab =
-    !isSuperadmin && activeTab === 'trash' ? 'reffs' : activeTab;
+    !isSuperadmin && superadminOnlyTabs.includes(activeTab) ? 'reffs' : activeTab;
 
   return (
     <div className="space-y-6 animate-fadeIn pb-16 md:pb-0">
@@ -91,6 +96,8 @@ const AdminShell: React.FC = () => {
           onNotify={notify}
         />
       )}
+
+      {resolvedTab === 'featured' && isSuperadmin && <FeaturedTab onNotify={notify} />}
 
       {resolvedTab === 'recap' && <RecapTab onNotify={notify} />}
 

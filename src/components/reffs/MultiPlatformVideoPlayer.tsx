@@ -4,6 +4,7 @@ import { ExternalLink, Play } from 'lucide-react';
 import { SafeImage } from '@/components/ui/safe-image';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { PLATFORM_LABELS } from '@/components/ui/platform-icon';
 
 export interface MultiPlatformVideoPlayerProps {
   platform: VideoPlatform;
@@ -15,33 +16,8 @@ export interface MultiPlatformVideoPlayerProps {
   className?: string;
 }
 
-const PLATFORM_CONFIG: Record<
-  VideoPlatform,
-  {
-    label: string;
-    allow: string;
-  }
-> = {
-  youtube: {
-    label: 'YouTube',
-    allow:
-      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
-  },
-  tiktok: {
-    label: 'TikTok',
-    allow:
-      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
-  },
-  bilibili: {
-    label: 'Bilibili',
-    allow:
-      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-  },
-  other: {
-    label: 'Platform Asli',
-    allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture',
-  },
-};
+const IFRAME_ALLOW =
+  'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
 
 const PlayerFallback: React.FC<{
   platformLabel: string;
@@ -53,7 +29,7 @@ const PlayerFallback: React.FC<{
     {thumbnailUrl && (
       <SafeImage
         src={thumbnailUrl}
-        alt={title}
+        alt=""
         className="absolute inset-0 w-full h-full object-cover opacity-35 blur-sm scale-105"
       />
     )}
@@ -65,7 +41,7 @@ const PlayerFallback: React.FC<{
       </div>
       <div className="space-y-1">
         <span className="text-xs text-zinc-400 block">
-          Preview langsung tidak tersedia untuk tautan ini
+          This link can’t be previewed here
         </span>
         <h4 className="text-sm font-heading font-bold text-white line-clamp-2">
           {title}
@@ -74,7 +50,7 @@ const PlayerFallback: React.FC<{
       {videoUrl && (
         <Button asChild size="sm">
           <a href={videoUrl} target="_blank" rel="noopener noreferrer">
-            <span>Buka di {platformLabel}</span>
+            <span>Watch on {platformLabel}</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </Button>
@@ -96,7 +72,7 @@ export const MultiPlatformVideoPlayer: React.FC<MultiPlatformVideoPlayerProps> =
   const [slowLoad, setSlowLoad] = useState<boolean>(false);
 
   const embedUrl = getVideoEmbedUrl(platform, videoId, videoUrl);
-  const cfg = PLATFORM_CONFIG[platform] || PLATFORM_CONFIG.youtube;
+  const platformLabel = PLATFORM_LABELS[platform] ?? PLATFORM_LABELS.youtube;
   const isVertical = platform === 'tiktok';
 
   useEffect(() => {
@@ -110,7 +86,7 @@ export const MultiPlatformVideoPlayer: React.FC<MultiPlatformVideoPlayerProps> =
     }, 8000);
 
     return () => clearTimeout(timer);
-  }, [embedUrl, platform, videoId]);
+  }, [embedUrl]);
 
   const frameClass = isVertical
     ? compact
@@ -136,11 +112,11 @@ export const MultiPlatformVideoPlayer: React.FC<MultiPlatformVideoPlayerProps> =
         {embedUrl ? (
           <>
             <iframe
-              key={`${platform}-${videoId}`}
+              key={embedUrl}
               src={embedUrl}
               title={title}
               className="w-full h-full border-0 bg-black"
-              allow={cfg.allow}
+              allow={IFRAME_ALLOW}
               allowFullScreen
               onLoad={() => {
                 setLoaded(true);
@@ -150,14 +126,14 @@ export const MultiPlatformVideoPlayer: React.FC<MultiPlatformVideoPlayerProps> =
 
             {!loaded && slowLoad && videoUrl && (
               <div className="absolute inset-x-3 bottom-3 z-10 flex items-center justify-between gap-2 rounded-xl bg-black/90 border border-[#27272a] px-3 py-2 text-xs text-zinc-200 backdrop-blur-md">
-                <span>Video lambat atau tidak muncul?</span>
+                <span>Video not loading?</span>
                 <a
                   href={videoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 font-semibold text-amber-400 hover:text-amber-300 shrink-0"
                 >
-                  <span>Buka di {cfg.label}</span>
+                  <span>Watch on {platformLabel}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -165,7 +141,7 @@ export const MultiPlatformVideoPlayer: React.FC<MultiPlatformVideoPlayerProps> =
           </>
         ) : (
           <PlayerFallback
-            platformLabel={cfg.label}
+            platformLabel={platformLabel}
             title={title}
             videoUrl={videoUrl}
             thumbnailUrl={thumbnailUrl}

@@ -40,14 +40,16 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({
   );
 };
 
-export const PlatformBadge: React.FC<{ platform?: VideoPlatform }> = ({ platform = 'youtube' }) => {
-  const label =
-    platform === 'tiktok' ? 'TikTok' : platform === 'bilibili' ? 'Bilibili' : 'YouTube';
-
-  return (
-    <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-black/85 text-zinc-200 border border-white/15 text-xs font-tech font-medium backdrop-blur-md">
-      <PlatformIcon platform={platform} className="w-3 h-3 fill-current" />
-      <span>{label}</span>
-    </span>
-  );
+export const PLATFORM_LABELS: Record<VideoPlatform, string> = {
+  youtube: 'YouTube',
+  tiktok: 'TikTok',
+  bilibili: 'Bilibili',
+  other: 'Source',
 };
+
+export const PlatformBadge: React.FC<{ platform?: VideoPlatform }> = ({ platform = 'youtube' }) => (
+  <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-black/85 text-zinc-200 border border-white/15 text-xs font-tech font-medium backdrop-blur-md">
+    <PlatformIcon platform={platform} className="w-3 h-3 fill-current" />
+    <span>{PLATFORM_LABELS[platform] ?? PLATFORM_LABELS.youtube}</span>
+  </span>
+);

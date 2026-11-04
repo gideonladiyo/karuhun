@@ -170,23 +170,25 @@ export function getVideoEmbedUrl(platform: VideoPlatform, videoId: string, fullU
   return fullUrl || '';
 }
 
+// Stock photos older builds saved as TikTok/Bilibili thumbnails. They aren't the video, so treat them as missing.
+const LEGACY_PLACEHOLDER_THUMBNAILS = [
+  'images.unsplash.com/photo-1618005182384-a83a8bd57fbe',
+  'images.unsplash.com/photo-1578632767115-351597cf2477',
+];
+
 /**
- * Generate platform default or fallback thumbnail
+ * Resolve the thumbnail for a reference: custom upload first, then the YouTube still.
+ * Returns '' when nothing real is available so the UI can render its own placeholder.
  */
 export function getPlatformThumbnail(platform: VideoPlatform, videoId: string, customThumbnail?: string): string {
-  if (customThumbnail && customThumbnail.trim()) {
-    return customThumbnail.trim();
+  const custom = customThumbnail?.trim();
+  if (custom && !LEGACY_PLACEHOLDER_THUMBNAILS.some((legacy) => custom.includes(legacy))) {
+    return custom;
   }
   if (platform === 'youtube' && videoId && videoId.length === 11) {
     return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
   }
-  if (platform === 'tiktok') {
-    return 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop';
-  }
-  if (platform === 'bilibili') {
-    return 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop';
-  }
-  return '/logo.png';
+  return '';
 }
 
 export const INITIAL_PROTOTYPE_REFERENCES: ReferenceItem[] = [
@@ -259,7 +261,6 @@ export const INITIAL_PROTOTYPE_REFERENCES: ReferenceItem[] = [
     videoUrl: 'https://www.tiktok.com/@larkshinnn/video/7672787506282138896',
     youtubeUrl: 'https://www.tiktok.com/@larkshinnn/video/7672787506282138896',
     videoId: '7672787506282138896',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop',
     description: `### Fast TikTok Combat Showcase\nCompact high-speed rotation highlight demonstration for **Lightning Warzone**.\n\n- Frame-perfect 3-ping trigger\n- Instant QTE double-swap chain`,
     tips: [
       'Keep your thumb ready on the QTE portrait as soon as matrix slows time.',
@@ -279,7 +280,6 @@ export const INITIAL_PROTOTYPE_REFERENCES: ReferenceItem[] = [
     videoUrl: 'https://b23.tv/mD1GlAc',
     youtubeUrl: 'https://b23.tv/mD1GlAc',
     videoId: 'mD1GlAc',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop',
     description: `### CN Dalao 0-Second Clear Theorycrafting\nElite speedrun strategy breakdown from Bilibili CN server for **PPC Ultimate Hell Mode**.\n\n> **Core Rule:** Execute zero-delay pre-buffing before entering the boss engagement radius.`,
     tips: [
       'Pre-cast assist skills right as the battle starts countdown.',
@@ -323,7 +323,7 @@ export function getStoredReferences(): ReferenceItem[] {
             videoUrl: rawUrl,
             youtubeUrl: rawUrl,
             videoId: resolvedVideoId,
-            thumbnailUrl: item.thumbnailUrl || getPlatformThumbnail(detectedPlat, resolvedVideoId)
+            thumbnailUrl: getPlatformThumbnail(detectedPlat, resolvedVideoId, item.thumbnailUrl)
           };
         });
       }
@@ -367,7 +367,7 @@ function mapSupabaseRowToReference(item: any): ReferenceItem {
     videoUrl: rawUrl,
     youtubeUrl: rawUrl,
     videoId: resolvedVideoId,
-    thumbnailUrl: item.thumbnail_url || getPlatformThumbnail(detectedPlat, resolvedVideoId),
+    thumbnailUrl: getPlatformThumbnail(detectedPlat, resolvedVideoId, item.thumbnail_url),
     description: item.description || '',
     tips: tipsList,
     author: item.author_name || 'Karuhun Tactical',
