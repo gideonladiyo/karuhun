@@ -127,14 +127,36 @@ export function extractVideoId(url: string, platform?: VideoPlatform): string {
 }
 
 /**
- * Generate embed player URL for iframe
+ * Check whether a video ID can be directly embedded in an iframe.
+ * Shortlinks (e.g. vt.tiktok.com/..., b23.tv/...) require server-side redirect resolution
+ * and therefore cannot be embedded directly inside a browser iframe.
+ */
+export function isEmbeddable(platform: VideoPlatform, videoId: string): boolean {
+  if (!videoId) return false;
+  if (platform === 'youtube') {
+    return /^[\w-]{11}$/.test(videoId);
+  }
+  if (platform === 'tiktok') {
+    return /^\d{15,22}$/.test(videoId);
+  }
+  if (platform === 'bilibili') {
+    return /^(BV[a-zA-Z0-9]+|av\d+)$/i.test(videoId);
+  }
+  return false;
+}
+
+/**
+ * Generate embed player URL for iframe (returns empty string if not directly embeddable)
  */
 export function getVideoEmbedUrl(platform: VideoPlatform, videoId: string, fullUrl?: string): string {
+  if (!isEmbeddable(platform, videoId)) {
+    return '';
+  }
   if (platform === 'youtube') {
     return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
   }
   if (platform === 'tiktok') {
-    return `https://www.tiktok.com/embed/${videoId}`;
+    return `https://www.tiktok.com/embed/v2/${videoId}`;
   }
   if (platform === 'bilibili') {
     if (videoId.toLowerCase().startsWith('bv')) {
@@ -144,7 +166,6 @@ export function getVideoEmbedUrl(platform: VideoPlatform, videoId: string, fullU
       const aid = videoId.toLowerCase().replace('av', '');
       return `https://player.bilibili.com/player.html?aid=${aid}&autoplay=0&danmaku=0&high_quality=1`;
     }
-    return `https://player.bilibili.com/player.html?bvid=${videoId}&autoplay=0&danmaku=0&high_quality=1`;
   }
   return fullUrl || '';
 }

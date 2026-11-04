@@ -6,6 +6,7 @@ import {
   CATEGORIES_CONFIG,
   detectVideoPlatform,
   extractVideoId,
+  isEmbeddable,
   getPlatformThumbnail,
   createReference,
   updateReference,
@@ -340,6 +341,22 @@ export const ReferenceForm: React.FC<ReferenceFormProps> = ({
               required
               className="font-mono"
             />
+            {(() => {
+              const trimmed = videoUrl.trim();
+              if (!trimmed) return null;
+              const plat = detectVideoPlatform(trimmed);
+              const vid = extractVideoId(trimmed, plat);
+              if (plat === 'tiktok' && vid && !isEmbeddable(plat, vid)) {
+                return (
+                  <p className="text-xs text-amber-400 pt-1">
+                    Tautan pendek TikTok tidak dapat diputar langsung di dalam preview. Gunakan
+                    URL penuh (<code className="font-mono">tiktok.com/@user/video/...</code>) agar
+                    video dapat diputar di halaman dan modal preview.
+                  </p>
+                );
+              }
+              return null;
+            })()}
           </Field>
 
           <Field

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { CheckCircle2, AlertTriangle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -204,6 +205,7 @@ export interface ModalProps {
   onClose: () => void;
   title: React.ReactNode;
   subtitle?: React.ReactNode;
+  footer?: React.ReactNode;
   maxWidthClass?: string;
   children: React.ReactNode;
 }
@@ -213,35 +215,45 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   title,
   subtitle,
+  footer,
   maxWidthClass = 'max-w-lg',
   children,
 }) => {
   useEffect(() => {
     if (!open) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKey);
+    };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || typeof document === 'undefined') return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto"
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
         className={cn(
-          'minimal-card p-6 w-full space-y-5 my-8',
+          'minimal-card w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl',
           maxWidthClass
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-[#27272a] pb-4">
+        {/* Sticky Header */}
+        <div className="flex items-start justify-between gap-4 border-b border-[#27272a] px-6 py-4 shrink-0 bg-[#121215]">
           <div className="space-y-1 min-w-0">
-            <h3 className="font-heading font-bold text-lg text-white">{title}</h3>
+            <h3 className="font-heading font-bold text-base sm:text-lg text-white truncate">
+              {title}
+            </h3>
             {subtitle && <div className="text-xs text-zinc-400">{subtitle}</div>}
           </div>
           <Button
@@ -250,13 +262,26 @@ export const Modal: React.FC<ModalProps> = ({
             size="icon"
             onClick={onClose}
             aria-label="Tutup dialog"
+            className="shrink-0"
           >
             <X className="w-4 h-4" />
           </Button>
         </div>
-        {children}
+
+        {/* Scrollable Body */}
+        <div className="p-6 overflow-y-auto overscroll-contain flex-1 min-h-0">
+          {children}
+        </div>
+
+        {/* Optional Sticky Footer */}
+        {footer && (
+          <div className="border-t border-[#27272a] px-6 py-3.5 shrink-0 bg-[#121215]">
+            {footer}
+          </div>
+        )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
