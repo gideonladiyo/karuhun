@@ -55,7 +55,7 @@ const getBackLabel = (path: string): string => {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<MainTab>('home');
-  const [ppcSubTab, setPpcSubTab] = useState<'bosses' | 'calculator'>('bosses');
+  const [ppcSubTab, setPpcSubTab] = useState<'bosses' | 'calculator'>('calculator');
   const [selectedBranchId, setSelectedBranchId] = useState<number>(() => GUILD_BRANCHES[0]?.id ?? 3638);
   const [activeRefId, setActiveRefId] = useState<string | undefined>(undefined);
   // Path of the in-app page we came from (null when this entry is the first one in the session)
@@ -150,11 +150,8 @@ export default function App() {
     } else if (parts[0] === 'ppc' || parts[0] === 'bosses' || parts[0] === 'calculator') {
       setCurrentViewMode('mainTab');
       setActiveTab('ppc');
-      if (parts[0] === 'calculator') {
-        setPpcSubTab('calculator');
-      } else {
-        setPpcSubTab('bosses');
-      }
+      // /ppc lands on the calculator; the boss list lives at /ppc/bosses (legacy /bosses still works).
+      setPpcSubTab(parts[0] === 'bosses' || parts[1] === 'bosses' ? 'bosses' : 'calculator');
     } else {
       setCurrentViewMode('notFound');
     }
@@ -240,7 +237,7 @@ export default function App() {
     setPpcSubTab(subTab);
     setActiveTab('ppc');
     setCurrentViewMode('mainTab');
-    navigateToPath(subTab === 'calculator' ? '/calculator' : '/ppc');
+    navigateToPath(subTab === 'bosses' ? '/ppc/bosses' : '/ppc');
   };
 
   const handleOpenPlayerProfile = (uid: number, srv?: string) => {
@@ -346,10 +343,7 @@ export default function App() {
             )}
 
             {activeTab === 'ppc' && (
-              <PpcPage
-                initialSubTab={ppcSubTab}
-                initialBossSlug={undefined}
-              />
+              <PpcPage subTab={ppcSubTab} onSubTabChange={handleOpenPpcTool} />
             )}
 
             {activeTab === 'admin' && (

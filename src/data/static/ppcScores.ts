@@ -131,6 +131,11 @@ export const ULTIMATE_PPC_SCORES: Record<number, { test: number; elite: number; 
   60: { test: 16890, elite: 33780, knight: 76560, chaos: 153121, hell: 306242 },
 };
 
+export type PpcTier = 'ultimate' | 'advanced';
+export type PpcStage = 'knight' | 'chaos' | 'hell';
+
+export const PPC_MAX_SEC = 60;
+
 // Full PPC Boss Detail Interface matching Google Sheet
 export interface PpcBossDetail {
   boss: string;

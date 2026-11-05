@@ -1,59 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BossesPage } from './BossesPage';
 import { ScoreCalculatorPage } from './ScoreCalculatorPage';
-import { Skull, Calculator, Flame } from 'lucide-react';
+import { Calculator, Skull } from 'lucide-react';
 import { SegmentedTabs, SegmentedTabOption } from '@/components/ui/segmented-tabs';
 
+type PpcSubTab = 'bosses' | 'calculator';
+
 interface PpcPageProps {
-  initialSubTab?: 'bosses' | 'calculator';
-  initialBossSlug?: string;
+  subTab: PpcSubTab;
+  onSubTabChange: (tab: PpcSubTab) => void;
 }
 
-const PPC_SUB_TABS: SegmentedTabOption<'bosses' | 'calculator'>[] = [
-  { value: 'bosses', label: 'Boss Directory', icon: Skull },
-  { value: 'calculator', label: 'Score Calculator', icon: Calculator },
+const PPC_SUB_TABS: SegmentedTabOption<PpcSubTab>[] = [
+  { value: 'calculator', label: 'Calculator', icon: Calculator },
+  { value: 'bosses', label: 'Bosses', icon: Skull },
 ];
 
-export const PpcPage: React.FC<PpcPageProps> = ({
-  initialSubTab = 'bosses',
-  initialBossSlug
-}) => {
-  const [activeSubTab, setActiveSubTab] = useState<'bosses' | 'calculator'>(initialSubTab);
-
-  useEffect(() => {
-    if (initialSubTab) {
-      setActiveSubTab(initialSubTab);
-    }
-  }, [initialSubTab]);
-
-  return (
-    <div className="space-y-6 animate-fadeIn pb-16 md:pb-0">
-      {/* Sub-Navigation Header Bar */}
-      <div className="minimal-card p-4 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center space-x-2">
-            <Flame className="w-5 h-5 text-white" />
-            <h1 className="font-heading font-bold text-lg text-white uppercase tracking-wider">
-              PPC HUB &amp; TOOLS
-            </h1>
-          </div>
-
-          <SegmentedTabs
-            options={PPC_SUB_TABS}
-            value={activeSubTab}
-            onChange={setActiveSubTab}
-          />
-        </div>
-      </div>
-
-      {/* Render Active Sub-Page */}
-      {activeSubTab === 'bosses' ? (
-        <BossesPage />
-      ) : (
-        <ScoreCalculatorPage
-          initialBossSlug={initialBossSlug}
-        />
-      )}
-    </div>
-  );
+const SUBTITLES: Record<PpcSubTab, string> = {
+  calculator: 'Turn clear times into score, compare runs side by side, and copy the matching Agus bot command.',
+  bosses: 'Stage HP, opener delay, and weaknesses for every boss in the current rotation.',
 };
+
+export const PpcPage: React.FC<PpcPageProps> = ({ subTab, onSubTabChange }) => (
+  <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
+    <div className="flex flex-col md:flex-row md:items-end justify-between gap-5">
+      <div className="space-y-1.5">
+        <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white tracking-tight">Phantom Pain Cage</h1>
+        <p className="text-sm text-zinc-400 max-w-xl">{SUBTITLES[subTab]}</p>
+      </div>
+      <SegmentedTabs
+        options={PPC_SUB_TABS}
+        value={subTab}
+        onChange={onSubTabChange}
+        fullWidthOnMobile
+        ariaLabel="PPC tools"
+      />
+    </div>
+
+    {subTab === 'bosses' ? <BossesPage /> : <ScoreCalculatorPage />}
+  </div>
+);

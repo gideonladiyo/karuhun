@@ -42,7 +42,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </ScrollReveal>
       </div>
 
-      {/* SECTION 3: PPC TOOLS & BOSSES (Secondary Utility) */}
+      {/* SECTION 3: PPC SCORE CALCULATOR (Secondary Utility) */}
       <div className="py-8 sm:py-11 border-t border-[#27272a]/50">
         <ScrollReveal variant="smooth" direction="up" threshold={0.05}>
           <PpcTacticalSuite

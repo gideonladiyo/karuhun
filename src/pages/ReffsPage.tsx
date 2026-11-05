@@ -16,11 +16,9 @@ import { Button } from '@/components/ui/button';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from '@/components/ui/empty';
 import { Search, Copy, Check, SearchX, X } from 'lucide-react';
 import {
-  MODE_TAB_OPTIONS,
-  WeeklyFeaturedShowcase,
+  FEATURED_MODES,
   WeeklyFeaturedGrid,
   ResetCountdown,
-  useFeaturedMode,
   useWeeklyFeatured,
 } from '@/components/reffs/WeeklyFeatured';
 
@@ -100,7 +98,6 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({
   );
 
   const featured = useWeeklyFeatured(publishedReferences);
-  const [featuredMode, setFeaturedMode] = useFeaturedMode(featured);
 
   const activeDetailItem = initialRefId
     ? publishedReferences.find((r) => r.id === initialRefId) ?? null
@@ -301,10 +298,13 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({
   }
 
   const subcategories = selectedCategory === 'all' ? [] : CATEGORIES_CONFIG[selectedCategory].subcategories;
-  const featuredForTab = selectedCategory === 'all' ? [] : featured.byCategory[selectedCategory];
+  // The page-level category tabs already pick the mode, so "All" shows every mode's picks together.
+  const featuredForTab =
+    selectedCategory === 'all'
+      ? FEATURED_MODES.flatMap((m) => featured.byCategory[m])
+      : featured.byCategory[selectedCategory];
   const isRefining = selectedSubcategory !== 'all' || selectedPlatform !== 'all' || searchTerm.trim() !== '';
-  const showFeatured =
-    !loading && !isRefining && (selectedCategory === 'all' ? featured.hasAny : featuredForTab.length > 0);
+  const showFeatured = !loading && !isRefining && featuredForTab.length > 0;
   const sectionHeading = 'font-heading font-bold text-sm text-zinc-300 uppercase tracking-wider';
   const pillClass = (active: boolean) =>
     `px-3 py-1.5 rounded-lg text-xs font-tech font-bold transition-colors whitespace-nowrap shrink-0 ${
@@ -336,34 +336,13 @@ export const ReffsPage: React.FC<ReffsPageProps> = ({
 
       {showFeatured && (
         <section className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="space-y-1">
-              <h2 className={sectionHeading}>
-                This week{selectedCategory !== 'all' && ` · ${CATEGORY_STYLES[selectedCategory].label}`}
-              </h2>
-              <ResetCountdown featured={featured} />
-            </div>
-            {selectedCategory === 'all' && (
-              <SegmentedTabs
-                options={MODE_TAB_OPTIONS}
-                value={featuredMode}
-                onChange={setFeaturedMode}
-                size="sm"
-                fullWidthOnMobile
-                ariaLabel="Featured mode"
-              />
-            )}
+          <div className="space-y-1">
+            <h2 className={sectionHeading}>
+              This week{selectedCategory !== 'all' && ` · ${CATEGORY_STYLES[selectedCategory].label}`}
+            </h2>
+            <ResetCountdown featured={featured} />
           </div>
-          {selectedCategory === 'all' ? (
-            <WeeklyFeaturedShowcase
-              references={publishedReferences}
-              featured={featured}
-              mode={featuredMode}
-              onOpen={handleOpenDetail}
-            />
-          ) : (
-            <WeeklyFeaturedGrid items={featuredForTab} onOpen={handleOpenDetail} />
-          )}
+          <WeeklyFeaturedGrid items={featuredForTab} onOpen={handleOpenDetail} />
         </section>
       )}
 

@@ -1,423 +1,310 @@
 import React, { useState } from 'react';
-import { ADVANCED_PPC_SCORES, ULTIMATE_PPC_SCORES } from '@/data/static/ppcScores';
-import { Calculator, Copy, Check, Sparkles } from 'lucide-react';
+import { Check, Copy } from 'lucide-react';
+import { getPpcStageScore, PpcStage, PpcTier, PPC_MAX_SEC } from '@/data/static/ppcScores';
+import { SegmentedTabs, SegmentedTabOption } from '@/components/ui/segmented-tabs';
+import { Button } from '@/components/ui/button';
+import { formatNumber } from '@/lib/format';
+import { cn } from '@/lib/utils';
 
-interface ScoreCalculatorPageProps {
-  initialBossSlug?: string;
-}
+type Mode = 'compare' | 'single';
 
-export const ScoreCalculatorPage: React.FC<ScoreCalculatorPageProps> = () => {
-  const [calcMode, setCalcMode] = useState<'single' | 'compare'>('compare');
-  const [tier, setTier] = useState<'ultimate' | 'advanced'>('ultimate');
-  
-  // Single mode state
-  const [knightSec, setKnightSec] = useState<number>(5);
-  const [chaosSec, setChaosSec] = useState<number>(10);
-  const [hellSec, setHellSec] = useState<number>(15);
+const MODE_OPTIONS: SegmentedTabOption<Mode>[] = [
+  { value: 'compare', label: 'Compare runs' },
+  { value: 'single', label: 'Single run' },
+];
+const TIER_OPTIONS: SegmentedTabOption<PpcTier>[] = [
+  { value: 'ultimate', label: 'Ultimate' },
+  { value: 'advanced', label: 'Advanced' },
+];
+const RUN_COUNT_OPTIONS: SegmentedTabOption<'2' | '3'>[] = [
+  { value: '2', label: '2' },
+  { value: '3', label: '3' },
+];
+const BOSS_COUNT_OPTIONS: SegmentedTabOption<'1' | '2' | '3'>[] = [
+  { value: '1', label: '1' },
+  { value: '2', label: '2' },
+  { value: '3', label: '3' },
+];
 
-  // Compare mode state (Run A, Run B, Run C)
-  const [compareRunsCount, setCompareRunsCount] = useState<2 | 3>(2);
-  const [bossesCount, setBossesCount] = useState<1 | 2 | 3>(1); // 1 Boss (3 timers), 2 Bosses (6 timers), 3 Bosses (9 timers)
+const STAGES: { key: PpcStage; label: string }[] = [
+  { key: 'knight', label: 'Knight' },
+  { key: 'chaos', label: 'Chaos' },
+  { key: 'hell', label: 'Hell' },
+];
+const RUN_NAMES = ['A', 'B', 'C'];
+const MAX_TIMERS = 9; // 3 bosses × 3 stages
+const repeat = (pattern: number[]) => Array.from({ length: MAX_TIMERS }, (_, i) => pattern[i % pattern.length]);
+const DEFAULT_RUNS = [repeat([5, 10, 15]), repeat([8, 12, 18]), repeat([10, 15, 20])];
 
-  // Timers array for Run A, Run B, Run C (max 9 timers per run)
-  const [runATimers, setRunATimers] = useState<number[]>([5, 10, 15, 5, 10, 15, 5, 10, 15]);
-  const [runBTimers, setRunBTimers] = useState<number[]>([8, 12, 18, 8, 12, 18, 8, 12, 18]);
-  const [runCTimers, setRunCTimers] = useState<number[]>([10, 15, 20, 10, 15, 20, 10, 15, 20]);
+const clampSec = (value: number) => Math.max(0, Math.min(PPC_MAX_SEC, Math.round(value) || 0));
+const labelClass = 'block text-[11px] font-tech font-semibold text-zinc-500 uppercase tracking-wider';
 
-  const [copied, setCopied] = useState<boolean>(false);
+const ControlGroup: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
+  <div className="space-y-1.5">
+    <span className={labelClass}>{label}</span>
+    {children}
+  </div>
+);
 
-  const scoresTable = tier === 'ultimate' ? ULTIMATE_PPC_SCORES : ADVANCED_PPC_SCORES;
+const SecondsInput: React.FC<{ value: number; onChange: (value: number) => void; label: string; className?: string }> = ({
+  value,
+  onChange,
+  label,
+  className,
+}) => (
+  <div className={cn('relative', className)}>
+    <input
+      type="number"
+      inputMode="numeric"
+      min={0}
+      max={PPC_MAX_SEC}
+      value={value}
+      aria-label={label}
+      onChange={(e) => onChange(clampSec(Number(e.target.value)))}
+      onFocus={(e) => e.target.select()}
+      className="w-full bg-[#09090b] border border-[#27272a] rounded-lg pl-3 pr-6 py-2 text-sm font-tech font-bold text-white text-right tabular-nums focus:outline-none focus:border-amber-400 transition-colors [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+    />
+    <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500">s</span>
+  </div>
+);
 
-  const getScoreForSec = (sec: number, diff: 'knight' | 'chaos' | 'hell') => {
-    const clamped = Math.max(0, Math.min(60, sec));
-    const entry = scoresTable[clamped];
-    if (!entry) return 0;
-    return entry[diff] || 0;
-  };
+export const ScoreCalculatorPage: React.FC = () => {
+  const [mode, setMode] = useState<Mode>('compare');
+  const [tier, setTier] = useState<PpcTier>('ultimate');
+  const [runCount, setRunCount] = useState<2 | 3>(2);
+  const [bossCount, setBossCount] = useState<1 | 2 | 3>(1);
+  const [runs, setRuns] = useState<number[][]>(DEFAULT_RUNS);
+  const [single, setSingle] = useState<number[]>([5, 10, 15]);
+  const [copied, setCopied] = useState(false);
 
-  // Compute total for an array of timers based on bossesCount
-  const calculateRunTotal = (timers: number[]) => {
-    const totalTimersNeeded = bossesCount * 3;
-    let total = 0;
+  const timerCount = bossCount * 3;
+  const scoreAt = (timerIndex: number, sec: number) => getPpcStageScore(tier, STAGES[timerIndex % 3].key, sec);
 
-    for (let i = 0; i < totalTimersNeeded; i += 3) {
-      const k = getScoreForSec(timers[i] || 0, 'knight');
-      const c = getScoreForSec(timers[i + 1] || 0, 'chaos');
-      const h = getScoreForSec(timers[i + 2] || 0, 'hell');
-      total += k + c + h;
+  const activeRuns = runs.slice(0, runCount).map((timers) => timers.slice(0, timerCount));
+  const totals = activeRuns.map((timers) => timers.reduce((sum, sec, i) => sum + scoreAt(i, sec), 0));
+  const best = Math.max(...totals);
+  const leader = totals.indexOf(best);
+  const isTie = totals.every((t) => t === best);
+  const runnerUp = totals.reduce((acc, t, i) => (i !== leader && (acc === -1 || t > totals[acc]) ? i : acc), -1);
+
+  const singleScores = single.map((sec, i) => scoreAt(i, sec));
+  const singleTotal = singleScores.reduce((sum, n) => sum + n, 0);
+
+  const updateRun = (run: number, index: number, value: number) =>
+    setRuns((prev) => prev.map((t, r) => (r === run ? t.map((s, i) => (i === index ? value : s)) : t)));
+  const updateSingle = (index: number, value: number) =>
+    setSingle((prev) => prev.map((s, i) => (i === index ? value : s)));
+
+  const command =
+    mode === 'single'
+      ? `${tier === 'ultimate' ? '!ult' : '!adv'}total ${single.join(' ')}`
+      : `!comparetotal ${activeRuns.map((t) => t.join(' ')).join(' vs ')}`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(command);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard unavailable; the command is still selectable.
     }
-
-    return total;
   };
 
-  const handleUpdateTimer = (run: 'A' | 'B' | 'C', index: number, value: number) => {
-    const clamped = Math.max(0, Math.min(60, value));
-    if (run === 'A') {
-      const next = [...runATimers];
-      next[index] = clamped;
-      setRunATimers(next);
-    } else if (run === 'B') {
-      const next = [...runBTimers];
-      next[index] = clamped;
-      setRunBTimers(next);
-    } else if (run === 'C') {
-      const next = [...runCTimers];
-      next[index] = clamped;
-      setRunCTimers(next);
-    }
-  };
-
-  // Single mode calculation
-  const singleKnightScore = getScoreForSec(knightSec, 'knight');
-  const singleChaosScore = getScoreForSec(chaosSec, 'chaos');
-  const singleHellScore = getScoreForSec(hellSec, 'hell');
-  const singleTotalScore = singleKnightScore + singleChaosScore + singleHellScore;
-
-  // Compare mode calculations
-  const totalA = calculateRunTotal(runATimers);
-  const totalB = calculateRunTotal(runBTimers);
-  const totalC = calculateRunTotal(runCTimers);
-
-  // Formatted Discord Agus Bot Command String Generator
-  const generateDiscordCommand = () => {
-    const botPrefix = tier === 'ultimate' ? '!ult' : '!adv';
-    
-    if (calcMode === 'single') {
-      return `${botPrefix}total ${knightSec} ${chaosSec} ${hellSec}`;
-    }
-
-    const totalTimersNeeded = bossesCount * 3;
-    const timersAStr = runATimers.slice(0, totalTimersNeeded).join(' ');
-    const timersBStr = runBTimers.slice(0, totalTimersNeeded).join(' ');
-    
-    if (compareRunsCount === 2) {
-      return `!comparetotal ${timersAStr} vs ${timersBStr}`;
-    } else {
-      const timersCStr = runCTimers.slice(0, totalTimersNeeded).join(' ');
-      return `!comparetotal ${timersAStr} vs ${timersBStr} vs ${timersCStr}`;
-    }
-  };
-
-  const handleCopyCommand = () => {
-    const cmd = generateDiscordCommand();
-    navigator.clipboard.writeText(cmd);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const context = `${tier === 'ultimate' ? 'Ultimate' : 'Advanced'} · ${
+    mode === 'single' ? '1 boss' : `${bossCount} ${bossCount === 1 ? 'boss' : 'bosses'}`
+  }`;
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fadeIn pb-16 md:pb-0">
-      
-      {/* Header Banner */}
-      <div className="minimal-card p-5 sm:p-8 space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a] text-zinc-300 text-xs font-tech font-bold uppercase tracking-wider">
-              <Calculator className="w-3.5 h-3.5 text-white" />
-              <span>Agus Bot Command Simulator Engine</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white">
-              PPC SCORE <span className="text-zinc-500 font-normal">SIMULATOR &amp; COMPARE</span>
-            </h1>
-            <p className="text-xs font-tech text-zinc-400">
-              Calculate PPC total scores and compare multi-run outcomes (3, 6, or 9 timers) for Discord bot commands
-            </p>
-          </div>
-
-          {/* Mode Switcher Tabs */}
-          <div className="flex items-center bg-black p-1 rounded-xl border border-[#27272a]">
-            <button
-              onClick={() => setCalcMode('compare')}
-              className={`px-4 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
-                calcMode === 'compare' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
-              }`}
-            >
-              COMPARE RUNS
-            </button>
-            <button
-              onClick={() => setCalcMode('single')}
-              className={`px-4 py-2 rounded-lg text-xs font-heading font-bold transition-all ${
-                calcMode === 'single' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'
-              }`}
-            >
-              SINGLE RUN
-            </button>
-          </div>
-        </div>
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-end gap-x-6 gap-y-4 pb-6 border-b border-[#27272a]">
+        <ControlGroup label="Mode">
+          <SegmentedTabs options={MODE_OPTIONS} value={mode} onChange={setMode} size="sm" ariaLabel="Calculator mode" />
+        </ControlGroup>
+        <ControlGroup label="Tier">
+          <SegmentedTabs options={TIER_OPTIONS} value={tier} onChange={setTier} size="sm" ariaLabel="PPC tier" />
+        </ControlGroup>
+        {mode === 'compare' && (
+          <>
+            <ControlGroup label="Runs">
+              <SegmentedTabs
+                options={RUN_COUNT_OPTIONS}
+                value={String(runCount) as '2' | '3'}
+                onChange={(v) => setRunCount(Number(v) as 2 | 3)}
+                size="sm"
+                ariaLabel="Number of runs"
+              />
+            </ControlGroup>
+            <ControlGroup label="Bosses">
+              <SegmentedTabs
+                options={BOSS_COUNT_OPTIONS}
+                value={String(bossCount) as '1' | '2' | '3'}
+                onChange={(v) => setBossCount(Number(v) as 1 | 2 | 3)}
+                size="sm"
+                ariaLabel="Number of bosses"
+              />
+            </ControlGroup>
+          </>
+        )}
       </div>
 
-      {/* Calculator Configuration Controls */}
-      <div className="minimal-card p-5 space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          
-          {/* Tier Select */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
-              PPC DIFFICULTY TIER
-            </label>
-            <select
-              value={tier}
-              onChange={(e) => setTier(e.target.value as any)}
-              className="w-full bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
-            >
-              <option value="ultimate">Ultimate PPC (High Score Cap)</option>
-              <option value="advanced">Advanced PPC</option>
-            </select>
-          </div>
-
-          {calcMode === 'compare' && (
-            <>
-              {/* Number of Runs Compare Select */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
-                  COMPARE RUNS COUNT
-                </label>
-                <select
-                  value={compareRunsCount}
-                  onChange={(e) => setCompareRunsCount(Number(e.target.value) as any)}
-                  className="w-full bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
-                >
-                  <option value={2}>2 Runs (Run A vs Run B)</option>
-                  <option value={3}>3 Runs (Run A vs Run B vs Run C)</option>
-                </select>
-              </div>
-
-              {/* Number of Bosses (3, 6, 9 Timers) Select */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-tech text-zinc-300 font-bold uppercase block">
-                  STAGE STACK / BOSS COUNT
-                </label>
-                <select
-                  value={bossesCount}
-                  onChange={(e) => setBossesCount(Number(e.target.value) as any)}
-                  className="w-full bg-[#09090b] text-xs font-tech font-bold text-white border border-[#27272a] rounded-xl px-3 py-2.5 focus:outline-none cursor-pointer"
-                >
-                  <option value={1}>1 Boss (3 Timers - K / C / H)</option>
-                  <option value={2}>2 Bosses (6 Timers - 2 Bosses Clearance)</option>
-                  <option value={3}>3 Bosses (9 Timers - Full PPC Season)</option>
-                </select>
-              </div>
-            </>
-          )}
-
-        </div>
-      </div>
-
-      {/* MODE 1: COMPARE RUNS SIMULATOR */}
-      {calcMode === 'compare' && (
-        <div className="space-y-6">
-          
-          {/* Comparison Cards Grid */}
-          <div className={`grid grid-cols-1 ${compareRunsCount === 3 ? 'lg:grid-cols-3' : 'md:grid-cols-2'} gap-5`}>
-            
-            {/* RUN A CARD */}
-            <div className="minimal-card p-5 space-y-4 border border-[#27272a]">
-              <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
-                <h3 className="font-heading font-bold text-lg text-white">RUN A</h3>
-                <span className="font-heading font-bold text-xl text-white">
-                  {totalA.toLocaleString()} <span className="text-xs font-tech text-zinc-400 font-normal">PTS</span>
-                </span>
-              </div>
-
-              {/* Sliders Grid */}
-              <div className="space-y-3">
-                {Array.from({ length: bossesCount }).map((_, bIdx) => (
-                  <div key={bIdx} className="bg-black p-3.5 rounded-xl border border-[#27272a] space-y-2">
-                    <span className="text-[10px] font-tech text-zinc-400 uppercase font-bold block">
-                      BOSS #{bIdx + 1} TIMERS
-                    </span>
-                    <div className="grid grid-cols-3 gap-2">
-                      {['Knight', 'Chaos', 'Hell'].map((diffName, dIdx) => {
-                        const timerIndex = bIdx * 3 + dIdx;
-                        const currentSec = runATimers[timerIndex] || 0;
-                        return (
-                          <div key={dIdx} className="space-y-1">
-                            <span className="text-[9px] font-tech text-zinc-500 uppercase block">{diffName} (s)</span>
-                            <input
-                              type="number"
-                              min={0}
-                              max={60}
-                              value={currentSec}
-                              onChange={(e) => handleUpdateTimer('A', timerIndex, Number(e.target.value))}
-                              className="w-full bg-[#121215] text-xs font-tech text-white border border-[#27272a] rounded-lg px-2 py-1.5 text-center focus:outline-none focus:border-white"
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* RUN B CARD */}
-            <div className="minimal-card p-5 space-y-4 border border-[#27272a]">
-              <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
-                <h3 className="font-heading font-bold text-lg text-white">RUN B</h3>
-                <span className="font-heading font-bold text-xl text-white">
-                  {totalB.toLocaleString()} <span className="text-xs font-tech text-zinc-400 font-normal">PTS</span>
-                </span>
-              </div>
-
-              <div className="space-y-3">
-                {Array.from({ length: bossesCount }).map((_, bIdx) => (
-                  <div key={bIdx} className="bg-black p-3.5 rounded-xl border border-[#27272a] space-y-2">
-                    <span className="text-[10px] font-tech text-zinc-400 uppercase font-bold block">
-                      BOSS #{bIdx + 1} TIMERS
-                    </span>
-                    <div className="grid grid-cols-3 gap-2">
-                      {['Knight', 'Chaos', 'Hell'].map((diffName, dIdx) => {
-                        const timerIndex = bIdx * 3 + dIdx;
-                        const currentSec = runBTimers[timerIndex] || 0;
-                        return (
-                          <div key={dIdx} className="space-y-1">
-                            <span className="text-[9px] font-tech text-zinc-500 uppercase block">{diffName} (s)</span>
-                            <input
-                              type="number"
-                              min={0}
-                              max={60}
-                              value={currentSec}
-                              onChange={(e) => handleUpdateTimer('B', timerIndex, Number(e.target.value))}
-                              className="w-full bg-[#121215] text-xs font-tech text-white border border-[#27272a] rounded-lg px-2 py-1.5 text-center focus:outline-none focus:border-white"
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* RUN C CARD (If compareRunsCount === 3) */}
-            {compareRunsCount === 3 && (
-              <div className="minimal-card p-5 space-y-4 border border-[#27272a]">
-                <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
-                  <h3 className="font-heading font-bold text-lg text-white">RUN C</h3>
-                  <span className="font-heading font-bold text-xl text-white">
-                    {totalC.toLocaleString()} <span className="text-xs font-tech text-zinc-400 font-normal">PTS</span>
-                  </span>
-                </div>
-
-                <div className="space-y-3">
-                  {Array.from({ length: bossesCount }).map((_, bIdx) => (
-                    <div key={bIdx} className="bg-black p-3.5 rounded-xl border border-[#27272a] space-y-2">
-                      <span className="text-[10px] font-tech text-zinc-400 uppercase font-bold block">
-                        BOSS #{bIdx + 1} TIMERS
-                      </span>
-                      <div className="grid grid-cols-3 gap-2">
-                        {['Knight', 'Chaos', 'Hell'].map((diffName, dIdx) => {
-                          const timerIndex = bIdx * 3 + dIdx;
-                          const currentSec = runCTimers[timerIndex] || 0;
-                          return (
-                            <div key={dIdx} className="space-y-1">
-                              <span className="text-[9px] font-tech text-zinc-500 uppercase block">{diffName} (s)</span>
-                              <input
-                                type="number"
-                                min={0}
-                                max={60}
-                                value={currentSec}
-                                onChange={(e) => handleUpdateTimer('C', timerIndex, Number(e.target.value))}
-                                className="w-full bg-[#121215] text-xs font-tech text-white border border-[#27272a] rounded-lg px-2 py-1.5 text-center focus:outline-none focus:border-white"
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="lg:col-span-8 min-w-0">
+          {mode === 'compare' ? (
+            <div className="rounded-xl border border-[#27272a] bg-[#121215] overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-[#27272a]">
+                    <th scope="col" className={cn(labelClass, 'text-left px-4 py-3 w-24 sm:w-32')}>
+                      Clear time
+                    </th>
+                    {activeRuns.map((_, r) => (
+                      <th key={r} scope="col" className="px-3 py-3 text-right font-heading font-bold text-white">
+                        Run {RUN_NAMES[r]}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                {Array.from({ length: bossCount }, (_, b) => (
+                  <tbody key={b} className={b > 0 ? 'border-t border-[#27272a]' : undefined}>
+                    {bossCount > 1 && (
+                      <tr>
+                        <th scope="rowgroup" colSpan={runCount + 1} className={cn(labelClass, 'text-left px-4 pt-4 pb-1')}>
+                          Boss {b + 1}
+                        </th>
+                      </tr>
+                    )}
+                    {STAGES.map((stage, s) => {
+                      const i = b * 3 + s;
+                      return (
+                        <tr key={stage.key}>
+                          <th scope="row" className="text-left px-4 py-2 font-normal text-zinc-300 align-top pt-4">
+                            {stage.label}
+                          </th>
+                          {activeRuns.map((timers, r) => (
+                            <td key={r} className="px-3 py-2">
+                              <SecondsInput
+                                value={timers[i]}
+                                onChange={(v) => updateRun(r, i, v)}
+                                label={`Run ${RUN_NAMES[r]}, boss ${b + 1}, ${stage.label} clear time`}
                               />
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
+                              <div className="mt-1 text-right text-[11px] font-tech text-zinc-500 tabular-nums">
+                                {formatNumber(scoreAt(i, timers[i]))}
+                              </div>
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                ))}
+                <tfoot>
+                  <tr className="border-t border-[#27272a] bg-[#0d0d10]">
+                    <th scope="row" className={cn(labelClass, 'text-left px-4 py-3')}>
+                      Total
+                    </th>
+                    {totals.map((total, r) => (
+                      <td key={r} className="px-3 py-3 text-right">
+                        <div
+                          className={cn(
+                            'font-heading font-bold text-base tabular-nums',
+                            !isTie && r === leader ? 'text-amber-400' : 'text-white'
+                          )}
+                        >
+                          {formatNumber(total)}
+                        </div>
+                        <div className="text-[11px] font-tech text-zinc-500 tabular-nums">
+                          {isTie ? 'Tied' : r === leader ? 'Best' : `−${formatNumber(best - total)}`}
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          ) : (
+            <div className="rounded-xl border border-[#27272a] bg-[#121215] divide-y divide-[#27272a]">
+              {STAGES.map((stage, i) => (
+                <div
+                  key={stage.key}
+                  className="px-4 py-4 space-y-3 sm:space-y-0 sm:grid sm:grid-cols-[4.5rem_1fr_5.5rem_7rem] sm:items-center sm:gap-4"
+                >
+                  <div className="flex items-baseline justify-between sm:contents">
+                    <span className="text-sm text-zinc-300 sm:col-start-1 sm:row-start-1">{stage.label}</span>
+                    <span className="font-tech font-bold text-zinc-100 tabular-nums text-right sm:col-start-4 sm:row-start-1">
+                      {formatNumber(singleScores[i])}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 sm:contents">
+                    <input
+                      type="range"
+                      min={0}
+                      max={PPC_MAX_SEC}
+                      value={single[i]}
+                      onChange={(e) => updateSingle(i, Number(e.target.value))}
+                      aria-label={`${stage.label} clear time slider`}
+                      className="flex-1 w-full cursor-pointer accent-amber-400 sm:col-start-2 sm:row-start-1"
+                    />
+                    <SecondsInput
+                      value={single[i]}
+                      onChange={(v) => updateSingle(i, v)}
+                      label={`${stage.label} clear time`}
+                      className="w-20 sm:w-auto sm:col-start-3 sm:row-start-1"
+                    />
+                  </div>
                 </div>
-              </div>
+              ))}
+            </div>
+          )}
+          <p className="mt-3 text-xs text-zinc-500">
+            Clear time in seconds, 0–{PPC_MAX_SEC}. Faster clears score higher.
+          </p>
+        </div>
+
+        <aside className="lg:col-span-4 space-y-4 lg:sticky lg:top-24">
+          <div className="rounded-xl border border-[#27272a] bg-[#121215] p-5 space-y-2">
+            <p className={labelClass}>{context}</p>
+            {mode === 'single' ? (
+              <>
+                <p className="font-heading font-black text-4xl text-amber-400 tabular-nums leading-none pt-1">
+                  {formatNumber(singleTotal)}
+                </p>
+                <p className="text-sm text-zinc-400">Boss total</p>
+              </>
+            ) : isTie ? (
+              <>
+                <p className="font-heading font-bold text-2xl text-white pt-1">Dead even</p>
+                <p className="text-sm text-zinc-400">
+                  Every run lands on <span className="text-zinc-200 tabular-nums">{formatNumber(best)}</span>.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="font-heading font-bold text-2xl text-white pt-1">
+                  Run <span className="text-amber-400">{RUN_NAMES[leader]}</span> wins
+                </p>
+                <p className="text-sm text-zinc-400">
+                  <span className="text-zinc-200 tabular-nums">+{formatNumber(best - totals[runnerUp])}</span> over Run{' '}
+                  {RUN_NAMES[runnerUp]}
+                </p>
+              </>
             )}
-
           </div>
 
-        </div>
-      )}
-
-      {/* MODE 2: SINGLE RUN CALCULATOR */}
-      {calcMode === 'single' && (
-        <div className="minimal-card p-6 space-y-6">
-          <div className="flex items-center justify-between border-b border-[#27272a] pb-4">
-            <h3 className="font-heading font-bold text-xl text-white">SINGLE RUN SCORE CALCULATOR</h3>
-            <span className="font-heading font-bold text-2xl text-white">
-              {singleTotalScore.toLocaleString()} <span className="text-xs font-tech text-zinc-400 font-normal">PTS</span>
-            </span>
+          <div className="rounded-xl border border-[#27272a] bg-[#121215] p-5 space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <p className="font-heading font-bold text-sm text-white">Agus bot command</p>
+              <Button variant="secondary" size="sm" onClick={handleCopy}>
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copied ? 'Copied' : 'Copy'}</span>
+              </Button>
+            </div>
+            <code className="block bg-[#09090b] border border-[#27272a] rounded-lg px-3 py-2.5 font-mono text-xs text-zinc-200 break-all select-all">
+              {command}
+            </code>
+            <p className="text-xs text-zinc-500">Paste it in Discord to check the same numbers with the bot.</p>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div className="bg-black p-4 rounded-2xl border border-[#27272a] space-y-3">
-              <span className="text-xs font-tech text-zinc-400 font-bold uppercase block">KNIGHT STAGE</span>
-              <input
-                type="range"
-                min={0}
-                max={60}
-                value={knightSec}
-                onChange={(e) => setKnightSec(Number(e.target.value))}
-                className="w-full accent-white cursor-pointer"
-              />
-              <div className="flex justify-between text-xs font-tech">
-                <span>Time: <strong>{knightSec}s</strong></span>
-                <span>Score: <strong className="text-white">{singleKnightScore.toLocaleString()}</strong></span>
-              </div>
-            </div>
-
-            <div className="bg-black p-4 rounded-2xl border border-[#27272a] space-y-3">
-              <span className="text-xs font-tech text-zinc-400 font-bold uppercase block">CHAOS STAGE</span>
-              <input
-                type="range"
-                min={0}
-                max={60}
-                value={chaosSec}
-                onChange={(e) => setChaosSec(Number(e.target.value))}
-                className="w-full accent-white cursor-pointer"
-              />
-              <div className="flex justify-between text-xs font-tech">
-                <span>Time: <strong>{chaosSec}s</strong></span>
-                <span>Score: <strong className="text-white">{singleChaosScore.toLocaleString()}</strong></span>
-              </div>
-            </div>
-
-            <div className="bg-black p-4 rounded-2xl border border-[#27272a] space-y-3">
-              <span className="text-xs font-tech text-zinc-400 font-bold uppercase block">HELL STAGE</span>
-              <input
-                type="range"
-                min={0}
-                max={60}
-                value={hellSec}
-                onChange={(e) => setHellSec(Number(e.target.value))}
-                className="w-full accent-white cursor-pointer"
-              />
-              <div className="flex justify-between text-xs font-tech">
-                <span>Time: <strong>{hellSec}s</strong></span>
-                <span>Score: <strong className="text-white">{singleHellScore.toLocaleString()}</strong></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* DISCORD AGUS BOT COMMAND OUTPUT BAR */}
-      <div className="minimal-card p-5 space-y-3 bg-[#121215] border border-white/40">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-tech text-zinc-300 font-bold uppercase tracking-wider flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-white" />
-            <span>GENERATED AGUS BOT DISCORD COMMAND</span>
-          </span>
-          <button
-            onClick={handleCopyCommand}
-            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-heading font-bold text-xs transition-all shadow-sm"
-          >
-            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copied ? 'COPIED!' : 'COPY COMMAND'}</span>
-          </button>
-        </div>
-
-        <div className="bg-black p-3.5 rounded-xl border border-[#27272a] font-mono text-xs text-zinc-200 overflow-x-auto">
-          <code>{generateDiscordCommand()}</code>
-        </div>
+        </aside>
       </div>
-
     </div>
   );
 };
